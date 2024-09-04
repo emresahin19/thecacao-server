@@ -1,4 +1,3 @@
-import { News } from '../../news/entities/news.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity('users')
@@ -45,7 +44,4 @@ export class User {
 
     @Column({ name: 'reset_password_expires', type: 'datetime', nullable: true })
     resetPasswordExpires: Date;
-
-    @OneToMany(() => News, (news) => news.author)
-    news: News[];
 }

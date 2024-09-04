@@ -9,7 +9,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoryService {
     constructor(
         @InjectRepository(Category)
-        private categoryRepository: Repository<Category>,
+        private readonly categoryRepository: Repository<Category>,
     ) {}
 
     create(createCategoryDto: CreateCategoryDto): Promise<Category> {

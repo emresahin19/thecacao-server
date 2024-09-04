@@ -1,8 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Product } from '../../product/entities/product.entity';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('categories')
-export class Category {
+@Entity('extras_categories')
+export class ExtraCategory {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -10,19 +9,10 @@ export class Category {
     name: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    slug: string;
+    description: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
     image: string;
-
-    @Column({ type: 'varchar', length: 255, nullable: true })
-    color: string;
-
-    @Column({ type: 'varchar', length: 255, nullable: true })
-    textColor: string;
-
-    @Column({ type: 'tinyint', default: 0 })
-    order: number;
 
     @Column({ type: 'tinyint', default: 0 })
     passive: boolean;
@@ -35,7 +25,4 @@ export class Category {
 
     @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
     updated_at: Date;
-
-    @OneToMany(() => Product, (product) => product.category)
-    products: Product[];
 }
