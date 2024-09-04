@@ -18,8 +18,8 @@ export class ProductController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.productService.findOne(+id);
+    async getProduct(@Param('id') id: number) {
+      return await this.productService.getProductWithImagesAndExtras(id);
     }
 
     @Patch(':id')

@@ -8,5 +8,6 @@ import { Extra } from './entities/extra.entity';
     imports: [TypeOrmModule.forFeature([Extra])],
     controllers: [ExtraController],
     providers: [ExtraService],
+    exports: [ExtraService, TypeOrmModule],
 })
 export class ExtraModule {}

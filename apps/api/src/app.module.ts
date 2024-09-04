@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppDataSource } from '../data-source';
 
 import { CategoryModule } from './category/category.module';
 import { ExtraModule } from './extra/extra.module';
@@ -8,6 +9,7 @@ import { ImageModule } from './image/image.module';
 import { ProductModule } from './product/product.module';
 import { SettingModule } from './setting/setting.module';
 import { UserModule } from './user/user.module';
+import { MenuModule } from './menu/menu.module';
 
 import { CategoryService } from './category/category.service';
 import { ExtraService } from './extra/extra.service';
@@ -16,7 +18,7 @@ import { ImageService } from './image/image.service';
 import { ProductService } from './product/product.service';
 import { SettingService } from './setting/setting.service';
 import { UserService } from './user/user.service';
-import { AppDataSource } from '../data-source';
+import { MenuService } from './menu/menu.service';
 
 @Module({
     imports: [
@@ -29,7 +31,8 @@ import { AppDataSource } from '../data-source';
         ImageModule,
         ProductModule,
         SettingModule,
-        UserModule
+        UserModule,
+        MenuModule,
     ],
     providers: [
         CategoryService,
@@ -39,6 +42,7 @@ import { AppDataSource } from '../data-source';
         ProductService,
         SettingService,
         UserService,
+        MenuService,
     ],
 })
 

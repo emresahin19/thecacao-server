@@ -8,5 +8,6 @@ import { ExtraCategory } from './entities/extra-category.entity';
     imports: [TypeOrmModule.forFeature([ExtraCategory])],
     controllers: [ExtraCategoryController],
     providers: [ExtraCategoryService],
+    exports: [ExtraCategoryService, TypeOrmModule],
 })
 export class ExtraCategoryModule {}
