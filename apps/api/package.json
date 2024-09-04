@@ -1,0 +1,17 @@
+{
+  "name": "api",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:run": "npm run typeorm -- migration:run -d ./data-source-module.ts",
+    "typeorm:create": "npm run typeorm -- migration:create",
+    "typeorm:generate": "npm run typeorm -- migration:generate -d ./data-source-module.ts",
+    "typeorm:seed": "ts-node -r tsconfig-paths/register src/seed.ts -d ./data-source-module.ts",
+    "typeorm:rollback": "npm run typeorm -- migration:revert -d ./data-source-module.ts"
+  }
+}

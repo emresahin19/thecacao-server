@@ -1,0 +1,1 @@
+create_migration: npm run typeorm:create src/migrations/[migration-name]
