@@ -1,4 +1,17 @@
 export * from './status-code';
+
+export const dbName = process.env.DB_NAME || 'base';
+export const dbHost = process.env.DB_HOST || 'localhost';
+export const dbPort = parseInt(process.env.DB_PORT || '3306');
+export const dbUsername = process.env.DB_USERNAME || 'root';
+export const dbPassword = process.env.DB_PASSWORD || 'supersecretpassword';
+
+export const apiPort = parseInt(process.env.API_PORT || '4040');
+export const apiHost = process.env.API_HOST || 'http://localhost:4040';
+
+export const APP_PORT = process.env.API_PORT || 4040;
+export const APP_URL = process.env.API_URL || 'http://localhost:4040';
+export const APP_DOMAIN = process.env.API_DOMAIN || 'localhost:4040';
 export const productVariantWidth = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_WIDTH || '360');
 export const productVariantHeight = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_HEIGHT || '314');
 export const productVariantQuality = process.env.NEXT_PUBLIC_PRODUCT_VARIANT_QUALITY || 'cover';

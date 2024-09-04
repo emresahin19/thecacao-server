@@ -1,23 +1,19 @@
 import { DataSource } from 'typeorm';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
 import {
-    DATABASE_NAME,
-    DATABASE_HOST,
-    DATABASE_PORT,
-    DATABASE_USERNAME,
-    DATABASE_PASSWORD
-} from './src/constants';
-
-dotenv.config({ path: path.resolve('.env') });
+    dbName,
+    dbHost,
+    dbPort,
+    dbUsername,
+    dbPassword,
+} from '@asim-ui/constants';
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
-    host: DATABASE_HOST,
-    port: DATABASE_PORT,
-    username: DATABASE_USERNAME,
-    password: DATABASE_PASSWORD,
-    database: DATABASE_NAME,
+    host: dbHost,
+    port: dbPort,
+    username: dbUsername,
+    password: dbPassword,
+    database: dbName,
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     migrations: [__dirname + '/migrations/*.ts'],
     synchronize: false,
