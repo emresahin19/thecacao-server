@@ -1,0 +1,199 @@
+
+.carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    
+    .carousel-wrapper {
+        display: flex;
+        touch-action: pan-y;
+    }
+    
+    .carousel-inner {
+        display: flex;
+        transition: transform 300ms ease-in-out;
+        width: 100%;
+    }
+
+    .scroll-carousel-wrapper {
+        display: flex;
+        transition: transform 300ms ease-in-out;
+        width: 100%;
+        overflow: scroll;
+    }
+
+    &.list {
+        .carousel-wrapper {
+            .carousel-item {
+                width: 100%;
+                max-height: 100%;
+                flex-direction: row;
+                .placeholder-image {
+                    max-height: 100%;
+                    width: auto;
+                    img {
+                        width: 70%;
+                        height: auto;
+                        max-height: 100%;
+                    }
+                }
+                .image {
+                    width: auto;
+                }
+            }
+        }
+    }
+
+    .carousel-item {
+        flex: 1 0 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 8px;
+        // scroll-snap-type: x mandatory;
+        // overflow: scroll hidden;
+        // touch-action: pan-x;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        .carousel-subitem {
+            margin-bottom: 8px;
+        }
+
+        &.carousel-1-item {
+            flex: 1 0 100%;
+            max-width: 100%;
+        }
+    
+        &.carousel-2-item {
+            flex: 1 0 50%;
+            max-width: 50%;
+        }
+    
+        &.carousel-3-item {
+            flex: 1 0 33.33%;
+            max-width: 33%;
+        }
+        
+        &.carousel-4-item {
+            flex: 1 0 25%;
+            max-width: 25%;
+        }
+    
+        &.carousel-5-item {
+            flex: 1 0 20%;
+            max-width: 20%;
+        }
+    }
+
+    .carousel-end {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 0 20%;
+        max-width: 20%;
+        svg g {
+            transform-origin: 50% 50% 0px;
+        }
+    }
+
+    .swipe-transition-hand {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        animation: swipe-end 2s infinite;
+        
+        .path {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background: rgba(149, 147, 241, 0.5);
+            border-radius: 40px;
+            top: 28px;
+            left: 78px;
+            visibility: hidden;
+            animation: swipe-dot 2s 0.5s infinite;
+        }
+
+        .hand-icon {
+            position: relative;
+            background-image:  url('data:image/bmp;base64,Qk2KFwAAAAAAAIoAAAB8AAAAIAAAAC4AAAABACAAAwAAAAAXAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/AAD/AAAAAAAA/0JHUnOPwvUoUbgeFR6F6wEzMzMTZmZmJmZmZgaZmZkJPQrXAyhcjzIAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAAFiMjI1AAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/IyMjUAAAABYAAAAWAAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFiEhIYUAAAD/AAAA/wAAAP8AAAD/AAAA/xYWFv8WFhb/FhYW/xYWFv8WFhb/AAAA/wAAAP8AAAD/AAAA/yEhIYUAAAAWAAAAFgAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFgAAABYAAAD/AAAA/wAAAP8WFhb/FhYW/xYWFv8WFhb//////////////////////xYWFv8WFhb/FhYW/xYWFv8WFhb/AAAA/wAAAP8jIyNQAAAAFgAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYhISGFAAAA/wAAAP8WFhb/FhYW/////////////////////////////////////////////////////////////////xYWFv8WFhb/AAAA/wAAAP8hISGFAAAAFgAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAA/wAAAP8AAAD/FhYW/////////////////////////////////////////////////////////////////////////////////xYWFv8WFhb/FhYW/wAAAP8AAAD/AAAAFgAAABYAAAAAAAAAAAAAAAAAAAAWAAAAFiEhIYUAAAD/AAAA/xYWFv////////////////////////////////////////////////////////////////////////////////////////////////8WFhb/FhYW/wAAAP8hISGFAAAAFgAAAAAAAAAAAAAAAAAAABYjIyNQAAAA/xYWFv8WFhb///////////////////////////////////////////////////////////////////////////////////////////////////////////8WFhb/FhYW/wAAAP8AAAAWAAAAFgAAAAAAAAAWAAAAFgAAAP8AAAD/FhYW//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8WFhb/FhYW/wAAAP8AAAAWAAAAFgAAABYhISGFAAAA/wAAAP8WFhb///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8WFhb/AAAA/yEhIYUAAAAWAAAAFgAAAP8WFhb/FhYW/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////xYWFv8WFhb/AAAA/wAAABYjIyNQAAAA/xYWFv///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////xYWFv8AAAD/IyMjUAAAAP8AAAD/FhYW////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////FhYW/wAAAP8AAAD/AAAA/wAAAP8WFhb///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8WFhb/AAAA/wAAAP8AAAD/AAAA/xYWFv///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////xYWFv8WFhb/AAAA/wAAAP8WFhb//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////xYWFv8AAAD/AAAA/xYWFv//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////FhYW/wAAAP8AAAD/FhYW//////////////////////8WFhb/FhYW//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8WFhb/AAAA/wAAAP8WFhb//////////////////////xYWFv8WFhb//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////xYWFv8AAAD/AAAA/xYWFv//////////////////////FhYW/xYWFv//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////FhYW/wAAAP8AAAD/FhYW//////////////////////8WFhb/FhYW//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8WFhb/AAAA/wAAAP8WFhb//////////////////////xYWFv8WFhb//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////xYWFv8AAAD/AAAA/xYWFv//////////////////////FhYW/xYWFv//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////FhYW/wAAAP8AAAD/FhYW//////////////////////8WFhb/FhYW//////////////////////////////////////////////////////////////////////////////////////8WFhb/FhYW//////////////////////8WFhb/AAAA/wAAAP8WFhb//////////////////////xYWFv8WFhb//////////////////////////////////////////////////////////////////////////////////////xYWFv8WFhb//////////////////////xYWFv8AAAD/AAAA/xYWFv//////////////////////FhYW/xYWFv//////////////////////////////////////////////////////FhYW/xYWFv//////////////////////FhYW/xYWFv8WFhb///////////8WFhb/FhYW/wAAAP8AAAD/FhYW//////////////////////8WFhb/FhYW//////////////////////////////////////////////////////8WFhb/FhYW//////////////////////8WFhb/AAAA/wAAAP8WFhb/FhYW/xYWFv8AAAD/ISEhhQAAAP8WFhb//////////////////////xYWFv8WFhb//////////////////////xYWFv8WFhb//////////////////////xYWFv8WFhb/FhYW////////////FhYW/xYWFv8AAAD/AAAA/wAAAP8AAAD/AAAA/yEhIYUAAAAWAAAA/wAAAP8WFhb///////////8WFhb/FhYW/xYWFv//////////////////////FhYW/xYWFv//////////////////////FhYW/wAAAP8AAAD/FhYW/xYWFv8WFhb/AAAA/yEhIYUAAAAWAAAAFgAAABYAAAAWAAAAFgAAABYhISGFAAAA/wAAAP8WFhb/FhYW/xYWFv8AAAD/FhYW//////////////////////8WFhb/FhYW/xYWFv///////////xYWFv8WFhb/AAAA/wAAAP8AAAD/AAAA/wAAAP8hISGFAAAAFgAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYhISGFAAAA/wAAAP8AAAD/AAAA/wAAAP8WFhb//////////////////////xYWFv8AAAD/AAAA/xYWFv8WFhb/FhYW/wAAAP8hISGFAAAAFgAAABYAAAAWAAAAFgAAABYAAAAWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFgAAABYAAAAWAAAAFgAAABYAAAAWAAAA/xYWFv//////////////////////FhYW/wAAAP8AAAD/AAAA/wAAAP8AAAD/ISEhhQAAABYAAAAWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAAD/FhYW//////////////////////8WFhb/AAAA/wAAABYAAAAWAAAAFgAAABYAAAAWAAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFgAAAP8WFhb//////////////////////xYWFv8AAAD/AAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAA/xYWFv//////////////////////FhYW/wAAAP8AAAAWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAAD/FhYW//////////////////////8WFhb/AAAA/wAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFgAAAP8WFhb//////////////////////xYWFv8AAAD/AAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAA/xYWFv//////////////////////FhYW/wAAAP8AAAAWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAAD/FhYW//////////////////////8WFhb/AAAA/wAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFgAAAP8WFhb//////////////////////xYWFv8AAAD/AAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAA/xYWFv//////////////////////FhYW/wAAAP8AAAAWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAAD/FhYW//////////////////////8WFhb/AAAA/wAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFgAAAP8WFhb//////////////////////xYWFv8AAAD/AAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAA/xYWFv//////////////////////FhYW/wAAAP8AAAAWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYAAAD/FhYW/xYWFv///////////xYWFv8WFhb/AAAA/wAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFiEhIYUAAAD/AAAA/xYWFv8WFhb/FhYW/wAAAP8hISGFAAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAAFiEhIYUAAAD/AAAA/wAAAP8AAAD/ISEhhQAAABYAAAAWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=');
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 100px;
+            height: 100px;
+            transform-origin: 52% 62%;
+            animation: swipe-hand 2s infinite;
+        }
+
+    }
+    
+    .carousel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(var(--black-rgb), 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 1;
+    
+        &.prev {
+            left: 0;
+        }
+    
+        &.next {
+            right: 0;
+        }
+    }
+
+    .counter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 9px;
+        .dot {
+            width: 9px;
+            aspect-ratio: 1;
+            background: rgba(var(--primary-rgb), 0.3);
+            opacity: .4;
+            display: flex;
+            border-radius: 50%;
+            margin: 0 2px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            &.active {
+                background: rgba(var(--primary-rgb), 0.5);
+                opacity: 1;
+            }
+        }
+    }
+}
+
+@keyframes swipe-hand {
+    25% { transform: translate(20px) rotate(30deg); }
+    50% { transform: translate(-20px) rotate(-15deg); }
+    100% { transform: translate(0px) rotate(0); }
+}
+
+@keyframes swipe-dot {
+    12% {
+        visibility: visible;
+        width: 40px;
+    }
+    25% {
+        visibility: visible;
+        transform: translate(-65px);
+        width: 20px;
+    }
+    26% { visibility: hidden; }
+}
+
+@keyframes swipe-end {
+    0% { opacity: 1; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}

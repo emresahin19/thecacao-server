@@ -1,0 +1,102 @@
+
+.modal-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-height: 100vh;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 0;
+    transform: translateY(calc(100% + 70px));
+    background-color: rgba(var(--black-rgb), 0.3);
+    backdrop-filter: blur(7px);
+
+    &.show {
+        transform: translateY(0) scale(1);
+    }
+
+    .modal {
+        background-color: var(--modal-background-color);
+        border-top: 2px solid #fff;
+        overflow: auto;
+        margin: auto;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(var(--black-rgb), 0.3) 0px 8px 16px -8px;
+        width: min(100%, 530px);
+        overflow: auto;
+        border-radius: 12px;
+        border-color: #fff;
+        border-width: 2px 1px 1px 1px;
+        border-style: solid;
+
+        .modal-header {
+            padding-top: 30px;
+            padding-bottom: 8px;
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            .logo {
+                margin-left: 24px;
+            }
+            .close {
+                right: 12px;
+                padding-left: 18px;
+            }
+        }
+
+        .modal-body {
+            padding: 8px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-footer {
+            padding: 8px 16px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .modal-loading {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            width: 32px;
+            height: 3px;
+            background: var(--white);
+            top: 8px;
+            border-radius: 4px;
+            opacity: 0.6;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-container {
+        .modal {
+            width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: auto;
+            border-radius: 12px;
+            border-color: #fff;
+            border-width: 2px 0 1px 0;
+            border-style: solid;
+        }
+    }
+}

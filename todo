@@ -1,0 +1,26 @@
+- make a script to create component, context, etc. 
+
+Yapay Zeka ile Son Dakika Haber sayfası ve sosyal medya hesapları
+	- Son dakika haber botu aktif edilip detaylandırılacak
+   		- En az 20 siteden, dakikalık olarak "Son Dakika" haberleri yakalanacak.
+		- Bu haberler "ile, ve, ki" gibi bağlaçlar ve SEO için eklenen gereksiz kelimeler filtrelenecek.
+		- Mümkünse bu haberlerden keywordler yakalanıp bunlara göre kategorizasyon yapılacak
+		- Storage ve AI iletişimi için redis kullanılacak.
+	- Toplanan son dakika haberleri kısa metinler ile detaylandırılacak
+	- Öncelikle sosyal medya hesapları üzerinden yayınlama başlanacak. Web sitesi sonradan devreye girecek. 
+	- Web sitesi twitter bağlantılı olacak ve editör üzerinden twitter yönetimi de yapılabilecek.
+	- Bayilik sistemi üzerine kurulacak. 
+	- AI sadece haber üretimi için tavsiye olarak da kullanılabilir. 
+	- AI (https://cleanup.pictures) ile haber resimlerindeki logolar ve textler temizlenebilir.
+	- aposto.com gibi günlük gündem özetleri
+	- AI ile metin okuma eklenecek
+
+- bütün local haber sayfaları rss'leri, sitemap'leri bulunacak veya puppeteer modülleri eklenecek
+	https://gazete.bik.gov.tr/Uygulamalar/GazeteIlkSayfalar?kapsam=yerel&il=10 = 1 kodlu şehir gazeteleri
+    puppeteer ile sayfadaki gazete isimleri alınacak,
+    her bir gazete için google'dan official site araması yapılacak ve ilk çıkan site alınacak
+    bu site üzerinden rss ve sitemap aranacak
+    sonuçlar panelde sergilenecek 
+
+
+	

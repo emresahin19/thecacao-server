@@ -1,0 +1,157 @@
+
+.icon-button {
+    transition: var(--transition);
+    border: none;
+    background: transparent;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    &:hover {
+        scale: 1.1;
+    }
+}
+
+.close {
+    position: absolute;
+    cursor: pointer;
+    color: var(--reverse-text-color);
+    border: none;
+    background-color: transparent;
+    outline: none;
+    padding-left: 18px;
+    font-size: 20px;
+
+    &:hover {
+        color: var(--reverse-text-color);
+    }
+    &:focus {
+        outline: none;
+    }
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 3px;
+        background-color: #fff;
+        top: 50%;
+        left: 0;
+        transform-origin: center;
+        border-radius: 5px;
+    }
+    
+    &::before {
+        transform: rotate(45deg);
+    }
+    
+    &::after {
+        transform: rotate(-45deg);
+    }
+}
+
+@mixin button-def($color, $hover, $width, $vertical, $horizontal, $duration, $radius) {
+    font-size: 16px;
+    padding: var(--button-padding);
+    margin: 0;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 $width $color;
+    color: $color;
+    transition: color $duration $duration/3;
+    position: relative;
+    border-radius: $radius;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &::before,
+    &::after {
+        border: 0 solid transparent;
+        box-sizing: border-box;
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        width: 0; 
+        height: 0;
+        border-radius: $radius;
+        #{$vertical}: 0; 
+        #{$horizontal}: 0;
+    }
+
+    &::before {
+        $h-side: if($horizontal == 'left', 'right', 'left');
+        
+        border-#{$vertical}-width: $width;
+        border-#{$h-side}-width: $width;
+    }
+    
+    &::after {
+        $v-side: if($vertical == 'top', 'bottom', 'top');
+        
+        border-#{$v-side}-width: $width;
+        border-#{$horizontal}-width: $width;
+    }
+    
+    &:hover {
+        color: $hover;
+        &::before,
+        &::after {
+            border-color: $hover;
+            transition: border-color 0s, width $duration, height $duration;
+            width: 100%;
+            height: 100%;
+        }
+        
+        &::before { transition-delay: 0s, 0s, $duration; }
+        
+        &::after { transition-delay: 0s, $duration, 0s; }
+    }
+    &.active {
+        color: $hover;
+        &::before,
+        &::after {
+            border-color: $hover;
+            transition: border-color 0s, width $duration, height $duration;
+            width: 100%;
+            height: 100%;
+        }
+        
+        &::before { transition-delay: 0s, 0s, $duration; }
+        
+        &::after { transition-delay: 0s, $duration, 0s; }
+    }
+    &:disabled {
+        opacity: .7;
+        &:hover {
+            &::before,
+            &::after {
+                width: 0%;
+                height: 0%;
+            }
+        }
+    }
+}
+
+.button {
+    $color1: var(--color1);
+    $color2: var(--color2);
+    min-width: 130px;
+    width: fit-content;
+    &-default {
+        @include button-def($color1, $color2, 2px, bottom, right, 0.25s, (0 6px 0 6px));
+    }
+    &-reverse {
+        @include button-def($color1, $color2, 2px, bottom, left, 0.25s, (6px 0 6px 0));
+    }
+    &-thin {
+        @include button-def($color1, $color2, 1px, bottom, right, 0.25s, (0 6px 0 6px));
+    }
+    &-reverse-thin {
+        @include button-def($color1, $color2, 1px, bottom, left, 0.25s, (6px 0 6px 0));
+    }
+}

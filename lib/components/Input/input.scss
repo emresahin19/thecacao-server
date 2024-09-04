@@ -1,0 +1,547 @@
+.input-body {
+    --font-size-md:      16px;
+    --font-size-sm:      14px;
+    --font-size-lg:      18px;
+    --padding-md:       16px 28px 6px 12px;
+    --padding-sm:       14px 22px 4px 8px;
+    --padding-lg:       18px 30px 8px 14px;
+    --border-width-md:   1px;
+    --border-width-sm:   1px;
+    --border-width-lg:   2px;
+    --font-weight-md:    400;
+    --font-weight-sm:    400;
+    --font-weight-lg:    400;
+    --border-radius:    8px;
+    --transition:  0.3s ease;
+    position: relative;
+    min-height: 36px;
+
+    input, textarea {
+        font-size: var(--font-size-md);
+        padding: var(--padding-md);
+        width: calc(100% - 44px);
+        border-radius: var(--border-radius);
+        border: var(--border-width-md) solid var(--input-border-color);
+        pointer-events: auto;
+        background: var(--input-background-color);
+        display: flex;
+        font-weight: var(--font-weight-md);
+        color: var(--input-color);
+
+        &:hover + label {
+            color: var(--input-border-color-focus);
+        }
+
+        &:focus {
+            box-shadow: none;
+            border-color: var(--input-border-color-focus);
+            box-shadow: 0 0 0 1px var(--input-border-color-focus);
+        }
+
+        &:focus-visible {
+            box-shadow: none;
+            outline: none;
+        }
+        
+        &[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        &[type="number"]::-webkit-outer-spin-button,
+        &[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        &[type=date][value=""]:not(:focus) {
+            opacity: 0;
+        }
+
+        &[type="color"] {
+            width: 100%;
+            height: 36px;
+            padding: 0; 
+            border-radius: var(--border-radius);
+            border: var(--border-width-md) solid var(--input-border-color);
+            background: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+    
+            &:focus {
+                border-color: var(--input-border-color-focus);
+                box-shadow: 0 0 0 1px var(--input-border-color-focus);
+            }
+        }
+    
+    }
+
+    input:focus + label,
+    input:not([value=""]) + label,
+    input:-webkit-autofill + label,
+    .select-box:focus + label,
+    .select-box:not([data-value=""]) + label {
+        top: -20px;
+        font-size: 12px;
+        left: 10px;
+        color: var(--input-border-color-focus);
+    }
+
+    .clear-button {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 14px;
+        user-select: none;
+        color: var(--danger);
+
+        &.number, &.date {
+            right: 36px;
+        }
+    }
+
+    .select-box {
+        cursor: pointer;
+        position: relative;
+        min-height: 36px;
+        border-radius: 8px;
+        border: var(--border-width-md) solid var(--input-border-color);
+        pointer-events: auto;
+        display: flex;
+        font-weight: 400;
+        color: var(--input-color);
+        background-color: var(--input-background-color);
+
+        .selected-value {
+            padding: var(--padding-md);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 400;
+            color: var(--input-color);
+            min-height: 20px;
+        }
+        .options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border: var(--border-width-md) solid var(--input-border-color);
+            border-radius: var(--border-radius);
+            max-height: 320px;
+            overflow-y: auto;
+            z-index: 1;
+            top: calc(100% + 4px);
+            user-select: none;
+            color: var(--input-color);
+            padding: 4px 0;
+            flex-direction: column;
+            width: calc(100% - 4px);
+            background-color: var(--input-background-color);
+
+            &.open {
+                display: flex;
+            }
+            .parent-option {
+                background-color: rgba(0, 0, 0, 0.5);
+                font-size: var(--font-size-sm);
+                padding: 4px 12px;
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.8);
+                }
+            }
+            .option {
+                padding: 8px 12px 8px;
+                display: flex;
+                flex-wrap: nowrap;
+                cursor: pointer;
+                font-size: var(--font-size-md);
+                font-weight: var(--font-weight-md);
+                user-select: none;
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
+
+                &.active {
+                    background-color: var(--input-background-color-focus);
+                    color: var(--input-border-color-focus);
+                }
+            }
+        }
+    }
+
+    input:-moz-autofill {
+        background-color: var(--white) !important;
+        & + label {
+            top: -20px;
+            font-size: 12px;
+            left: 10px;
+            color: var(--input-border-color-focus);
+        }
+    }
+
+    textarea {
+        & + label {
+            bottom: auto;
+            top: 12px;
+        }
+        &:focus + label, &:not(:empty) + label {
+            top: 5px;
+            font-size: 12px;
+            left: 10px;
+            color: var(--input-border-color-focus);
+        }
+    }
+
+    label {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 8px;
+        height: fit-content;
+        margin: auto;
+        padding: 0 4px;
+        transition: var(--transition);
+        color: var(--input-color);
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .number-controls {
+        position: absolute;
+        right: 8px;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+        height: 100%;
+        top: 0;
+        bottom: 0;
+        justify-content: center;
+        align-items: center;
+
+        .increment, .decrement {
+            cursor: pointer;
+            background-color: var(--primary-06);
+            color: #fff;
+            font-size: 14px;
+            line-height: 1;
+            text-align: center;
+            margin: 1px 0;
+            border-radius: 3px;
+            transition: .1s ease;
+            height: 14px;
+            width: 20px;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &:hover {
+                background-color: var(--primary);
+            }
+        }
+        .increment {
+            border-radius: 2px 6px 2px 2px;
+        }
+        .decrement {
+            border-radius: 2px 2px 6px 2px;
+        }
+    }
+
+    &.transparent {
+        input, textarea {
+            background: transparent !important;
+            border-color: var(--gray-30);
+            color: var(--gray-30);
+
+            &:read-only {
+                cursor: default;
+            }
+
+            &:hover {
+                border-color: var(--gray-10);
+
+                & + label {
+                    color: var(--gray-10);
+                }
+            }
+
+            &:focus {
+                border-color: var(--primary);
+            }
+        }
+
+        label {
+            color: var(--gray-30);
+        }
+
+        input:focus + label, input:not([value=""]) + label {
+            color: var(--primary);
+            background: var(--primary);
+            top: -44px;
+        }
+
+        textarea:focus + label, textarea:not(:empty) + label {
+            left: 10px;
+            color: var(--primary);
+            background: var(--gray-30);
+            top: -8px;
+        }
+    }
+
+    &.error {
+        textarea, input {
+            border-color: var(--danger);
+        }
+
+        label {
+            color: var(--danger);
+        }
+    }
+
+    &.sm {
+        input, textarea {
+            font-size: var(--font-size-sm);
+            padding: var(--padding-sm);
+            border: var(--border-width-sm) solid var(--text-color);
+            font-weight: var(--font-weight-sm);
+        }
+        label {
+            font-weight: var(--font-weight-sm);
+            font-size: 12px;
+            left: 4px;
+        }
+        input {
+            &:focus + label, 
+            &:not([value=""]) + label,
+            &:-webkit-autofill + label {
+                font-size: 11px;
+                left: 6px;
+            }
+            
+        }
+    }
+
+    &.lg {
+        input, textarea {
+            font-size: var(--font-size-lg);
+            padding: var(--padding-lg);
+            border: var(--border-width-lg) solid var(--text-color);
+            font-weight: var(--font-weight-lg);
+        }
+        label {
+            font-weight: var(--font-weight-lg);
+            font-size: var(--font-size-lg);
+        }
+    }
+}
+
+.image-input {
+    position: relative;
+    border: 2px dashed var(--input-border-color);
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--input-color);
+    border-radius: 6px;
+    padding: 8px;
+    // aspect-ratio: 195/130;
+    display: flex;
+    flex-grow: 1;
+
+    &.active, &:hover {
+        border-color: var(--input-border-color-focus);
+        background-color: rgba(0, 0, 0, 0.3);
+        border-style: solid;
+    }
+
+    .switch {
+        display: block;
+        font-size: var(--font-size-md);
+    }
+
+    .file-info {
+        margin-top: 10px;
+        font-size: var(--font-size-sm);
+    }
+
+    .preview-container {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .preview {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin: 0 auto;
+        }
+    }
+    .close {
+        right: 8px;
+        top: 8px;
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        &:before, &:after {
+            background-color: var(--danger);
+        }
+    }
+}
+
+.input-container {
+    margin: 12px 0;
+}
+
+.multiple-image-input {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 16px;
+    .sortable-item {
+        flex: 1 0 50%;
+        max-width: calc(50% - 26px);
+        display: flex;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        aspect-ratio: 1;
+        &.dragging {
+            opacity: 0.8;
+        }
+        .dragging-over {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.i-see-you {
+    position: absolute;
+    width: 24px;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    padding: 0 6px;
+    transition: var(--transition);
+}
+
+.forgot-password {
+    width: fit-content;
+    color: var(--primary);
+    font-size: 14px;
+    margin-left: auto;
+    transition: var(--transition);
+    position: relative;
+    &:before {
+        content: '';
+        width: 0%;
+        height: 1px;
+        transition: var(--transition);
+        background: var(--white);
+        position: absolute;
+        left: 0%;
+        bottom: 0;
+    }
+    &:hover {
+        color: var(--white);
+        &:before {
+            width: 100%;
+        }
+    }
+}
+
+.remember-me {
+    display: flex;
+    margin-top: 12px;
+    & label {
+        margin-bottom: 0;
+    }
+    & .text {
+        color: var(--gray-30);
+        margin-left: 8px;
+    }
+}
+
+.checkbox-area {
+    color: #fff;
+    margin: 8px 0;
+}
+
+.checkbox {
+    display: flex;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 0;
+    margin-right: 8px;
+    width: fit-content;
+    input,
+    svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+        margin-right: 16px;
+    }
+    input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        position: relative;
+        outline: none;
+        background: var(--white);
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: box-shadow .3s;
+        box-shadow: inset 0 0 0 var(--s, 2px) var(--b, #ddd);
+        &:hover {
+            --s: 2px;
+            --b: #ddd;
+        }
+        &:checked {
+            --s: 2px;
+            --b: var(--primary);
+        }
+    }
+    svg {
+        pointer-events: none;
+        fill: none;
+        stroke-width: 3px;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke: var(--stroke, var(--primary));
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 16px;
+        height: 16px;
+        transform: scale(var(--scale, 1)) translateZ(0);
+    }
+    .label {
+        margin-left: 8px;
+    }
+    & {
+        input {
+            &:checked {
+                --s: 2px;
+                transition-delay: .4s;
+                & + svg {
+                    --a: 16.1 86.12;
+                    --o: 102.22;
+                }
+            }
+        }
+        svg {
+            stroke-dasharray: var(--a, 86.12);
+            stroke-dashoffset: var(--o, 86.12);
+            transition: stroke-dasharray .6s, stroke-dashoffset .6s;
+        }
+    }
+}

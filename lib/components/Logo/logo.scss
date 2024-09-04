@@ -1,0 +1,17 @@
+
+.logo {
+    max-height: 100%;
+    display: flex;
+    aspect-ratio: 1;
+    max-width: 100%;
+    transition: var(--transition);
+    img {
+        max-height: 100%;
+        padding: 12px;
+        transition: var(--transition);
+        aspect-ratio: 1;
+    }
+    &:hover img {
+        scale: 1.1;
+    }
+}

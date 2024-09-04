@@ -1,0 +1,12 @@
+:root {
+    --header-height: 60px;
+    --header-scrolled-height: 10vh;
+    --header-scrolled-view-height: 4vh;
+    --header-padding: 0 6vw;
+    --header-background-color: #fff;
+    --body-background-color: #fff;
+    --modal-background-color: rgba(var(--primary-rgb), 0.7);
+    --container-padding: 6vh 6vw;
+    --transition: 0.2s cubic-bezier(.79,.14,.15,.86) all;
+    --font-family: 'SF Pro Display Regular', sans-serif;
+}

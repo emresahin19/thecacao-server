@@ -1,0 +1,35 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@asim-ui": ["lib/index"],
+      "@asim-ui/components": ["lib/components/index"],
+      "@asim-ui/interfaces": ["lib/interfaces/index"],
+      "@asim-ui/layouts": ["lib/layouts/index"],
+      "@asim-ui/constants": ["lib/constants/index"],
+      "@asim-ui/contexts": ["lib/contexts/index"],
+      "@asim-ui/hooks": ["lib/hooks/index"],
+      "@asim-ui/lib": ["lib/lib/index"],
+      "@asim-ui/pages": ["lib/pages/index"],
+      "@asim-ui/services": ["lib/services/index"],
+      "@asim-ui/store": ["lib/store/index"],
+      "@asim-ui/utils": ["lib/utils/index"],
+      "@asim-ui/views": ["lib/views/index"]
+    },
+  },
+  "include": ["src", "lib"],
+  "exclude": ["node_modules", "tmp"]
+}
