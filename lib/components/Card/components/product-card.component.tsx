@@ -51,7 +51,7 @@ const ProductCard: React.FC<ProductProps> = ({
             />
         }
     ), [images, name, productVariantWidth, productVariantHeight, productVariantQuality, loading]);
-    console.log(images)
+
     const handleClick = () => {
         return handleShow({
             show: true,

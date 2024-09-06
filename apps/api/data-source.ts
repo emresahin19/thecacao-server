@@ -21,4 +21,9 @@ export const AppDataSource = new DataSource({
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     migrations: [__dirname + '/migrations/*.ts'],
     synchronize: false,
+    extra: {
+        connectionLimit: 10,
+        connectTimeout: 60000,
+        keepAlive: true,
+    },
 });

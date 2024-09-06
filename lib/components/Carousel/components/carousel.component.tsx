@@ -26,6 +26,7 @@ const Carousel: React.FC<CarouselProps> = ({
     const [cloneItems, setCloneItems] = useState<React.ReactNode[]>([]);
     const [swipeTransition, setSwipeTransition] = useState<boolean>(false);
     const initialSwipe = useRef(false);
+    const touchStartTimeRef = useRef<number>(0); 
 
     const carouselRef = useRef<HTMLDivElement>(null);
     const transitionDuration = 300;
@@ -33,7 +34,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
     const touchStartXRef = useRef(0);
     const touchStartYRef = useRef(0);
-
+    
     const nextSlide = (index: number) => {
         if (viewType != 'carousel' || items.length < rowItemsCount || isVerticalScroll) return;
         
@@ -67,7 +68,8 @@ const Carousel: React.FC<CarouselProps> = ({
     const handleTouchStart = (e: React.TouchEvent) => {
         e.stopPropagation();
         if (viewType != 'carousel' || items.length < rowItemsCount) return;
-
+        
+        touchStartTimeRef.current = Date.now();
         const touchStartX = e.touches[0].clientX;
         const touchStartY = e.touches[0].clientY;
         touchStartXRef.current = touchStartX;
@@ -122,51 +124,55 @@ const Carousel: React.FC<CarouselProps> = ({
 
     const handleTouchEnd = (e: React.TouchEvent) => {
         e.stopPropagation();
-        if (viewType != 'carousel' || items.length < rowItemsCount || isVerticalScroll) return;
-
+        if (viewType !== 'carousel' || isVerticalScroll) return;
+    
+        const touchEndTime = Date.now();
         const touchStartX = touchStartXRef.current;
         const touchEndX = e.changedTouches[0].clientX;
         const touchDeltaX = touchEndX - touchStartX;
-        const itemWidth = carouselRef.current!.offsetWidth / rowItemsCount;
-        const calculatedWidth = infinite ? itemWidth : itemWidth;
+    
+        const touchDuration = touchEndTime - touchStartTimeRef.current;
+        const velocity = Math.abs(touchDeltaX) / touchDuration;
         
-        const deltaIndex = Math.abs(Math.ceil(touchDeltaX / (calculatedWidth + slideWidth)));
+        const moveFactor = Math.max(Math.floor(velocity), 0);
+        const slidable = Math.abs(touchDeltaX) > slideWidth;
 
         if (carouselRef.current) {
             carouselRef.current.style.transition = `transform ${transitionDuration}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
             carouselRef.current.style.transform = 'translateX(0)';
         }
 
-        if(infinite){
-            if (touchDeltaX > slideWidth) {
-                const index = currentIndex - deltaIndex;
+        if(!slidable) return;
+    
+        if (infinite) {
+            if (touchDeltaX > 0) {
+                const index = currentIndex - moveFactor;
                 prevSlide(index);
-            } else if (touchDeltaX < -slideWidth) {
-                const index = currentIndex + deltaIndex;
-                nextSlide(index + 1);
+            } else if (touchDeltaX < 0) {
+                const index = currentIndex + moveFactor;
+                nextSlide(index);
             }
         } else {
-            if (touchDeltaX > slideWidth) {
-                const index = currentIndex - deltaIndex;
-                prevSlide(index);
-            } else if (touchDeltaX < -slideWidth) {
+            if (touchDeltaX > 0) {
+                const index = currentIndex - moveFactor;
+                prevSlide(index - 1);
+            } else if (touchDeltaX < 0) {
                 const extraMove = Math.abs(touchDeltaX * 0.3);
                 const isLastSlide = currentIndex === items.length - rowItemsCount && extraMove >= slideWidth;
-                
+    
                 if (isLastSlide) {
                     setCurrentIndex(0);
                     setEndMessageOpacity(0);
                 } else {
-                    const index = currentIndex + deltaIndex;
+                    const index = currentIndex + moveFactor;
                     nextSlide(index + 1);
                 }
             }
         }
-        if (carouselRef.current) {
-            carouselRef.current.style.touchAction = 'pan-y';
-        }
+    
         setIsTouchActive(false);
     };
+    
 
     useEffect(() => {
         if (viewType) 
@@ -206,7 +212,7 @@ const Carousel: React.FC<CarouselProps> = ({
         const startAnimation = async () => {
             if(!initialStart || !carouselRef.current || viewType !== 'carousel') return;
             await sleep(1000);
-            setSwipeTransition(true);
+            // setSwipeTransition(true);
             await sleep(400);
             if (!initialSwipe.current && carouselRef.current) {
                 initialSwipe.current = true;
