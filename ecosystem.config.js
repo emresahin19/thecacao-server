@@ -1,3 +1,9 @@
+const dotenv = require('dotenv');
+const path = require('path');
+
+// .env dosyasını manuel yükleyelim
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
 module.exports = {
     apps: [
         {
@@ -18,15 +24,15 @@ module.exports = {
                 NODE_ENV: 'production',
             },
         },
-        // {
-        //     name: 'demo-api', 
-        //     script: 'node dist/apps/api/main.js', 
-        //     cwd: './project',
-        //     env: {
-        //     NODE_ENV: 'production',
-        //         PORT: 4040, 
-        //     },
-        // },
+        {
+            name: 'demo-api',
+            script: 'apps/api/dist/src/main.js',
+            cwd: '/home/web/asimthecat.com/demo/server',
+            env: {
+                NODE_ENV: 'production',
+                PORT: 4040,
+            },
+        },
     ],
 };
   

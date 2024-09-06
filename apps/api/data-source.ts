@@ -11,6 +11,13 @@ import {
 
 dotenv.config({ path: path.resolve('.env') });
 
+console.log(
+    DB_DATABASE,
+    DB_HOST,
+    DB_PORT,
+    DB_USERNAME,
+    DB_PASSWORD)
+
 export const AppDataSource = new DataSource({
     type: 'mysql',
     host: DB_HOST,
