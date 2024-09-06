@@ -1,6 +1,6 @@
 // next-sitemap.config.js
 const devMode = process.env.NEXT_PUBLIC_APP_MODE === 'development';
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4040';
 
 module.exports = devMode ? {
     siteUrl: process.env.NEXT_PUBLIC_WWW_URL || 'http://localhost:3050',

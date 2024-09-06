@@ -9,7 +9,7 @@ import { CategoryProps, ContactProps, MenuProps } from "@asim-ui/interfaces";
 import { Menu } from "@asim-ui/views";
 
 export const getServerSideProps = async () => {
-    const { data } = await axios.get(`${apiUrl}/api/menu`) ?? {};
+    const { data } = await axios.get(`${apiUrl}/menu`) ?? {};
     const { items, contacts }: { items: CategoryProps[], contacts: ContactProps} = data;
 
     return {

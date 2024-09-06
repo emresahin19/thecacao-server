@@ -19,7 +19,7 @@ export class ProductController {
 
     @Get(':id')
     async getProduct(@Param('id') id: number) {
-      return await this.productService.getProductWithImagesAndExtras(id);
+      return await this.productService.getProductWithImageUrls(id);
     }
 
     @Patch(':id')

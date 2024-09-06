@@ -27,8 +27,8 @@ export const sliderVariantFit = process.env.NEXT_PUBLIC_SLIDER_VARIANT_FIT || 'c
 export const slideWidthDefault = parseInt(process.env.NEXT_PUBLIC_SLIDE_WIDTH || '70');
 export const carouselLengthOnScreen = parseInt(process.env.NEXT_PUBLIC_CAROUSEL_LENGTH_ON_SCREEN || '2');
 
-export const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-export const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || 'http://localhost:8000';
+export const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4040';
+export const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || 'http://localhost:4040';
 export const wwwUrl = process.env.NEXT_PUBLIC_WWW_URL || 'http://localhost:4020';
 export const dashUrl = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:4030';
 

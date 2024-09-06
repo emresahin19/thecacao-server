@@ -39,54 +39,41 @@ export class ProductService {
     async remove(id: number): Promise<void> {
         await this.productRepository.delete(id);
     }
-    
-    async getProductWithImagesAndExtras(productId: number): Promise<Product> {
-        const product = await this.productRepository.findOne({
-            where: { id: productId },
-            relations: ['images', 'extraItems'],
-        });
-    
-        if (product.image_ids && Array.isArray(product.image_ids) && product.image_ids.length > 0) {
-            const images = await this.imageRepository
-                .createQueryBuilder('image')
-                .whereInIds(product.image_ids)
-                .getMany();
-            product.images = images
+
+    async getImageUrls(image_ids: number[]): Promise<string[]> {
+        if (!image_ids || image_ids.length === 0) {
+            return [];
         }
-    
-        if (product.extra && Array.isArray(product.extra) && product.extra.length > 0) {
-            product.extraItems = await this.extraRepository
-                .createQueryBuilder('extra')
-                .leftJoinAndSelect('extra.category', 'category')
-                .whereInIds(product.extra)
-                .select(['extra.*', 'category.name AS category_name'])
-                .getMany();
+
+        const images = await this.imageRepository
+            .createQueryBuilder('image')
+            .whereInIds(image_ids)
+            .getMany();
+
+        return images.map((image) => image.url);
+    }
+
+    async getProductWithImageUrls(productId: number): Promise<Product> {
+        const product = await this.productRepository.findOne({ where: { id: productId } });
+
+        if (product.image_ids && product.image_ids.length > 0) {
+            product.images = await this.getImageUrls(product.image_ids);
+        } else {
+            product.images = [];
         }
-    
+
         return product;
     }
 
     async getAllProducts(): Promise<Product[]> {
-        const products = await this.productRepository.find({
-            relations: ['images', 'extraItems'], 
-        });
+        const products = await this.productRepository.find();
 
         for (const product of products) {
-            if (product.image_ids && Array.isArray(product.image_ids) && product.image_ids.length > 0) {
-                product.images = await this.imageRepository
-                    .createQueryBuilder('image')
-                    .whereInIds(product.image_ids)
-                    .getMany();
-                }
-
-            if (product.extra && Array.isArray(product.extra) && product.extra.length > 0) {
-                product.extraItems = await this.extraRepository
-                    .createQueryBuilder('extra')
-                    .leftJoinAndSelect('extra.category', 'category')
-                    .whereInIds(product.extra)
-                    .select(['extra.*', 'category.name AS category_name'])
-                    .getMany();
-                }
+            if (product.image_ids && product.image_ids.length > 0) {
+                product.images = await this.getImageUrls(product.image_ids);
+            } else {
+                product.images = [];
+            }
         }
 
         return products;

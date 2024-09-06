@@ -5,9 +5,10 @@ import { Extra } from '../extra/entities/extra.entity';
 import { Setting } from '../setting/entities/setting.entity';
 import { MenuService } from './menu.service';
 import { MenuController } from './menu.controller';
+import { ProductModule } from '../product/product.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Category, Extra, Setting])],
+    imports: [TypeOrmModule.forFeature([Category, Extra, Setting]), ProductModule],
     controllers: [MenuController],
     providers: [MenuService],
 })

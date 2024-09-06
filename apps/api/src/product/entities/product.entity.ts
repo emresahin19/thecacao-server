@@ -32,9 +32,8 @@ export class Product {
 
     @Column({ type: 'simple-json', nullable: true })
     extra: number[]; // Assuming extra is a JSON array of extra IDs
-
-    @OneToMany(() => Image, (image) => image.id)
-    images: Image[];
+    
+    images?: Image['url'][];  
 
     @OneToMany(() => Extra, (extra) => extra.id)
     extraItems: Extra[];
