@@ -1,6 +1,4 @@
 import { DataSource } from 'typeorm';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
 import {
     DB_DATABASE,
     DB_HOST,
@@ -8,15 +6,6 @@ import {
     DB_USERNAME,
     DB_PASSWORD
 } from './src/constants';
-
-dotenv.config({ path: path.resolve('.env') });
-
-console.log(
-    DB_DATABASE,
-    DB_HOST,
-    DB_PORT,
-    DB_USERNAME,
-    DB_PASSWORD)
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
@@ -30,7 +19,7 @@ export const AppDataSource = new DataSource({
     synchronize: false,
     extra: {
         connectionLimit: 10,
-        connectTimeout: 60000,
+        connectTimeout: 600000,
         keepAlive: true,
     },
 });

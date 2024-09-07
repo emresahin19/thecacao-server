@@ -212,7 +212,7 @@ const Carousel: React.FC<CarouselProps> = ({
         const startAnimation = async () => {
             if(!initialStart || !carouselRef.current || viewType !== 'carousel') return;
             await sleep(1000);
-            // setSwipeTransition(true);
+            setSwipeTransition(true);
             await sleep(400);
             if (!initialSwipe.current && carouselRef.current) {
                 initialSwipe.current = true;

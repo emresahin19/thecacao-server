@@ -7,9 +7,9 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@asim-ui/store";
+import { CategorySection } from "@asim-ui/components";
 
 const ProductDetailCard = dynamic(() => import('../../components/Card/components/product-detail-card.component'), { ssr: false });
-const CategorySection = dynamic(() => import('../../components/Card/components/category-card.component'), { ssr: false });
 
 const Menu: React.FC<MenuProps> = () => {
     const router = useRouter();
@@ -39,8 +39,8 @@ const Menu: React.FC<MenuProps> = () => {
 
     return (
         <div className="menu-container">
-            {data.map((category, i) => 
-                <CategorySection 
+            {data.slice(0, 2).map((category, i) => (
+                <CategorySection
                     key={category.id}
                     id={category.id}
                     index={i}
@@ -52,7 +52,25 @@ const Menu: React.FC<MenuProps> = () => {
                     textColor={category.textColor}
                     isActive={router.query.categorySlug === category.slug}
                 />
-            )}
+            ))}
+
+            {data.slice(2).map((category, i) => {
+                const LazyCategorySection = dynamic(() => import('../../components/Card/components/category-card.component'), { ssr: false });
+                return (
+                    <LazyCategorySection 
+                        key={category.id}
+                        id={category.id}
+                        index={i + 2}  // Offset by 2 since the first two are already loaded
+                        order={category.order}
+                        slug={category.slug}
+                        name={category.name}
+                        products={category.products}
+                        color={category.color}
+                        textColor={category.textColor}
+                        isActive={router.query.categorySlug === category.slug}
+                    />
+                );
+            })}
         </div>
     );
 };
