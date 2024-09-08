@@ -5,21 +5,18 @@ import {
     productVariantWidth, 
     productVariantHeight, 
     defaultColor, 
-    productVariantQuality, 
-    placeholderImage, 
+    placeholderProductImage, 
 } from '@asim-ui/constants';
+import { imageToCdnUrl } from '@asim-ui/utils';
 
 const PlaceholderImage: React.FC<PlaceholderImageProps> = ({ 
     alt, 
     loading, 
     backgroundColor = defaultColor, 
     width = productVariantWidth,
-    height = productVariantHeight,
-    fit = productVariantQuality
+    height = productVariantHeight
 }) => {
-    const productVariants = `w=${width},h=${height},fit=${fit}`;
-    const url = `${placeholderImage}${productVariants}`;
-
+    const url = imageToCdnUrl({ image: placeholderProductImage, width, height });
     const [imageSrc, setImageSrc] = useState<string>(url); 
 
     const handleImageError = (e: any) => {

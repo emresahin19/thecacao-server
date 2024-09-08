@@ -36,6 +36,7 @@ export class MenuService {
                 category.products = await Promise.all(
                     category.products.map(async (product) => {
                         product.images = await this.productService.getImageUrls(product.image_ids);
+                        // product.cfImages = await this.productService.getCfImageUrls(product.image_ids);
                         return product;
                     })
                 );

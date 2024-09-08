@@ -27,7 +27,7 @@ const ProductCard: React.FC<ProductProps> = ({
 }) => {
     const { handleShow } = useModal();
     const { loaded } = useVariable();
-    
+
     const imgItems = useMemo(() => images.map((image) => {
         return slug === 'placeholder-slug' ? 
             <Skeleton 
@@ -42,7 +42,7 @@ const ProductCard: React.FC<ProductProps> = ({
             :
             <ProductImage 
                 key={image}
-                src={`${image}`} 
+                image={`${image}`} 
                 alt={name} 
                 width={productVariantWidth}
                 height={productVariantHeight}

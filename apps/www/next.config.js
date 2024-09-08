@@ -51,6 +51,10 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'api.thecacao.com.tr',
             },
+            {
+                protocol: 'https',
+                hostname: '7phvozox.mncdn.org',
+            },
         ],
         formats: ['image/webp'],
     },

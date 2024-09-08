@@ -73,6 +73,7 @@ export interface ProductProps {
     recipe: string;
     extra?: Array<any>;
     images: Array<any>;
+    cfImages?: Array<any>;
     passive: number;
     diy: Array<any> | null;
     order: number;
@@ -105,3 +106,10 @@ export interface HexToRgba {
   (hex: string, opacity: number): string;
 }
 
+
+export interface ImageToCdnUrlProps {
+  image: string | null | undefined;
+  width?: number;
+  height?: number;
+  type?: 'product' | 'product-detail' | 'slider' | 'extra';
+}

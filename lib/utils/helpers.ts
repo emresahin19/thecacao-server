@@ -1,6 +1,17 @@
-import { dashUrl } from "@asim-ui/constants";
-import { HexToRgba } from "@asim-ui/interfaces";
+import { cdnUrl, cfCdnUrl, dashUrl, productVariantQuality } from "@asim-ui/constants";
+import { HexToRgba, ImageToCdnUrlProps } from "@asim-ui/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
+import { 
+    apiUrl, 
+    extraImageHeight, 
+    extraImageWidth, 
+    productDetailVariantHeight, 
+    productDetailVariantWidth, 
+    productVariantHeight, 
+    productVariantWidth, 
+    sliderVariantHeight, 
+    sliderVariantWidth 
+} from '@asim-ui/constants';
 
 const sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -99,6 +110,48 @@ const serializeFilters = (filters: { [key: string]: any }) => {
         .join('&');
 };
 
+const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
+    if(!image) return '/the-cacao-logo.webp';
+
+    const sizes = {
+        'product': {
+            _width: productVariantWidth,
+            _height: productVariantHeight,
+        },
+        'product-detail': {
+            _width: productDetailVariantWidth,
+            _height: productDetailVariantHeight,
+        },
+        'slider': {
+            _width: sliderVariantWidth,
+            _height: sliderVariantHeight,
+        },
+        'extra': {
+            _width: extraImageWidth,
+            _height: extraImageHeight,
+        }
+    };
+
+    const { _width, _height } = type 
+        ? sizes[type] 
+        : width && height 
+            ? { _width: width, _height: height }
+            : { _width: null, _height: null }
+
+    const size = _width && _height ? `/mncropresize/${productVariantWidth}/${productVariantHeight}` : '';
+
+    return `${cdnUrl}${size}/image/${image}`;
+}
+
+const imageToCFCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
+    console.log(image)
+    if(!image) return '/the-cacao-logo.webp';
+
+    const size = `w=${productVariantWidth},h=${productVariantHeight},fit=${productVariantQuality}`;
+    console.log(`${cfCdnUrl}${size}`)
+    return `${image}${size}`;
+}
+
 export {
     sleep,
     useShallowRouting,
@@ -109,4 +162,6 @@ export {
     createHeaders,
     handleErrorResponse,
     serializeFilters,
+    imageToCdnUrl,
+    imageToCFCdnUrl,
 }

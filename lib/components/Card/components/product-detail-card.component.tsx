@@ -4,12 +4,12 @@ import { Carousel, PlaceholderImage, ProductImage } from '@asim-ui/components';
 import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality, extraImageWidth, extraImageHeight, extraImageFit } from '@asim-ui/constants';
 import { useVariable } from '@asim-ui/contexts';
 
-const ProductDetail: React.FC<ProductProps> = ({ id, name, slug, fullpath = '', description, price, category_id, recipe, extra, images, passive, diy, order }) => {
+const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, images }) => {
     const { loaded } = useVariable();
 
     const imgItems = images.map((image) => 
         <ProductImage 
-            src={`${image}`} 
+            image={`${image}`} 
             alt={name} 
             width={productDetailVariantWidth}
             height={productDetailVariantHeight}

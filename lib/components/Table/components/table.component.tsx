@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { IconButton, Checkbox, Input, SelectBox, Pagination, EditableInput, TableProps, Button } from '@asim-ui/components';
-import { placeholderImageBg, productVariantHeight, productVariantQuality, productVariantWidth } from '@asim-ui/constants';
-
-const imageVariant = `w=${productVariantWidth},h=${productVariantHeight},fit=${productVariantQuality}`
+import { Checkbox, Input, SelectBox, Pagination, EditableInput, TableProps, Button } from '@asim-ui/components';
+import { placeholderProductImageBg } from '@asim-ui/constants';
+import { imageToCdnUrl } from '@asim-ui/utils';
 
 const Table = <T extends { id: string | number, passive?: number }>({
     data,
@@ -266,7 +265,7 @@ const Table = <T extends { id: string | number, passive?: number }>({
                                 <td key={colIndex} data-label={col.label}>
                                     {String(col.key).includes('image') ? (
                                         <div className="avatar">
-                                            <img src={`${placeholderImageBg}${imageVariant}`} />
+                                            <img src={imageToCdnUrl({image: placeholderProductImageBg, type: 'product'})} />
                                         </div>
                                     ) : (
                                         <div className="avatar">

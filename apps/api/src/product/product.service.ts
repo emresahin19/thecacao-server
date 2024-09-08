@@ -50,6 +50,19 @@ export class ProductService {
             .whereInIds(image_ids)
             .getMany();
 
+        return images.map((image) => image.filename);
+    }
+
+    async getCfImageUrls(image_ids: number[]): Promise<string[]> {
+        if (!image_ids || image_ids.length === 0) {
+            return [];
+        }
+
+        const images = await this.imageRepository
+            .createQueryBuilder('image')
+            .whereInIds(image_ids)
+            .getMany();
+
         return images.map((image) => image.url);
     }
 

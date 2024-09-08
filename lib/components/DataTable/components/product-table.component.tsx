@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { ProductProps } from '@asim-ui/interfaces';
 import { useProducts } from '@asim-ui/hooks';
 import { useCategoryInputData } from '@asim-ui/hooks';
-import { dateToString } from '@asim-ui/utils';
-import { placeholderImageBg } from '@asim-ui/constants';
+import { dateToString, imageToCdnUrl } from '@asim-ui/utils';
+import { placeholderProductImageBg } from '@asim-ui/constants';
 import { Table, ProductEditCard, Button, DeleteModal } from '@asim-ui/components';
 import { useModal } from '@asim-ui/contexts';
 import { deleteProduct } from '@asim-ui/services';
@@ -100,7 +100,7 @@ const ProductTable = () => {
                                     <img src={`${product.images[0]?.url}`} />
                                 }
                                 {product.images.length === 0 &&
-                                    <img src={`${placeholderImageBg}public`} />
+                                    <img src={imageToCdnUrl({image:placeholderProductImageBg, type: 'product'})} />
                                 }
                             </div>
                         )

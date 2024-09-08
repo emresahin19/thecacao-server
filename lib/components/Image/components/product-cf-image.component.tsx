@@ -1,10 +1,11 @@
 import type { ImageProps } from '../image.props';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { imageToCdnUrl } from '@asim-ui/utils';
+import { imageToCdnUrl, imageToCFCdnUrl } from '@asim-ui/utils';
 
-const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, height, loading = "lazy", backgroundColor }) => {
-    const url = imageToCdnUrl({ image, width, height });
+const ProductCFImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, height, loading = "lazy", backgroundColor }) => {
+    const url = imageToCFCdnUrl({ image });
+    console.log(url)
     const [error, setError] = useState<boolean>(false);
 
     const handleImageError = (e: any) => {
@@ -46,4 +47,4 @@ const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, h
     )
 }
 
-export default ProductImage;
+export default ProductCFImage;

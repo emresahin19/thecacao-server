@@ -62,8 +62,8 @@ class MyDocument extends Document {
           <meta property="og:description" content={metaDescription} />
           <meta property="og:image" content={metaImage} />
           <meta property="og:image:type" content="image/webp" />
-          <meta property="og:image:width" content={metaImageWidth} />
-          <meta property="og:image:height" content={metaImageHeight} />
+          <meta property="og:image:width" content={metaImageWidth.toString()} />
+          <meta property="og:image:height" content={metaImageHeight.toString()} />
           <meta property="og:url" content="https://thecacao.com.tr" />
           <meta property="og:type" content="website" />
 
@@ -71,8 +71,8 @@ class MyDocument extends Document {
           <meta property="twitter:title" content={metaTitle} />
           <meta property="twitter:description" content={metaDescription} />
           <meta property="twitter:image:src" content={metaImage} />
-          <meta property="twitter:image:width" content={metaImageWidth} />
-          <meta property="twitter:image:height" content={metaImageHeight} />
+          <meta property="twitter:image:width" content={metaImageWidth.toString()} />
+          <meta property="twitter:image:height" content={metaImageHeight.toString()} />
           <meta property="twitter:site" content="@asim-ui" />
 
           <meta name="msapplication-TileColor" content={defaultColor} />

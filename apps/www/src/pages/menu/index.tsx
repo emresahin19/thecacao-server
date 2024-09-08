@@ -9,7 +9,7 @@ import { CategoryProps, ContactProps, MenuProps } from "@asim-ui/interfaces";
 import { Menu } from "@asim-ui/views";
 
 // trying to use getStaticProps instead of getServerSideProps
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     const { data } = await axios.get(`${apiUrl}/menu`) ?? {};
     const { items, contacts }: { items: CategoryProps[], contacts: ContactProps} = data;
 
@@ -17,8 +17,7 @@ export const getStaticProps = async () => {
         props: {
             data: items,
             contacts,
-        },
-        revalidate: 60, 
+        }
     };
 };
 

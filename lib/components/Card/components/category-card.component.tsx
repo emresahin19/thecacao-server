@@ -22,7 +22,7 @@ const viewTypes = [
     },
 ];
 
-const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, order, isActive, index, textColor = defaultColor, viewType = 'carousel' }) => {
+const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel' }) => {
     const listTypeStorage = getLocalStorageItem('listTypes') || {};
     const [catType, setCatType] = useState<CarouselProps['viewType']>(listTypeStorage[slug] ?? viewType);
     const categoryRef = useRef<HTMLDivElement>(null);
