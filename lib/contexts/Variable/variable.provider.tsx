@@ -2,7 +2,6 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import { VariableContext } from './variable.context';
 
 export const VariableProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [loaded, setLoaded] = useState<boolean>(false);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [isOverflow, setIsOverflow] = useState<boolean>(false);
     const [searchOpen, setSearchOpen] = useState<boolean>(false);
@@ -22,8 +21,6 @@ export const VariableProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
 
     const variables = {
-        loaded,
-        setLoaded,
         menuOpen,
         setMenuOpen,
         isOverflow,

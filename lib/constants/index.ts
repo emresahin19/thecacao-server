@@ -52,4 +52,4 @@ export const metaDescription = `The Cacao Chocolate & Coffee, Gebze'de çikolata
 export const metaImageWidth = 1920;
 export const metaImageHeight = 960;
 
-export const metaImage = `${cdnUrl}/mncropresize/${metaImageWidth}/${metaImageHeight}/image/the-cacao-logo.webp`
+export const metaImage = `${cdnUrl}/mncropresize/${metaImageWidth}/${metaImageHeight}/image/the-cacao-logo.png`

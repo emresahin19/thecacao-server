@@ -111,7 +111,7 @@ const serializeFilters = (filters: { [key: string]: any }) => {
 };
 
 const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
-    if(!image) return '/the-cacao-logo.webp';
+    if(!image) return '/images/the-cacao-logo.webp';
 
     const sizes = {
         'product': {
@@ -144,8 +144,7 @@ const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
 }
 
 const imageToCFCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
-    console.log(image)
-    if(!image) return '/the-cacao-logo.webp';
+    if(!image) return '/images/the-cacao-logo.webp';
 
     const size = `w=${productVariantWidth},h=${productVariantHeight},fit=${productVariantQuality}`;
     console.log(`${cfCdnUrl}${size}`)

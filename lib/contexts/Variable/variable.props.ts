@@ -1,7 +1,5 @@
 
 export interface VariableContextProps {
-    loaded: boolean;
-    setLoaded: React.Dispatch<React.SetStateAction<boolean>>;
     menuOpen: boolean;
     setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
     isOverflow: boolean;
