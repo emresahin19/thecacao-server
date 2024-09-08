@@ -32,7 +32,7 @@ const nextConfig = {
             // Add other turbo-specific configurations here
         },
     },
-    assetPrefix: '',
+    assetPrefix: devMode ? '' : 'https://cdn.asimthecat.com',
     images: {
         remotePatterns: [
             {

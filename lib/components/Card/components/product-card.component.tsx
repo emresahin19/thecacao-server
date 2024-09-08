@@ -7,24 +7,27 @@ import dynamic from 'next/dynamic';
 
 const PlaceholderImage = dynamic(() => import('../../Image/components/placeholder-image.component'));
 
-const ProductCard: React.FC<ProductProps> = memo(({
-    id, 
-    name, 
-    slug, 
-    fullpath = slug, 
-    description, 
-    price, 
-    category_id, 
-    recipe, 
-    extra, 
-    images = [], 
-    passive, 
-    diy, 
-    order, 
-    loading,
-    textColor = defaultColor,
-    listView = false,
-}) => {
+const ProductCard: React.FC<ProductProps> = memo((product) => {
+    const  { 
+        id, 
+        name, 
+        slug, 
+        fullpath, 
+        description, 
+        price, 
+        category_id, 
+        recipe, 
+        extra, 
+        images, 
+        textColor, 
+        passive, 
+        diy, 
+        order, 
+        loading, 
+        listView, 
+        onClick 
+    } = product;
+    
     const { handleShow } = useModal();
 
     const imageItems = useMemo(() => images.map((image, index) => (
@@ -40,11 +43,7 @@ const ProductCard: React.FC<ProductProps> = memo(({
     )), [images, name, loading]);
 
     const handleClick = useCallback(() => {
-        handleShow({
-            show: true,
-            component: <ProductDetailCard {...{ id, name, slug, fullpath, description, price, category_id, recipe, extra, images, passive, diy, order }} />,
-            route: `menu/${fullpath}`
-        });
+        onClick && onClick({id, name, slug, fullpath, description, price, category_id, recipe, extra, images, passive, diy, order});
     }, [handleShow, id, name, slug, fullpath, description, price, category_id, recipe, extra, images, passive, diy, order]);
 
     return (

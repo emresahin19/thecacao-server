@@ -29,6 +29,7 @@ export class MenuService {
             .where('category.passive = :passive', { passive: 0 })
             .andWhere('category.deleted = :deleted', { deleted: 0 }) 
             .orderBy('category.order', 'ASC')
+            .addOrderBy('product.order', 'ASC')
             .getMany();
 
         const formattedCategories = await Promise.all(

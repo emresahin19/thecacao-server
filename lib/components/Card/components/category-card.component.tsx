@@ -1,12 +1,12 @@
 "use client";
 import type { CarouselProps, CategoryProps, ProductProps } from "@asim-ui/interfaces";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { Carousel, ProductCard } from "@asim-ui/components";
+import { Carousel, ProductCard, ProductDetailCard } from "@asim-ui/components";
 import dynamic from "next/dynamic";
 import { defaultColor } from "@asim-ui/constants";
 import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/utils";
 import { CiViewBoard, CiViewList } from "react-icons/ci";
-import { useLoading } from "@asim-ui/contexts";
+import { useLoading, useModal } from "@asim-ui/contexts";
 
 const LogoIcon = dynamic(() => import('../../Logo/components/logo-icon.component'), { ssr: true });
 
@@ -27,7 +27,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     const listTypeStorage = getLocalStorageItem('listTypes') || {};
     const [catType, setCatType] = useState<CarouselProps['viewType']>(listTypeStorage[slug] ?? viewType);
     const [visibleProducts, setVisibleProducts] = useState<ProductProps[]>(products.slice(0, 2));
-
+    const { handleShow } = useModal();
     const { domContentLoaded } = useLoading();
 
     useEffect(() => {
@@ -36,11 +36,19 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
         }
     }, [domContentLoaded]);
 
+    const handleClick = (product: ProductProps) => {
+        handleShow({
+            show: true,
+            component: <ProductDetailCard {...product} />,
+            route: `menu/${product.fullpath}`
+        });
+    };
+    
     const items = useMemo(() => {
         return visibleProducts.map((product, i) => {
             const { id, name, slug, description, fullpath, price, category_id, recipe, extra, images, passive, diy, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
-
+           
             return (
                 <ProductCard
                     key={id}
@@ -60,15 +68,14 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     loading={isEager ? 'eager' : 'lazy'}
                     textColor={textColor}
                     listView={catType === 'list'}
+                    onClick={handleClick}
                 />
             );
         });
     }, [visibleProducts, catType, textColor, index, slug]);
 
-    // Use useMemo to cache the current view type details
     const currentViewType = useMemo(() => viewTypes.find((type) => type.value === catType), [catType]);
 
-    // Toggle between carousel and list view, store choice in local storage
     const showAll = useCallback(() => {
         const viewIndex = viewTypes.findIndex((type) => type.value === catType);
         const newType = viewTypes[(viewIndex + 1) % viewTypes.length].value as CarouselProps['viewType'];

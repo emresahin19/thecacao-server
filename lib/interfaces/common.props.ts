@@ -81,6 +81,7 @@ export interface ProductProps {
     listView?: boolean;
     createdAt?: string;
     updatedAt?: string;
+    onClick?: (product: ProductProps) => void;
 }
 
 export interface ContactProps {
