@@ -13,9 +13,6 @@ export class Category {
     slug: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    image: string;
-
-    @Column({ type: 'varchar', length: 255, nullable: true })
     color: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })

@@ -19,6 +19,8 @@ import { ProductService } from './product/product.service';
 import { SettingService } from './setting/setting.service';
 import { UserService } from './user/user.service';
 import { MenuService } from './menu/menu.service';
+import { RedisService } from './redis/redis.service';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
     imports: [
@@ -33,6 +35,7 @@ import { MenuService } from './menu/menu.service';
         SettingModule,
         UserModule,
         MenuModule,
+        RedisModule,
     ],
     providers: [
         CategoryService,
@@ -43,6 +46,7 @@ import { MenuService } from './menu/menu.service';
         SettingService,
         UserService,
         MenuService,
+        RedisService,
     ],
 })
 

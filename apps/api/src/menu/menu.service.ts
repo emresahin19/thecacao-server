@@ -5,6 +5,7 @@ import { Category } from '../category/entities/category.entity';
 import { Extra } from '../extra/entities/extra.entity';
 import { Setting } from '../setting/entities/setting.entity';
 import { ProductService } from '../product/product.service';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class MenuService {
@@ -16,9 +17,20 @@ export class MenuService {
         @InjectRepository(Setting)
         private readonly settingRepository: Repository<Setting>,
         private readonly productService: ProductService,
+        private readonly redisService: RedisService
     ) {}
 
     async getMenuData() {
+        const cacheKey = 'menu_data';
+        const cachedData = await this.redisService.get(cacheKey);
+
+        // Redis'te veri varsa direkt return et
+        if (cachedData) {
+            console.log('Cached Data');
+            return cachedData;
+        }
+        console.log('Not Cached Data');
+        // Redis'te veri yoksa sorguyu çalıştır
         const categories = await this.categoryRepository
             .createQueryBuilder('category')
             .select([
@@ -27,7 +39,7 @@ export class MenuService {
             ])
             .leftJoin('category.products', 'product')
             .where('category.passive = :passive', { passive: 0 })
-            .andWhere('category.deleted = :deleted', { deleted: 0 }) 
+            .andWhere('category.deleted = :deleted', { deleted: 0 })
             .orderBy('category.order', 'ASC')
             .addOrderBy('product.order', 'ASC')
             .getMany();
@@ -37,7 +49,7 @@ export class MenuService {
                 category.products = await Promise.all(
                     category.products.map(async (product) => {
                         product.images = await this.productService.getImageUrls(product.image_ids);
-                        // product.cfImages = await this.productService.getCfImageUrls(product.image_ids);
+                        delete product.image_ids; 
                         return product;
                     })
                 );
@@ -47,9 +59,10 @@ export class MenuService {
 
         const extras = await this.extraRepository
             .createQueryBuilder('extras')
+            .select(['extras.id', 'extras.name', 'extras.description', 'extras.price', 'extras.image'])
             .leftJoinAndSelect('extras.category', 'category')
             .where('extras.passive = :passive', { passive: 0 })
-            .select(['extras.*', 'category.name AS category_name'])
+            .andWhere('extras.deleted = :deleted', { deleted: 0 })
             .orderBy('extras.id', 'ASC')
             .getRawMany();
     
@@ -62,13 +75,17 @@ export class MenuService {
             instagram: instagram,
             linkedin: linkedin,
         };
-    
-        return {
+
+        const responseData = {
             status: true,
             items: formattedCategories || [],
             extras: extras || [],
             contacts: contacts || [],
         };
+
+        await this.redisService.set(cacheKey, responseData, 3600);
+
+        return responseData;
     }
 
     async getContactData() {

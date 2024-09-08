@@ -2,9 +2,9 @@ import React from 'react';
 import Head from "next/head";
 import Script from "next/script";
 import { Provider } from 'react-redux';
-import { VariableProvider, ModalProvider } from '@asim-ui/contexts';
+// import { VariableProvider, ModalProvider } from '@asim-ui/contexts';
 import { LayoutContainer } from "@asim-ui/layouts";
-import { apiDomain, googleTagManagerId, appMode } from "@asim-ui/constants";
+// import { apiDomain, googleTagManagerId, appMode } from "@asim-ui/constants";
 import { store } from '@asim-ui/store';
 import dynamic from 'next/dynamic';
 import "../../assets/scss/variables.scss";
@@ -23,7 +23,7 @@ function TheApp({ children }: { children: React.ReactNode }) {
                   <meta name="viewport" content="width=device-width, initial-scale=1" />
                 </Head>
 
-                {appMode === 'production' && (
+                {/* {appMode === 'production' && (
                   <>
                     <Script
                       src={`https://www.googletagmanager.com/gtag/js?id=${googleTagManagerId}`}
@@ -44,7 +44,7 @@ function TheApp({ children }: { children: React.ReactNode }) {
                       `}
                     </Script>
                   </>
-                )}
+                )} */}
                 {children}
               </LayoutContainer>
             </ModalProvider>
