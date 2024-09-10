@@ -1,11 +1,13 @@
 import React, { memo } from "react"
-import dynamic from "next/dynamic";
-import { IconButton, SearchModule, Sidebar } from "@asim-ui/components";
+import { IconButton } from "@asim-ui/components";
 import { useVariable } from "@asim-ui/contexts";
-import CategoryCarousel from "./category-thumbnail.component";
 import { MdMenu, MdOutlineSearch, MdOutlineSearchOff } from "react-icons/md";
+import Logo from "../../../Logo/components/logo-image.component";
+import dynamic from "next/dynamic";
 
-const Logo = dynamic(() => import('../../../Logo/components/logo.component'), { ssr: false });
+const Sidebar = dynamic(() => import('./sidebar.component'))
+const SearchModule = dynamic(() => import('../../../Search/components/search.component'))
+const CategoryCarousel = dynamic(() => import('./category-thumbnail.component'))
 
 const Header: React.FC = () => {
   const { 
@@ -50,7 +52,11 @@ const Header: React.FC = () => {
             </ul>
           </div>
 
-          <Logo width={58} />
+          <Logo
+            image="menu-logo.png"
+            width={58}
+            height={58}
+          />
 
           <div className="h-side">
             <ul className="header-list">

@@ -6,6 +6,7 @@
     "dev": "next dev -p 4020",
     "dev-turbo": "next dev --turbo -p 4020",
     "build": "next build",
-    "start": "next start -p 4020"
+    "start": "next start -p 4020",
+    "build-css": "npx sass lib/assets/variable.scss lib/assets/css/layout.css"
   }
 }

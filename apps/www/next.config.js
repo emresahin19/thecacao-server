@@ -5,7 +5,7 @@ const { composePlugins, withNx } = require('@nx/next');
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 
-const devMode = process.env.NODE_ENV === 'development';
+const devMode = process.env.NEXT_PUBLIC_APP_MODE === 'development';
 
 const nextConfig = {
     nx: {

@@ -111,7 +111,7 @@ const serializeFilters = (filters: { [key: string]: any }) => {
 };
 
 const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
-    if(!image) return '/images/the-cacao-logo.webp';
+    if(!image) return '/media/image/the-cacao-logo.webp';
 
     const sizes = {
         'product': {
@@ -138,16 +138,16 @@ const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
             ? { _width: width, _height: height }
             : { _width: null, _height: null }
 
-    const size = _width && _height ? `/mncropresize/${productVariantWidth}/${productVariantHeight}` : '';
+    const size = _width && _height ? `/mncropresize/${_width}/${_height}` : '';
 
-    return `${cdnUrl}${size}/image/${image}`;
+    return `${cdnUrl}${size}/media/image/${image}`;
 }
 
 const imageToCFCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
-    if(!image) return '/images/the-cacao-logo.webp';
+    if(!image) return '/media/image/the-cacao-logo.webp';
 
     const size = `w=${productVariantWidth},h=${productVariantHeight},fit=${productVariantQuality}`;
-    console.log(`${cfCdnUrl}${size}`)
+    
     return `${image}${size}`;
 }
 

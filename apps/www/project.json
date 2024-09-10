@@ -4,5 +4,12 @@
   "sourceRoot": "apps/www",
   "projectType": "application",
   "tags": [],
-  "targets": {}
+  "targets": {
+    "build-css": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx sass lib/assets/scss/variables.scss lib/assets/css/style.css"
+      }
+    }
+  }
 }

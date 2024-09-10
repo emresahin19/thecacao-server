@@ -1,21 +1,18 @@
 import React from 'react';
 import Head from "next/head";
-import Script from "next/script";
 import { Provider } from 'react-redux';
-// import { VariableProvider, ModalProvider } from '@asim-ui/contexts';
+import { VariableProvider, ModalProvider, LoadingProvider } from '@asim-ui/contexts';
 import { LayoutContainer } from "@asim-ui/layouts";
-// import { apiDomain, googleTagManagerId, appMode } from "@asim-ui/constants";
 import { store } from '@asim-ui/store';
-import dynamic from 'next/dynamic';
-import "../../assets/scss/variables.scss";
 
-const DynamicLoadingProvider = dynamic(() => import('../../contexts/Loading/loading.provider'), { ssr: false });
+// import { apiDomain, googleTagManagerId, appMode } from "@asim-ui/constants";
+// import Script from "next/script";
 
 function TheApp({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Provider store={store}>
-        <DynamicLoadingProvider>
+        <LoadingProvider>
           <VariableProvider>
             <ModalProvider>
               <LayoutContainer>
@@ -49,7 +46,7 @@ function TheApp({ children }: { children: React.ReactNode }) {
               </LayoutContainer>
             </ModalProvider>
           </VariableProvider>
-        </DynamicLoadingProvider>
+        </LoadingProvider>
       </Provider>
     </>
   );

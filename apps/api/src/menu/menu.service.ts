@@ -59,7 +59,7 @@ export class MenuService {
 
         const extras = await this.extraRepository
             .createQueryBuilder('extras')
-            .select(['extras.id', 'extras.name', 'extras.description', 'extras.price', 'extras.image'])
+            .select(['extras.id', 'extras.name', 'extras.description', 'extras.price', 'extras.image', 'category.name'])
             .leftJoinAndSelect('extras.category', 'category')
             .where('extras.passive = :passive', { passive: 0 })
             .andWhere('extras.deleted = :deleted', { deleted: 0 })

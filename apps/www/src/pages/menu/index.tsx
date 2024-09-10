@@ -2,11 +2,11 @@
 import { apiUrl } from "@asim-ui/constants";
 import axios from "axios";
 import Head from "next/head";
+import { CategoryProps, ContactProps, MenuProps } from "@asim-ui/interfaces";
+import { Menu } from "@asim-ui/views";
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setContacts, setMenuData } from '@asim-ui/store';
-import { CategoryProps, ContactProps, MenuProps } from "@asim-ui/interfaces";
-import { Menu } from "@asim-ui/views";
 import { useLoading } from "@asim-ui/contexts";
 
 // trying to use getStaticProps instead of getServerSideProps
@@ -39,7 +39,10 @@ const MenuHome: React.FC<MenuProps> = ({ data, contacts }) => {
                 <link rel="canonical" href="https://thecacao.com.tr/menu" />
             </Head>
 
-            <Menu />
+            <Menu 
+                data={data}
+                contacts={contacts}
+            />
         </>
     );
 };

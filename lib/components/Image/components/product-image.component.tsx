@@ -13,7 +13,7 @@ const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, h
 
     if(error) return (
         <Image
-            src={'/images/the-cacao-logo.webp'}
+            src={'/image/the-cacao-logo.webp'}
             alt={alt}
             className='image'
             width={width}

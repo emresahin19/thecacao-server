@@ -1,15 +1,12 @@
-"use client";
 import type { CarouselProps, CategoryProps, ProductProps } from "@asim-ui/interfaces";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { Carousel, ProductCard, ProductDetailCard } from "@asim-ui/components";
-import dynamic from "next/dynamic";
+import { Carousel, LogoIcon, ProductDetailCard } from "@asim-ui/components";
 import { defaultColor } from "@asim-ui/constants";
 import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/utils";
 import { CiViewBoard, CiViewList } from "react-icons/ci";
 import { useLoading, useModal } from "@asim-ui/contexts";
 
-const LogoIcon = dynamic(() => import('../../Logo/components/logo-icon.component'), { ssr: true });
-
+import ProductCard from "../../Card/components/product-card.component";
 const viewTypes = [
     {
         value: 'carousel',
@@ -26,15 +23,15 @@ const viewTypes = [
 const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel' }) => {
     const listTypeStorage = getLocalStorageItem('listTypes') || {};
     const [catType, setCatType] = useState<CarouselProps['viewType']>(listTypeStorage[slug] ?? viewType);
-    const [visibleProducts, setVisibleProducts] = useState<ProductProps[]>(products.slice(0, 2));
     const { handleShow } = useModal();
-    const { domContentLoaded } = useLoading();
+    // const [visibleProducts, setVisibleProducts] = useState<ProductProps[]>(products.slice(0, 2));
+    // const { domContentLoaded } = useLoading();
 
-    useEffect(() => {
-        if (domContentLoaded) {
-            setVisibleProducts(products);
-        }
-    }, [domContentLoaded]);
+    // useEffect(() => {
+    //     if (domContentLoaded) {
+    //         setVisibleProducts(products);
+    //     }
+    // }, [domContentLoaded]);
 
     const handleClick = (product: ProductProps) => {
         handleShow({
@@ -45,7 +42,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     };
     
     const items = useMemo(() => {
-        return visibleProducts.map((product, i) => {
+        return products.map((product, i) => {
             const { id, name, slug, description, fullpath, price, category_id, recipe, extra, images, passive, diy, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
            
@@ -72,7 +69,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                 />
             );
         });
-    }, [visibleProducts, catType, textColor, index, slug]);
+    }, [products, catType, textColor, index, slug]);
 
     const currentViewType = useMemo(() => viewTypes.find((type) => type.value === catType), [catType]);
 
