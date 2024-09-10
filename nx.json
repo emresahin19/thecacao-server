@@ -8,7 +8,6 @@
     ],
     "sharedGlobals": []
   },
-  
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"]

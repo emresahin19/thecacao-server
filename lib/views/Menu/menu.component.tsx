@@ -1,5 +1,5 @@
 import React from "react";
-import { MenuProps, ProductProps } from "@asim-ui/interfaces";
+import { CategoryCarouselItemProps, MenuProps, ProductProps } from "@asim-ui/interfaces";
 // import { sleep } from "@asim-ui/utils";
 // import { useLoading, useModal } from "@asim-ui/contexts";
 import { useRouter } from "next/router";
@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 // import { RootState } from "@asim-ui/store";
 
 import CategorySection from '../../components/Card/components/category-card.component';
+import CategoryCarousel from '../../components/Layout/components/www/category-thumbnail.component';
+// import { CategoryCarousel } from "@asim-ui/components";
 // import ProductDetailCard from '../../components/Card/components/product-detail-card.component';
 // import { CategorySection, ProductDetailCard } from "@asim-ui/components";
 // import dynamic from "next/dynamic";
@@ -17,7 +19,8 @@ import CategorySection from '../../components/Card/components/category-card.comp
 // const initialObjectCount = 3;
 
 const Menu: React.FC<MenuProps> = ({ data, contacts }) => {
-    const router = useRouter();
+    const catData = data && data.map((category, i) => ({id: category.id, name: category.name, isActive: false}));
+    // const router = useRouter();
     // const { handleShow } = useModal();
     // const { domContentLoaded } = useLoading();
     // const { data, selectedProduct } = useSelector((state: RootState) => state.menu);
@@ -41,6 +44,7 @@ const Menu: React.FC<MenuProps> = ({ data, contacts }) => {
 
     return (
         <div className="menu-container">
+            {data && <CategoryCarousel data={catData as CategoryCarouselItemProps[]} />}
             {data && data.map((category, i) => (
                 <CategorySection
                     key={category.id}
@@ -52,7 +56,7 @@ const Menu: React.FC<MenuProps> = ({ data, contacts }) => {
                     products={category.products}
                     color={category.color}
                     textColor={category.textColor}
-                    isActive={router.query.categorySlug === category.slug}
+                    isActive={false}
                 />
             ))}
 

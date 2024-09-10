@@ -86,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
             }
         }
-        setIsOverflow(open)
+        setIsOverflow(!!open)
     }, [open]);
 
     return (

@@ -1,10 +1,9 @@
 import React from 'react';
-import { IconButtonProps } from '../button.props';
 import { MdMenu } from 'react-icons/md';
 import IconButton from './icon-button.component';
 import { useVariable } from '@asim-ui/contexts';
 
-const HamburgerButton: React.FC<IconButtonProps> = ({ icon, onClick = () => {}, disabled = false, width=16, height=width, children, ariaLabel, className }) => {
+const HamburgerButton: React.FC = () => {
     const { 
       menuOpen, 
       setMenuOpen,
@@ -19,7 +18,7 @@ const HamburgerButton: React.FC<IconButtonProps> = ({ icon, onClick = () => {}, 
     return (
         <IconButton 
             width={24}
-            onClick={onClick} 
+            onClick={handleHamburger} 
             ariaLabel="Menüyü Aç"
         >
             <MdMenu />

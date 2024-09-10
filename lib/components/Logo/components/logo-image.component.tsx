@@ -4,7 +4,7 @@ import Image from "next/image"
 import React from "react"
 
 const LogoImage: React.FC<ImageProps> = ({image, width=16, height=16}) => {
-    const url = imageToCdnUrl({ image, width, height });
+    const url = imageToCdnUrl({ image, width: width * 2, height: height * 2 });
     
     return (
         <Image 
@@ -12,7 +12,8 @@ const LogoImage: React.FC<ImageProps> = ({image, width=16, height=16}) => {
             width={width}
             height={height}
             alt="icon"
-            priority={true} 
+            priority={true}
+            loading="eager"
         />
     )
 }

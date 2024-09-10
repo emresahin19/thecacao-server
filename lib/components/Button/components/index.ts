@@ -4,6 +4,7 @@ import Button from "./button.component";
 import ThemeSwitcher from "./theme-switcher.component";
 import LogoutButton from "./logout.component";
 import HamburgerButton from "./hamburger-button.component";
+import SearchButton from "./search-button.component";
 
 export {
     IconButton,
@@ -12,4 +13,5 @@ export {
     ThemeSwitcher,
     LogoutButton,
     HamburgerButton,
+    SearchButton,
 }

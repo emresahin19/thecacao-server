@@ -23,7 +23,17 @@ export interface MenuNavBarItem {
 }
 
 export interface SidebarProps {
-    open: boolean;
+    open?: boolean;
     onChange?: (open: boolean) => void;
     onClose?: () => void;
+}
+
+export interface CategoryCarouselItemProps {
+    id: number;
+    name: string;
+    isActive?: boolean;
+}
+
+export interface CategoryCarouselProps {
+    data: CategoryCarouselItemProps[];
 }

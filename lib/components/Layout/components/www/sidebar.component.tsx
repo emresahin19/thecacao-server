@@ -12,7 +12,7 @@ import { ContactProps } from "@asim-ui/interfaces";
 
 const Logo = dynamic(() => import('../../../Logo/components/logo.component'), { ssr: false });
 
-const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = () => {
     const [contact, setContact] = useState<ContactProps>({
         email: '',
         phone: '',
@@ -24,10 +24,18 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
     const startXRef = useRef<number>(0);
     const [factor, setFactor] = useState<number>(1); 
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const { resetModal } = useModal();
-    const { setIsOverflow } = useVariable();
     const contacts = useSelector((state: RootState) => state.menu.contacts); 
+    const { resetModal } = useModal();
 
+    const { 
+        menuOpen, 
+        setMenuOpen,
+        resetVariables,
+        searchOpen,
+        setSearchOpen,
+        setIsOverflow
+    } = useVariable();
+    
     useEffect(() => {
         contacts && setContact(contacts);
     }, [contacts]);
@@ -63,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
             sidebarRef.current.style.transition = 'transform 0.3s ease';
             if (diffX < -50) {
                 sidebarRef.current.style.transform = 'translateX(-100%)';
-                onClose && setTimeout(onClose, 300);
+                setTimeout(() => setMenuOpen(false), 300);
             } else {
                 sidebarRef.current.style.transform = 'translateX(0)';
             }
@@ -74,14 +82,14 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = 'transform 0.3s ease';
             sidebarRef.current.style.transform = 'translateX(-100%)';
-            onClose && setTimeout(onClose, 300);
+            setTimeout(() => setMenuOpen(false), 300);
         }
     };
 
     useEffect(() => {
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = 'transform 0.3s ease';
-            if (open) {
+            if (menuOpen) {
                 resetModal();
                 sidebarRef.current.style.transform = 'translateX(0)';
                 setFactor(0);
@@ -89,13 +97,13 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
                 sidebarRef.current.style.transform = 'translateX(-100%)';
                 setFactor(1);
             }
-            setIsOverflow(open)
+            setIsOverflow(!!menuOpen)
         }
-    }, [open]);
+    }, [menuOpen]);
 
     return (
         <>
-            <div className={`sidebar-menu ${open ? 'open' : ''}`} >
+            <div className={`sidebar-menu ${menuOpen ? 'open' : ''}`} >
                 <div 
                     className="s-container"
                     ref={sidebarRef}
@@ -116,7 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
                                         if (sidebarRef.current) {
                                             sidebarRef.current.style.transition = 'transform 0.3s ease';
                                             sidebarRef.current.style.transform = 'translateX(-100%)';
-                                            onClose && setTimeout(onClose, 300);
+                                            setTimeout(() => setMenuOpen(false), 300);
                                         }
                                     }}
                                     role="button"
@@ -165,9 +173,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
                         </ul>
                     )}
                 </div>
-                {open && 
+                {menuOpen && 
                     <div 
-                        className={`backdrop ${open ? 'open' : ''}`} 
+                        className={`backdrop ${menuOpen ? 'open' : ''}`} 
                         onClick={handleBackdropClick}
                         style={{
                             // backdropFilter: `blur(${7 - 7*factor}px)`,

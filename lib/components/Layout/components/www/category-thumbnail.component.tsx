@@ -1,10 +1,8 @@
 import React from "react"
-import { RootState } from '@asim-ui/store';
-import { useSelector } from 'react-redux';
-import { CategoryProps } from "@asim-ui/interfaces";
+import { CategoryCarouselItemProps, CategoryCarouselProps, CategoryProps } from "@asim-ui/interfaces";
 
-const CategoryCarousel: React.FC = () => {
-    const { data } = useSelector((state: RootState) => state.menu);
+
+const CategoryCarousel: React.FC<CategoryCarouselProps> = ({data}) => {
 
     const handleCategoryClick = (id: number) => {
         const element = document.getElementById(`category-${id}`);
@@ -18,7 +16,7 @@ const CategoryCarousel: React.FC = () => {
     return (
     
         <div className="category-carousel">
-            {data.map((category: CategoryProps) => 
+            {data.map((category: CategoryCarouselItemProps) => 
                 <button
                     key={`cc-${category.id}`}
                     aria-label={`${category.name} Kategorisine Git`}
