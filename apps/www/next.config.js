@@ -23,6 +23,23 @@ const nextConfig = {
         }
       ]
     },
+    async headers() {
+        return [
+            {
+                // Apply these headers to all routes in your application.
+                source: "/fonts/:path*",
+                headers: [
+                    { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+                ],
+            },
+            // {
+            //     source: "/critical-path.css",
+            //     headers: [
+            //         { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+            //     ],
+            // },
+        ];
+    },
     // compress: true,
     reactStrictMode: true,
     // swcMinify: !devMode, // disabled for performance issue

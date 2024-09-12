@@ -5,6 +5,8 @@ import BackToStart from './back-to-start.component';
 import { carouselLengthOnScreen, slideWidthDefault } from '@asim-ui/constants';
 import { sleep } from '@asim-ui/utils';
 
+const cdnUrl = 'https://cdn.asimthecat.com';
+
 const Carousel: React.FC<CarouselProps> = ({ 
     items, 
     arrows = false, 
@@ -316,7 +318,7 @@ const Carousel: React.FC<CarouselProps> = ({
                 swipeTransition && (
                     <div className="swipe-transition-hand">
                         <div className="path"></div>
-                        <div className="hand-icon"></div>
+                        <div className="hand-icon" style={{backgroundImage: `url(${cdnUrl}/media/image/swipe-hand.png)`}}></div>
                     </div>
                 )
             }
