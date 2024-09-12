@@ -278,6 +278,7 @@
     width: 100%;
     padding-top: calc(var(--header-height) + 50px);
     min-height: 1000px;
+    z-index: 1;
 }
 
 .category-carousel {
