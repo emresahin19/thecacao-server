@@ -26,9 +26,10 @@ export class MenuService {
 
         // Redis'te veri varsa direkt return et
         if (cachedData) {
+            console.log('serve from cache');
             return cachedData;
         }
-
+        console.log('serve from db');
         // Redis'te veri yoksa sorguyu çalıştır
         const categories = await this.categoryRepository
             .createQueryBuilder('category')
