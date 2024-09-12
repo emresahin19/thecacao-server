@@ -4,10 +4,8 @@ import { CategoryCarouselItemProps, MenuProps } from "@asim-ui/interfaces";
 import CategorySection from '../../components/Card/components/category-card.component';
 // import dynamic from "next/dynamic";
 import CategoryCarousel from '../../components/Layout/components/www/category-thumbnail.component';
-import dynamic from "next/dynamic";
 
 // const CategoryCarousel = dynamic(() => import('../../components/Layout/components/www/category-thumbnail.component'), { ssr: false });
-const Modal = dynamic(() => import('../../components/Modal/components/modal.component'), { ssr: false });
 
 const Menu: React.FC<MenuProps> = ({ data, contacts }) => {
     const catData = data && data.map((category, i) => ({id: category.id, name: category.name, isActive: false}));
@@ -61,7 +59,6 @@ const Menu: React.FC<MenuProps> = ({ data, contacts }) => {
                     />
                 ))} */}
             </div>
-            <Modal />
         </>
     );
 };
