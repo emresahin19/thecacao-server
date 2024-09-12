@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service'
+import { CreateLoginDto } from './dto/create-login.dto';
+import { StatusCode } from '../common/constants';
 
 @Injectable()
 export class AuthService {
@@ -18,16 +20,25 @@ export class AuthService {
         return null;
     }
 
-    async login(email: string, password: string) {
-        const user = await this.usersService.findByEmail(email);
+    async login(loginDto: CreateLoginDto) {
+        const user = await this.usersService.findByEmail(loginDto.email);
     
-        if (!user || user.password !== password) {
-          throw new Error('Invalid credentials');
+        if (!user || user.password !== loginDto.password) {
+            throw new HttpException(
+                StatusCode.UNAUTHORIZED.message,
+                StatusCode.UNAUTHORIZED.status,
+            );
         }
     
         const payload = { email: user.email, sub: user.id };
         return {
+            status: true,
             access_token: this.jwtService.sign(payload),
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            },
         };
     }
 }

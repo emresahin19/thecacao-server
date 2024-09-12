@@ -7,21 +7,32 @@ const LoadingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            const handleDomContentLoaded = () => {
+            const handleLoad = () => {
                 setDomContentLoaded(true);
+                setLoaded(true); // Tüm içerik yüklendiğinde loaded state'ini true yapıyoruz
             };
     
-            if (document.readyState === "complete" || document.readyState === "interactive") {
-                handleDomContentLoaded();
+            // Tarayıcıda döküman tam yüklendiyse hemen loaded yap
+            if (document.readyState === "complete") {
+                handleLoad();
             } else {
-                window.addEventListener("DOMContentLoaded", handleDomContentLoaded);
+                // Eğer döküman henüz tam yüklenmediyse "load" eventini dinle
+                window.addEventListener("load", handleLoad);
             }
-    
+
+            // Hata durumlarını yakalamak için timeout ekliyoruz (örneğin 10 saniye sonra)
+            const timeout = setTimeout(() => {
+                if (!loaded) {
+                    setLoaded(true); // 10 saniye sonra loaded durumunu true yapıyoruz
+                }
+            }, 10000);
+
             return () => {
-                window.removeEventListener("DOMContentLoaded", handleDomContentLoaded);
+                window.removeEventListener("load", handleLoad);
+                clearTimeout(timeout); // Cleanup timeout
             };
         }
-    }, []);
+    }, [loaded]);
 
     const values = {
         loaded,

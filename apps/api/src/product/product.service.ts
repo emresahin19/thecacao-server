@@ -40,6 +40,17 @@ export class ProductService {
         await this.productRepository.delete(id);
     }
 
+    async getImages(image_ids: number[]): Promise<Image[]> {
+        if (!image_ids || image_ids.length === 0) {
+            return [];
+        }
+
+        return this.imageRepository
+            .createQueryBuilder('image')
+            .whereInIds(image_ids)
+            .getMany();
+    }
+
     async getImageUrls(image_ids: number[]): Promise<string[]> {
         if (!image_ids || image_ids.length === 0) {
             return [];
@@ -66,13 +77,25 @@ export class ProductService {
         return images.map((image) => image.url);
     }
 
+    async getProductWithImages(productId: number): Promise<Product> {
+        const product = await this.productRepository.findOne({ where: { id: productId } });
+
+        if (product.image_ids && product.image_ids.length > 0) {
+            product.images = await this.getImages(product.image_ids);
+        } else {
+            product.images = [];
+        }
+
+        return product;
+    }
+
     async getProductWithImageUrls(productId: number): Promise<Product> {
         const product = await this.productRepository.findOne({ where: { id: productId } });
 
         if (product.image_ids && product.image_ids.length > 0) {
-            product.images = await this.getImageUrls(product.image_ids);
+            product.image_urls = await this.getImageUrls(product.image_ids);
         } else {
-            product.images = [];
+            product.image_urls = [];
         }
 
         return product;
@@ -83,9 +106,9 @@ export class ProductService {
 
         for (const product of products) {
             if (product.image_ids && product.image_ids.length > 0) {
-                product.images = await this.getImageUrls(product.image_ids);
+                product.image_urls = await this.getImageUrls(product.image_ids);
             } else {
-                product.images = [];
+                product.image_urls = [];
             }
         }
 

@@ -7,18 +7,18 @@ import { createHeaders, handleErrorResponse } from '@asim-ui/utils';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
         const cookies = new Cookies(req, res);
-        const xsrfToken = cookies.get('XSRF-TOKEN');
-
-        if (!xsrfToken) {
-            return res.status(401).json({ error: 'CSRF token or session not found' });
+        const jwtToken = cookies.get('jwt'); // JWT token'ı cookie'den alıyoruz
+    
+        if (!jwtToken) {
+            return res.status(401).json({ error: 'Authentication token not found' });
         }
-
+    
         const headers = {
-            ...createHeaders(req, xsrfToken),
+            Authorization: `Bearer ${jwtToken}`, // JWT token'ı Bearer token olarak header'da gönderiyoruz
         };
-
+    
         try {
-            const response = await axios.get(`${apiUrl}/api/categories/input-data`, { headers });
+            const response = await axios.get(`${apiUrl}/categories/input-data`, { headers });
 
             return res.status(200).json(response.data);
         } catch (err: any) {

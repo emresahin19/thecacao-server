@@ -42,7 +42,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     
     const items = useMemo(() => {
         return products.map((product, i) => {
-            const { id, name, slug, description, fullpath, price, category_id, recipe, extra, images, passive, diy, order }: ProductProps = product;
+            const { id, name, slug, description, fullpath, price, category_id, recipe, extra, image_urls, passive, diy, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
            
             return (
@@ -57,7 +57,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     category_id={category_id}
                     recipe={recipe}
                     extra={extra}
-                    images={images}
+                    image_urls={image_urls}
                     passive={passive}
                     diy={diy}
                     order={order}

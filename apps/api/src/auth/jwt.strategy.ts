@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+    constructor(
+        private userService: UserService,
+    ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Bearer token olarak JWT'yi al
             ignoreExpiration: false,
@@ -13,7 +16,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-        // Token doğrulandıktan sonra kullanıcı bilgilerini döner
-        return { userId: payload.sub, email: payload.email };
+        // JWT'den gelen payload (sub: user id)
+        const user = await this.userService.findOne(payload.sub); // UserService ile user'ı alıyoruz
+        if (!user) {
+          throw new Error('Unauthorized');
+        }
+        return user; // Kullanıcıyı geri döndürüyoruz
     }
 }

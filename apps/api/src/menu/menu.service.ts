@@ -26,10 +26,9 @@ export class MenuService {
 
         // Redis'te veri varsa direkt return et
         if (cachedData) {
-            console.log('Cached Data');
             return cachedData;
         }
-        console.log('Not Cached Data');
+
         // Redis'te veri yoksa sorguyu çalıştır
         const categories = await this.categoryRepository
             .createQueryBuilder('category')
@@ -48,7 +47,7 @@ export class MenuService {
             categories.map(async (category) => {
                 category.products = await Promise.all(
                     category.products.map(async (product) => {
-                        product.images = await this.productService.getImageUrls(product.image_ids);
+                        product.image_urls = await this.productService.getImageUrls(product.image_ids);
                         delete product.image_ids; 
                         return product;
                     })

@@ -95,15 +95,16 @@ const ProductTable = () => {
                         key: 'images', 
                         label: 'Resim', 
                         render: (product: ProductProps) => (
-                            <div className="avatar">
-                                {product.images.length > 0 &&
-                                    <img src={`${product.images[0]?.url}`} />
-                                }
-                                {product.images.length === 0 &&
-                                    <img src={imageToCdnUrl({image:placeholderProductImageBg, type: 'product'})} />
-                                }
-                            </div>
-                        )
+                            product.images && (
+                                <div className="avatar">
+                                    {product.images.length > 0 &&
+                                        <img src={`${product.images[0]?.url}`} />
+                                    }
+                                    {product.images.length === 0 &&
+                                        <img src={imageToCdnUrl({image:placeholderProductImageBg, type: 'product'})} />
+                                    }
+                                </div>
+                        ))
                     },
                     { 
                         key: 'name', 

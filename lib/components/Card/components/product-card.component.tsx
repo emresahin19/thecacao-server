@@ -17,7 +17,7 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
         category_id, 
         recipe, 
         extra, 
-        images, 
+        image_urls, 
         textColor, 
         passive, 
         diy, 
@@ -29,7 +29,7 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
     
     const { handleShow } = useModal();
 
-    const imageItems = useMemo(() => images.map((image, index) => (
+    const imageItems = image_urls && useMemo(() => image_urls.map((image, index) => (
         <ProductImage 
             key={index}
             image={`${image}`} 
@@ -39,16 +39,16 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
             fit={productVariantQuality}
             loading={loading}
         />
-    )), [images, name, loading]);
+    )), [image_urls, name, loading]);
 
     const handleClick = useCallback(() => {
-        onClick && onClick({id, name, slug, fullpath, description, price, category_id, recipe, extra, images, passive, diy, order});
-    }, [handleShow, id, name, slug, fullpath, description, price, category_id, recipe, extra, images, passive, diy, order]);
+        onClick && onClick({id, name, slug, fullpath, description, price, category_id, recipe, extra, image_urls, passive, diy, order});
+    }, [handleShow, id, name, slug, fullpath, description, price, category_id, recipe, extra, image_urls, passive, diy, order]);
 
     return (
         <div className={`card ${listView ? 'list' : ''}`} onClick={handleClick} role="button" aria-label={`${name} Detay`}>
             <div className="card-image">
-                {images.length > 1 ? (
+                {imageItems && image_urls.length > 1 ? (
                     <Carousel 
                         items={imageItems} 
                         rowItemsCount={1}
@@ -58,7 +58,7 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
                     />
                 ) : (
                     <div className="carousel-item">
-                        {imageItems[0] || (
+                        {imageItems && imageItems[0] || (
                             <PlaceholderImage 
                                 alt={name} 
                                 loading={loading}

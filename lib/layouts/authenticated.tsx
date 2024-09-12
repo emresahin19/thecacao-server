@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { DashFooter, DashHeader, Footer, Modal } from '@asim-ui/components';
-import { useAppSelector } from '@asim-ui/store';
+import { closeSidebar, openSidebar, useAppDispatch, useAppSelector } from '@asim-ui/store';
 import { useRouter } from 'next/router';
 import { useLoading } from '@asim-ui/contexts';
 
@@ -12,13 +12,32 @@ export default function LayoutAuthenticated({ children }: Props) {
     const isOpen = useAppSelector((state) => state.sidebar.isOpen);
     const [isMounted, setIsMounted] = useState(false);
     const { setLoaded } = useLoading();
+    const dispatch = useAppDispatch();
     const router = useRouter();
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth <= 768) {
+                dispatch(closeSidebar()); 
+            } else {
+                dispatch(openSidebar());
+            }
+        };
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [dispatch]);
 
     useEffect(() => {
         setIsMounted(true);
 
-        const handleStart = () => setLoaded(true);
-        const handleComplete = () => setLoaded(false);
+        const handleStart = () => setLoaded(false);
+        const handleComplete = () => setLoaded(true);
 
         router.events.on('routeChangeStart', handleStart);
         router.events.on('routeChangeComplete', handleComplete);

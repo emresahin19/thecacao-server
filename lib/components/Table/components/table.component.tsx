@@ -4,7 +4,7 @@ import { placeholderProductImageBg } from '@asim-ui/constants';
 import { imageToCdnUrl } from '@asim-ui/utils';
 
 const Table = <T extends { id: string | number, passive?: number }>({
-    data,
+    data = [],
     columns,
     onRowAction,
     onPageChange,

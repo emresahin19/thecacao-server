@@ -4,10 +4,10 @@ import { Carousel, PlaceholderImage, ProductImage } from '@asim-ui/components';
 import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality, extraImageWidth, extraImageHeight, extraImageFit } from '@asim-ui/constants';
 import { useLoading } from '@asim-ui/contexts';
 
-const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, images }) => {
+const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, image_urls }) => {
     const { loaded } = useLoading();
 
-    const imgItems = images.map((image) => 
+    const imageItems = image_urls && image_urls.map((image) => 
         <ProductImage 
             image={`${image}`} 
             alt={name} 
@@ -49,29 +49,26 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
     return (
         <div className='detail-card'>
             <div className="image">
-                {loaded && imgItems.length > 1 && (
+                {imageItems && image_urls.length > 1 ? (
                     <Carousel 
-                        items={imgItems} 
+                        items={imageItems} 
                         rowItemsCount={1}
                         dots={true}
-                        // initialStart={true}
                     />
-                )}
-
-                {loaded && imgItems.length === 1 && (
+                ) : (
                     <div className="carousel-item">
-                        {imgItems[0]}
+                        {imageItems && imageItems[0] || (
+                            <PlaceholderImage 
+                                alt={name} 
+                                backgroundColor='transparent'
+                                width={productDetailVariantWidth}
+                                height={productDetailVariantHeight}
+                            />
+                        )}
+                        <div className='counter' />
                     </div>
                 )}
 
-                {loaded && imgItems.length === 0 && (
-                    <PlaceholderImage 
-                        alt={name} 
-                        backgroundColor='transparent'
-                        width={productDetailVariantWidth}
-                        height={productDetailVariantHeight}
-                    />
-                )}
             </div>
             <div className='content'>
                 <h3 className='title'>{name}</h3>

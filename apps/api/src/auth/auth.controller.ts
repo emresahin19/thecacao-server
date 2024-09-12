@@ -1,18 +1,41 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response } from 'express'; // Add this line
+import { UserService } from '../user/user.service';
+import { Response, Request } from 'express'; // Add this line
+import { CreateLoginDto } from './dto/create-login.dto';
+import { StatusCode } from '../common/constants';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private userService: UserService
     ) {
-
+    }
+    @Post('login')
+    async login(@Body() loginDto: CreateLoginDto, @Res() res: Response) {
+        try {
+            const result = await this.authService.login(loginDto);
+            return res.status(StatusCode.SUCCESS.status).json({
+                message: StatusCode.SUCCESS.message,
+                ...result,
+            });
+        } catch (error) {
+            return res.status(StatusCode.UNAUTHORIZED.status).json({
+                message: StatusCode.UNAUTHORIZED.message,
+            });
+        }
     }
     
-    @Post('login')
-    async login(@Body() body, @Res() res: Response) { // Add 'Response' as a parameter
-        const { access_token } = await this.authService.login(body.email, body.password);
-        return res.json(access_token);
+    @UseGuards(JwtAuthGuard)
+
+    @Get('user')
+    getAuthenticatedUser(@Req() req: Request, @Res() res: Response) {
+        const user = req.user;
+        return res.status(StatusCode.SUCCESS.status).json({
+            message: StatusCode.SUCCESS.message,
+            user,
+        });
     }
 }

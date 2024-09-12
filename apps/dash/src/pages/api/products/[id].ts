@@ -1,21 +1,21 @@
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import Cookies from 'cookies';
 import { apiUrl } from '@asim-ui/constants';
 import { createHeaders, handleErrorResponse } from '@asim-ui/utils';
 
+export const config = {
+    api: {
+        bodyParser: false, // BodyParser'ı kapatıyoruz, çünkü form-data kullanabiliriz
+    },
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const cookies = new Cookies(req, res);
-    const xsrfToken = cookies.get('XSRF-TOKEN');
+    const jwtToken = cookies.get('jwt'); // JWT token'ı cookie'den alıyoruz
 
-    if (!xsrfToken) {
-        return res.status(401).json({ error: 'CSRF token or session not found' });
+    if (!jwtToken) {
+        return res.status(401).json({ error: 'Authentication token not found' });
     }
 
     const { id } = req.query;
@@ -23,20 +23,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         let response;
         const headers = {
-            ...createHeaders(req, xsrfToken),
+            Authorization: `Bearer ${jwtToken}`, // JWT token'ı Bearer token olarak ekliyoruz
         };
-        
+
         switch (req.method) {
             case 'GET':
-                response = await axios.get(`${apiUrl}/api/products/${id}`, { headers });
+                response = await axios.get(`${apiUrl}/products/${id}`, { headers });
                 break;
                 
             case 'POST':
-                response = await axios({
-                    method: 'post',
-                    url: `${apiUrl}/api/products`,
-                    data: req, // Forward the original request data
-                    headers: {...headers, ...req.headers},
+                response = await axios.post(`${apiUrl}/products`, req.body, {
+                    headers: { ...headers, ...req.headers },
                     maxContentLength: Infinity,
                     maxBodyLength: Infinity,
                     timeout: 45000,
@@ -44,12 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
 
             case 'PUT':
-                // using method override to send a PUT request
-                response = await axios({
-                    method: 'post',
-                    url: `${apiUrl}/api/products/${id}?_method=put`,
-                    data: req,
-                    headers: {...headers, ...req.headers},
+                response = await axios.put(`${apiUrl}/products/${id}`, req.body, {
+                    headers: { ...headers, ...req.headers },
                     maxContentLength: Infinity,
                     maxBodyLength: Infinity,
                     timeout: 45000,
@@ -57,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
 
             case 'DELETE':
-                response = await axios.delete(`${apiUrl}/api/products/${id}`, { headers });
+                response = await axios.delete(`${apiUrl}/products/${id}`, { headers });
                 break;
 
             default:

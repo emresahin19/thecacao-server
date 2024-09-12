@@ -1,21 +1,15 @@
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import Cookies from 'cookies';
 import { apiUrl } from '@asim-ui/constants';
-import { createHeaders, handleErrorResponse } from '@asim-ui/utils';
+import { handleErrorResponse } from '@asim-ui/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const cookies = new Cookies(req, res);
-    const xsrfToken = cookies.get('XSRF-TOKEN');
+    const token = cookies.get('jwt'); // JWT token'ı cookie'den alıyoruz
 
-    if (!xsrfToken) {
-        return res.status(401).json({ error: 'CSRF token or session not found' });
+    if (!token) {
+        return res.status(401).json({ error: 'Authentication token not found' });
     }
 
     const { id } = req.query;
@@ -23,40 +17,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         let response;
         const headers = {
-            ...createHeaders(req, xsrfToken),
+            Authorization: `Bearer ${token}`, 
         };
-        
+
         switch (req.method) {
             case 'GET':
-                response = await axios.get(`${apiUrl}/api/categories/${id}`, { headers });
+                response = await axios.get(`${apiUrl}/categories/${id}`, { headers });
                 break;
                 
             case 'POST':
-                response = await axios({
-                    method: 'post',
-                    url: `${apiUrl}/api/categories`,
-                    data: req, // Orijinal request verisini iletin
-                    headers: {...headers, ...req.headers},
-                    maxContentLength: Infinity,
-                    maxBodyLength: Infinity,
-                    timeout: 45000,
-                });
+                response = await axios.post(`${apiUrl}/categories`, req.body, { headers });
                 break;
 
             case 'PUT':
-                response = await axios({
-                    method: 'post',
-                    url: `${apiUrl}/api/categories/${id}?_method=put`,
-                    data: req,
-                    headers: {...headers, ...req.headers},
-                    maxContentLength: Infinity,
-                    maxBodyLength: Infinity,
-                    timeout: 45000,
-                });
+                response = await axios.put(`${apiUrl}/categories/${id}`, req.body, { headers });
                 break;
 
             case 'DELETE':
-                response = await axios.delete(`${apiUrl}/api/categories/${id}`, { headers });
+                response = await axios.delete(`${apiUrl}/categories/${id}`, { headers });
                 break;
 
             default:

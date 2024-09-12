@@ -5,7 +5,7 @@ import {
     DB_PORT,
     DB_USERNAME,
     DB_PASSWORD
-} from './src/constants';
+} from './src/common/constants';
 
 export const AppDataSource = new DataSource({
     type: 'mysql',

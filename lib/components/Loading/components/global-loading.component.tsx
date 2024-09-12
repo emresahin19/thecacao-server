@@ -5,7 +5,7 @@ import { useLoading } from '@asim-ui/contexts';
 const GlobalLoading = () => {
     const { loaded } = useLoading();
     
-    if (!loaded) return null;
+    if (loaded) return null;
 
     return (
         <div className='global-loading'>

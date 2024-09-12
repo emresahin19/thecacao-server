@@ -1,4 +1,5 @@
 export class CreateCategoryDto {
+    id?: number;
     name?: string;
     slug?: string;
     color?: string;
@@ -6,5 +7,4 @@ export class CreateCategoryDto {
     order?: number;
     passive?: boolean;
     deleted?: boolean;
-  }
-  
+}

@@ -183,7 +183,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                 <Button 
                     property="reverse" 
                     onClick={handleSave}
-                    loading={loaded}
+                    loading={!loaded}
                     color2="success"
                 >
                     Kaydet

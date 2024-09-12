@@ -72,8 +72,9 @@ export interface ProductProps {
     category_id: number;
     recipe: string;
     extra?: Array<any>;
-    images: Array<any>;
+    images?: Array<any>;
     cfImages?: Array<any>;
+    image_urls?: Array<string>;
     passive: number;
     diy: Array<any> | null;
     order: number;
