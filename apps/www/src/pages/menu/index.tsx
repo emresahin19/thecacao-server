@@ -17,13 +17,13 @@ export const getStaticProps = async () => {
         }
     };
 };
-const cdnUrl = 'https://cdn.thecacao.com.tr';
+const cdnUrl = 'https://cdn.asimthecat.com';
 const MenuHome: React.FC<MenuProps> = ({ data, contacts }) => {
     return (
         <>
             <Head>
                 <title>Menü - The Cacao</title>
-                <link rel="canonical" href="https://thecacao.com.tr/menu" />
+                <link rel="canonical" href="https://demo.asimthecat.com/menu" />
                 <link
                     rel="preload"
                     href={`${cdnUrl}/media/css/critical.css`}
