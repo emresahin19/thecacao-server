@@ -17,13 +17,15 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({data}) => {
     
         <div className="category-carousel">
             {data.map((category: CategoryCarouselItemProps) => 
-                <button
+                <a
+                    className="cc-item"
+                    role="button"
                     key={`cc-${category.id}`}
                     aria-label={`${category.name} Kategorisine Git`}
                     onClick={() => handleCategoryClick(category.id)}
                 >
                     {category.name}
-                </button>
+                </a>
             )}
         </div>
     )

@@ -14,7 +14,6 @@ import {
   metaImageWidth,
   metaTitle,
 } from '@asim-ui/constants';
-import { LayoutContainer } from "@asim-ui/layouts";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
@@ -86,10 +85,8 @@ class MyDocument extends Document {
         </Head>
 
         <body>
-          {/* <LayoutContainer > */}
             <Main />
             <NextScript />
-          {/* </LayoutContainer> */}
         </body>
       </Html>
     );

@@ -6,7 +6,7 @@ import { Setting } from '../setting/entities/setting.entity';
 import { MenuService } from './menu.service';
 import { MenuController } from './menu.controller';
 import { ProductModule } from '../product/product.module';
-import { RedisModule } from '../redis/redis.module';
+import { RedisModule } from '../common/redis/redis.module';
 
 @Module({
     imports: [

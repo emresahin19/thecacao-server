@@ -8,7 +8,7 @@
     "build-css": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx sass lib/assets/scss/variables.scss lib/assets/css/style.css"
+        "command": "npx sass --style compressed --no-source-map lib/assets/scss/variables.scss lib/assets/css/style.css"
       }
     }
   }

@@ -1,11 +1,10 @@
 import type { ProductProps } from '@asim-ui/interfaces';
 import React, { memo, useMemo, useCallback } from 'react';
-import { ProductImage, ProductDetailCard, Carousel } from '@asim-ui/components';
 import { useModal } from '@asim-ui/contexts';
 import { productVariantWidth, productVariantHeight, productVariantQuality, defaultColor } from '@asim-ui/constants';
-import dynamic from 'next/dynamic';
-
-const PlaceholderImage = dynamic(() => import('../../Image/components/placeholder-image.component'));
+import ProductImage from '../../Image/components/product-image.component';
+import PlaceholderImage from '../../Image/components/placeholder-image.component';
+import Carousel from '../../Carousel/components/carousel.component';
 
 const ProductCard: React.FC<ProductProps> = memo((product) => {
     const  { 

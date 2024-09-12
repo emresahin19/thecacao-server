@@ -1,13 +1,7 @@
 export class CreateUserDto {
-    username: string;
+    name: string;
     email: string;
     password: string;
-    firstName?: string;
-    lastName?: string;
-    imagePath?: string;
-    role?: string;
-    resetPasswordToken?: string;
-    resetPasswordExpires?: Date;
-    passive?: boolean;
-    deleted?: boolean;
+    email_verified_at: Date;
+    remember_token: string;
 }

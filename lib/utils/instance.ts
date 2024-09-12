@@ -6,25 +6,6 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
-const getCsrfToken = async () => {
-    let token = Cookies.get('XSRF-TOKEN');
-    
-    if (token) {
-        return token;
-    }
-
-    const response = await axios.get(`${apiUrl}/sanctum/csrf-cookie`, { withCredentials: true });
-    const xsrfCookie = response.headers['set-cookie']?.find(cookie => cookie.startsWith('XSRF-TOKEN='));
-
-    if (xsrfCookie) {
-        const xsrfToken = xsrfCookie.split(';')[0].split('=')[1];
-        Cookies.set('XSRF-TOKEN', xsrfToken, { sameSite: 'Lax' });
-        return decodeURIComponent(xsrfToken);
-    }
-    
-    return null;
-};
-
 export const fetcher = async (url: string) => {
     try {
         const response = await axiosInstance.get(url);
@@ -34,10 +15,10 @@ export const fetcher = async (url: string) => {
     }
 };
 
-axiosInstance.interceptors.request.use(async config => {
-    const token = await getCsrfToken();
+axiosInstance.interceptors.request.use(config => {
+    const token = Cookies.get('jwt');
     if (token) {
-        config.headers['X-XSRF-TOKEN'] = token;
+        config.headers['Authorization'] = `Bearer ${token}`;
     }
     
     return config;

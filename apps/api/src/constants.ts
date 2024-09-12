@@ -7,3 +7,5 @@ export const DB_PASSWORD = process.env.DB_PASSWORD || 'supersecretpassword';
 export const APP_PORT = process.env.API_PORT || 4040;
 export const APP_URL = process.env.API_URL || 'http://localhost:4040';
 export const APP_DOMAIN = process.env.API_DOMAIN || 'localhost:4040';
+
+export const DASH_URL = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:3000';

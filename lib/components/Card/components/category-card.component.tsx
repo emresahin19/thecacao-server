@@ -1,6 +1,6 @@
 import type { CarouselProps, CategoryProps, ProductProps } from "@asim-ui/interfaces";
+import { Carousel } from "@asim-ui/components";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { Carousel, ProductDetailCard } from "@asim-ui/components";
 import { defaultColor } from "@asim-ui/constants";
 import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/utils";
 import { useModal } from "@asim-ui/contexts";
@@ -10,6 +10,8 @@ import dynamic from "next/dynamic";
 
 const CiViewList = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewList), { ssr: false });
 const CiViewBoard = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewBoard), { ssr: false });
+const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
+const LogoIcon = dynamic(() => import("../../Logo/components/logo-icon.component"), { ssr: false });
 
 const viewTypes = [
     {
@@ -24,7 +26,6 @@ const viewTypes = [
     },
 ];
 
-const LogoIcon = dynamic(() => import("../../Logo/components/logo-icon.component"), { ssr: false });
 
 const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel' }) => {
     const listTypeStorage = getLocalStorageItem('listTypes') || {};

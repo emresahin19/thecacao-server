@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,10 @@ export class UserService {
         return this.userRepository.findOne({ where: { id } });
     }
 
+    findByEmail(email: string): Promise<User> {
+        return this.userRepository.findOne({ where: { email } });
+    }
+
     async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
         await this.userRepository.update(id, updateUserDto);
         return this.findOne(id);
@@ -32,5 +37,9 @@ export class UserService {
 
     async remove(id: number): Promise<void> {
         await this.userRepository.delete(id);
+    }
+
+    async validatePassword(password: string, storedPassword: string): Promise<boolean> {
+        return bcrypt.compare(password, storedPassword);
     }
 }

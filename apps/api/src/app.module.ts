@@ -10,6 +10,9 @@ import { ProductModule } from './product/product.module';
 import { SettingModule } from './setting/setting.module';
 import { UserModule } from './user/user.module';
 import { MenuModule } from './menu/menu.module';
+import { RedisModule } from './common/redis/redis.module';
+import { MediaModule } from './media/media.module';
+import { AuthModule } from './auth/auth.module';
 
 import { CategoryService } from './category/category.service';
 import { ExtraService } from './extra/extra.service';
@@ -19,8 +22,10 @@ import { ProductService } from './product/product.service';
 import { SettingService } from './setting/setting.service';
 import { UserService } from './user/user.service';
 import { MenuService } from './menu/menu.service';
-import { RedisService } from './redis/redis.service';
-import { RedisModule } from './redis/redis.module';
+import { RedisService } from './common/redis/redis.service';
+import { MediaService } from './media/media.service';
+import { AuthService } from './auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
     imports: [
@@ -36,6 +41,8 @@ import { RedisModule } from './redis/redis.module';
         UserModule,
         MenuModule,
         RedisModule,
+        MediaModule,
+        AuthModule,
     ],
     providers: [
         CategoryService,
@@ -47,6 +54,9 @@ import { RedisModule } from './redis/redis.module';
         UserService,
         MenuService,
         RedisService,
+        MediaService,
+        AuthService,
+        JwtService,
     ],
 })
 

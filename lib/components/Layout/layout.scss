@@ -3,9 +3,6 @@
     margin: auto;
 }
 .dash-sidebar {
-    &.open {
-        transform: translateX(0);
-    }
     z-index: 999;
     transform: translateX(-110%);
     position: fixed;
@@ -21,6 +18,9 @@
     overflow: scroll;
     transition: var(--layout-transition);
 
+    &.open {
+        transform: translateX(0);
+    }
     .dash-sidebar-logo {
         max-width: 100%;
         height: var(--header-height);
@@ -285,11 +285,14 @@
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
-    padding: 4px 0 12px;
     background-color: #fff;
+    padding: 4px 0 12px;
     position: fixed;
     top: 60px;
+    width: 100%;
     z-index: 99;
+    left: 0;
+    right: 0;
 
     &::-webkit-scrollbar {
         height: 0px;
@@ -304,7 +307,7 @@
         background-color: transparent;
     }
 
-    button {
+    .cc-item {
         display: inline-block;
         padding: 8px 12px;
         text-align: center;
@@ -317,6 +320,7 @@
         box-shadow: rgba(12, 76, 76, 0.1) 0px 1px 2px 0px;
         cursor: pointer;
         color: var(--primary);
+        font-size: 12px;
         &:last-child {
             margin-right: 0;
         }

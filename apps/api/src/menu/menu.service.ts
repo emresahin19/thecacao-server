@@ -5,7 +5,7 @@ import { Category } from '../category/entities/category.entity';
 import { Extra } from '../extra/entities/extra.entity';
 import { Setting } from '../setting/entities/setting.entity';
 import { ProductService } from '../product/product.service';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from '../common/redis/redis.service';
 
 @Injectable()
 export class MenuService {
