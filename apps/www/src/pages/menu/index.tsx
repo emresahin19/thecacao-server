@@ -1,5 +1,5 @@
 // apps/www/src/pages/menu/index.tsx
-import { apiUrl, cdnUrl } from "@asim-ui/constants";
+import { apiUrl } from "@asim-ui/constants";
 import axios from "axios";
 import Head from "next/head";
 import { CategoryProps, ContactProps, MenuProps } from "@asim-ui/interfaces";
@@ -17,7 +17,7 @@ export const getStaticProps = async () => {
         }
     };
 };
-
+const cdnUrl = 'https://cdn.thecacao.com.tr';
 const MenuHome: React.FC<MenuProps> = ({ data, contacts }) => {
     return (
         <>
