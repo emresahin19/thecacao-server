@@ -4,7 +4,7 @@ export interface ImageProps {
     alt?: string;
     width?: number;
     height?: number;
-    fit?: string | 'fill' | 'contain' | 'cover' | 'none' | 'scale-down';
+    quality?: number;
     loading?: 'eager' | 'lazy';
     backgroundColor?: string;
     style?: React.CSSProperties;
@@ -16,7 +16,7 @@ export interface PlaceholderImageProps {
     backgroundColor?: string
     width?: number
     height?: number
-    fit?: string
+    quality?: number
 }
 
 export interface IconImageProps {

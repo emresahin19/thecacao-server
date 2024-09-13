@@ -1,19 +1,16 @@
 import { ProductProps } from '@asim-ui/interfaces';
 import React, { memo } from 'react';
 import { Carousel, PlaceholderImage, ProductImage } from '@asim-ui/components';
-import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality, extraImageWidth, extraImageHeight, extraImageFit } from '@asim-ui/constants';
-import { useLoading } from '@asim-ui/contexts';
+import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality } from '@asim-ui/constants';
 
 const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, image_urls }) => {
-    const { loaded } = useLoading();
-
     const imageItems = image_urls && image_urls.map((image) => 
         <ProductImage 
             image={`${image}`} 
             alt={name} 
             width={productDetailVariantWidth}
             height={productDetailVariantHeight}
-            fit={productDetailVariantQuality}
+            quality={productDetailVariantQuality}
             loading='eager'
         />
     );
@@ -32,15 +29,18 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
                     </p>
                 </div>
                 <div className="extra-items">
-                    {extra.map((item, index) => (
-                        <div key={index} className="extra-item">
-                            {item.image && item.image.url && <img src={`${item.image.url}w=${extraImageWidth},h=${extraImageHeight},fit=${extraImageFit}`} alt="" />}
-                            <div className="extra-item-content">
-                                <span className="extra-item-title">{item.name}</span>
-                                <span className="extra-item-price">{item.price}₺</span>
+                    {extra.map((item, index) => {
+                        const extraImageUrl = item.image && item.image.url;
+                        return (
+                            <div key={index} className="extra-item">
+                                {item.image && item.image.url && <img src={`${extraImageUrl}`} alt="" />}
+                                <div className="extra-item-content">
+                                    <span className="extra-item-title">{item.name}</span>
+                                    <span className="extra-item-price">{item.price}₺</span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             </div>
         );

@@ -36,7 +36,7 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
             alt={name} 
             width={productVariantWidth}
             height={productVariantHeight}
-            fit={productVariantQuality}
+            quality={productVariantQuality}
             loading={loading}
         />
     )), [image_urls, name, loading]);
