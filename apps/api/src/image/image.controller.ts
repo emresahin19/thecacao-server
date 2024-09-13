@@ -29,7 +29,7 @@ export interface ImageVariant {
 export class ImageController {
     constructor(private readonly imageService: ImageService) {}
 
-    @Get('crop,w=:width,h=:height,f=:format,q=:quality/*')
+    @Get('crop/*')
     async getCroppedImage(
         @Param('width', new ParseIntPipe()) width: number,  // Get width as an integer using ParseIntPipe
         @Param('height', new ParseIntPipe()) height: number,  // Get height as an integer using ParseIntPipe
@@ -94,7 +94,7 @@ export class ImageController {
         const { width, height, format = 'webp', quality }: ImageVariant = sizes[type];
 
         // Compress the image based on the type and get the file path
-        const compressedImagePath = await this.imageService.compressImage({imagePath, width, height, format, quality});
+        const compressedImagePath = await this.imageService.compressImage({imagePath, width, height, format, quality, type});
 
         // Send the image file to the browser
         res.sendFile(compressedImagePath);
