@@ -89,7 +89,8 @@ export class ImageService {
         // Proceed with image processing if no valid file exists
         let image = sharp(inputFilePath).resize(width, height, {
             fit: sharp.fit.cover, // Cover to ensure image fills the dimensions
-            position: sharp.strategy.entropy // Choose the most "interesting" part of the image
+            position: 'center',
+            // position: sharp.strategy.entropy, // Choose the most "interesting" part of the image
         });
     
         // Compress the image based on format
