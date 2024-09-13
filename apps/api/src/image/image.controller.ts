@@ -11,23 +11,23 @@ export class ImageController {
 
     @Get('crop,w=:width,h=:height,f=:format,q=:quality/*')
     async getCroppedImage(
-        @Param('width', new ParseIntPipe()) width: number,  // ParseIntPipe ile integer olarak al
-        @Param('height', new ParseIntPipe()) height: number,  // ParseIntPipe ile integer olarak al
-        @Param('format') format: 'png' | 'webp',  // String olarak formatı al
-        @Param('quality', new ParseIntPipe()) quality: number,  // ParseIntPipe ile integer olarak al
+        @Param('width', new ParseIntPipe()) width: number,  // Get width as an integer using ParseIntPipe
+        @Param('height', new ParseIntPipe()) height: number,  // Get height as an integer using ParseIntPipe
+        @Param('format') format: 'png' | 'webp',  // Get format as a string
+        @Param('quality', new ParseIntPipe()) quality: number,  // Get quality as an integer using ParseIntPipe
         @Param() params: any,
         @Res() res: Response,
     ) {
-        // Varsayılan değerler
-        const _width = !isNaN(width) && width || 300;  // Varsayılan genişlik
-        const _height = !isNaN(height) && height || 300;  // Varsayılan yükseklik
-        const _quality = !isNaN(quality) && quality || 80;  // Varsayılan kalite
-        const _format = format || 'webp';  // Varsayılan format
+        // Default values
+        const _width = !isNaN(width) && width || 300;  // Default width
+        const _height = !isNaN(height) && height || 300;  // Default height
+        const _quality = !isNaN(quality) && quality || 80;  // Default quality
+        const _format = format || 'webp';  // Default format
         const imagePath = params['0']; 
     
-        // Resmi sıkıştır ve dosya yolunu al
+        // Compress the image and get the file path
         const compressedImagePath = await this.imageService.compressImage(imagePath, _width, _height, _format, _quality);
-        // Resmi tarayıcıda göster
+        // Send the image file to the browser
         res.sendFile(compressedImagePath);
     }
     @Post()

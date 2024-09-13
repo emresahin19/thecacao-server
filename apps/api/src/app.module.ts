@@ -11,7 +11,6 @@ import { SettingModule } from './setting/setting.module';
 import { UserModule } from './user/user.module';
 import { MenuModule } from './menu/menu.module';
 import { RedisModule } from './common/redis/redis.module';
-import { MediaModule } from './media/media.module';
 import { AuthModule } from './auth/auth.module';
 
 import { CategoryService } from './category/category.service';
@@ -23,7 +22,6 @@ import { SettingService } from './setting/setting.service';
 import { UserService } from './user/user.service';
 import { MenuService } from './menu/menu.service';
 import { RedisService } from './common/redis/redis.service';
-import { MediaService } from './media/media.service';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -41,7 +39,6 @@ import { JwtService } from '@nestjs/jwt';
         UserModule,
         MenuModule,
         RedisModule,
-        MediaModule,
         AuthModule,
     ],
     providers: [
@@ -54,7 +51,6 @@ import { JwtService } from '@nestjs/jwt';
         UserService,
         MenuService,
         RedisService,
-        MediaService,
         AuthService,
         JwtService,
     ],

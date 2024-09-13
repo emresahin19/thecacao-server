@@ -70,8 +70,8 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: '7phvozox.mncdn.org',
-            },
+                hostname: 'cdn.asimthecat.com',
+            }
         ],
         formats: ['image/webp'],
     },

@@ -20,7 +20,7 @@ const PlaceholderImage: React.FC<PlaceholderImageProps> = ({
     const [imageSrc, setImageSrc] = useState<string>(url); 
 
     const handleImageError = (e: any) => {
-        setImageSrc('/image/the-cacao-logo.webp');
+        setImageSrc('/images/the-cacao-logo.webp');
     };
 
     return (

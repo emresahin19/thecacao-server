@@ -6,7 +6,7 @@ export const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4040'
 export const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || 'http://localhost:4040';
 export const wwwUrl = process.env.NEXT_PUBLIC_WWW_URL || 'http://localhost:4020';
 export const dashUrl = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:4030';
-export const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || 'https://7phvozox.mncdn.org';
+export const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || 'https://cdn.asimthecat.com';
 export const cfCdnUrl = process.env.NEXT_PUBLIC_CF_CDN_URL || 'https://cdn.thecacao.com.tr/cdn-cgi/imagedelivery';
 
 export const dbName = process.env.DB_NAME || 'base';
@@ -52,4 +52,4 @@ export const metaDescription = `The Cacao Chocolate & Coffee, Gebze'de çikolata
 export const metaImageWidth = 1920;
 export const metaImageHeight = 960;
 
-export const metaImage = `${cdnUrl}/mncropresize/${metaImageWidth}/${metaImageHeight}/image/the-cacao-logo.png`
+export const metaImage = `${cdnUrl}/images/crop,w=${metaImageWidth},h=${metaImageHeight},f=webp,q=80/the-cacao-logo.png`
