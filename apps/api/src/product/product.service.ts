@@ -62,7 +62,7 @@ export class ProductService {
             .whereInIds(image_ids)
             .getMany();
 
-        return images.map((image) => `${cdnUrl}/images/products/${image.filename}`);
+        return images.map((image) => `${cdnUrl}/images/product/${image.filename}`);
     }
 
     async getCfImageUrls(image_ids: number[]): Promise<string[]> {

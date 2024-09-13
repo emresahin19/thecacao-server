@@ -17,6 +17,7 @@
         "commands": [
           "nx build www",
           "pm2 restart demo-www",
+          "redis-cli FLUSHALL",
           "rm -rf /var/cache/nginx/*",
           "nginx -s reload"
         ],
