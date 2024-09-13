@@ -7,6 +7,7 @@ export interface ImageProps {
     fit?: string | 'fill' | 'contain' | 'cover' | 'none' | 'scale-down';
     loading?: 'eager' | 'lazy';
     backgroundColor?: string;
+    style?: React.CSSProperties;
 }
 
 export interface PlaceholderImageProps {

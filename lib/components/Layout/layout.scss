@@ -186,6 +186,7 @@
         top: calc(0px - var(--header-height));
         overflow: scroll;
         padding-bottom: 120px;
+        animation: .3s sidebar-open;
         
         .s-logo {
             max-width: 100%;
@@ -271,6 +272,15 @@
         &.open {
             backdrop-filter: blur(7px);
         }
+    }
+}
+
+@keyframes sidebar-open {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
     }
 }
 

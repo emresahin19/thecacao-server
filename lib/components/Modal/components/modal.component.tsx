@@ -122,7 +122,7 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
     }
 
     return (
-        <div className={`modal-container ${show ? 'show' : ''}`} >
+        show && <div className={`modal-container ${show ? 'show' : ''}`} >
             <div className="modal"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}

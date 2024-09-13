@@ -22,7 +22,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
     });
     const sidebarRef = useRef<HTMLDivElement>(null);
     const startXRef = useRef<number>(0);
-    const [factor, setFactor] = useState<number>(1); 
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const contacts = useSelector((state: RootState) => state.menu.contacts); 
     const { resetModal } = useModal();
@@ -30,9 +29,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
     const { 
         menuOpen, 
         setMenuOpen,
-        resetVariables,
-        searchOpen,
-        setSearchOpen,
         setIsOverflow
     } = useVariable();
     
@@ -56,7 +52,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
         const _factor = Math.min(Math.abs(diffX) / sidebarWidth, 1);
         
         if (diffX < 0 && sidebarRef.current) {
-            setFactor(_factor);
             sidebarRef.current.style.transform = `translateX(${diffX}px)`;
         }
     };
@@ -92,17 +87,15 @@ const Sidebar: React.FC<SidebarProps> = () => {
             if (menuOpen) {
                 resetModal();
                 sidebarRef.current.style.transform = 'translateX(0)';
-                setFactor(0);
             } else {
                 sidebarRef.current.style.transform = 'translateX(-100%)';
-                setFactor(1);
             }
             setIsOverflow(!!menuOpen)
         }
     }, [menuOpen]);
 
     return (
-        <>
+        menuOpen && (
             <div className={`sidebar-menu ${menuOpen ? 'open' : ''}`} >
                 <div 
                     className="s-container"
@@ -184,7 +177,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     />
                 }
             </div>
-        </>
+        )
     );
 };
 
