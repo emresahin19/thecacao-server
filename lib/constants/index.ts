@@ -18,18 +18,6 @@ export const dbPassword = process.env.DB_PASSWORD || 'supersecretpassword';
 export const apiPort = parseInt(process.env.API_PORT || '4040');
 export const apiHost = process.env.API_HOST || 'http://localhost:4040';
 
-export const productVariantWidth = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_WIDTH || '360');
-export const productVariantHeight = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_HEIGHT || '300');
-export const productVariantQuality = process.env.NEXT_PUBLIC_PRODUCT_VARIANT_QUALITY || 'cover';
-
-export const productDetailVariantWidth = parseInt(process.env.NEXT_PUBLIC_PRODUCT_DETAIL_VARIANT_WIDTH || '1080');
-export const productDetailVariantHeight = parseInt(process.env.NEXT_PUBLIC_PRODUCT_DETAIL_VARIANT_HEIGHT || '900');
-export const productDetailVariantQuality = process.env.NEXT_PUBLIC_PRODUCT_DETAIL_VARIANT_FIT || 'cover';
-
-export const sliderVariantWidth = parseInt(process.env.NEXT_PUBLIC_SLIDER_VARIANT_WIDTH || '399');
-export const sliderVariantHeight = parseInt(process.env.NEXT_PUBLIC_SLIDER_VARIANT_HEIGHT || '197');
-export const sliderVariantFit = process.env.NEXT_PUBLIC_SLIDER_VARIANT_FIT || 'cover';
-
 export const slideWidthDefault = parseInt(process.env.NEXT_PUBLIC_SLIDE_WIDTH || '70');
 export const carouselLengthOnScreen = parseInt(process.env.NEXT_PUBLIC_CAROUSEL_LENGTH_ON_SCREEN || '2');
 
@@ -38,12 +26,24 @@ export const defaultColor = `#${process.env.NEXT_PUBLIC_DEFAULT_COLOR || 'ffffff
 export const menuCacheKey = process.env.NEXT_PUBLIC_MENU_CACHE_KEY || 'menu';
 export const sliderCacheKey = process.env.NEXT_PUBLIC_SLIDER_CACHE_KEY || 'slider';
 
-export const placeholderProductImage = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE
-export const placeholderProductImageBg = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_BG;
+export const productVariantWidth = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_WIDTH || '360');
+export const productVariantHeight = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_HEIGHT || '300');
+export const productVariantQuality = process.env.NEXT_PUBLIC_PRODUCT_VARIANT_QUALITY || 80;
+
+export const productDetailVariantWidth = parseInt(process.env.NEXT_PUBLIC_PRODUCT_DETAIL_VARIANT_WIDTH || '1080');
+export const productDetailVariantHeight = parseInt(process.env.NEXT_PUBLIC_PRODUCT_DETAIL_VARIANT_HEIGHT || '900');
+export const productDetailVariantQuality = process.env.NEXT_PUBLIC_PRODUCT_DETAIL_VARIANT_QUALITY || 80;
+
+export const sliderVariantWidth = parseInt(process.env.NEXT_PUBLIC_SLIDER_VARIANT_WIDTH || '399');
+export const sliderVariantHeight = parseInt(process.env.NEXT_PUBLIC_SLIDER_VARIANT_HEIGHT || '197');
+export const sliderVariantQuality = process.env.NEXT_PUBLIC_SLIDER_VARIANT_QUALITY || 80;
 
 export const extraImageWidth = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_WIDTH || '60');
 export const extraImageHeight = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_HEIGHT || '60');
-export const extraImageFit = process.env.NEXT_PUBLIC_EXTRA_IMAGE_FIT || 'cover';
+export const extraImageQuality = process.env.NEXT_PUBLIC_EXTRA_IMAGE_QUALITY || 80;
+
+export const placeholderProductImage = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE
+export const placeholderProductImageBg = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_BG;
 
 export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 
