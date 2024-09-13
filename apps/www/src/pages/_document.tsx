@@ -7,6 +7,7 @@ import Document, {
   DocumentInitialProps,
 } from 'next/document';
 import {
+  cdnUrl,
   defaultColor,
   metaDescription,
   metaImage,
@@ -28,13 +29,16 @@ class MyDocument extends Document {
     const initialProps = await Document.getInitialProps(ctx);
     return initialProps;
   }
-
+  
   render() {
     return (
       <Html lang="en">
         <Head>
-          <link rel="preload" href="https://fonts.cdnfonts.com/css/sf-pro-display" as="style" />
-          <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display" />
+          <link rel="preload" href={`${cdnUrl}/font/fonts.css`} as="style" />
+          <link rel="stylesheet" href={`${cdnUrl}/font/fonts.css`} />
+
+          {/* <link rel="preload" href="https://fonts.cdnfonts.com/css/sf-pro-display" as="style" />
+          <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display" /> */}
 
           <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png" />
           <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png" />

@@ -103,6 +103,7 @@
 // www
 .h-header {
     height: var(--header-height);
+    height: 60px;
     width: 100%;
     position: fixed;
     transition: var(--transition);
@@ -289,6 +290,8 @@
     padding-top: calc(var(--header-height) + 50px);
     min-height: 1000px;
     z-index: 1;
+    margin: auto;
+    max-width: 700px;
 }
 
 .category-carousel {

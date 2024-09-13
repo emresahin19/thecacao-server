@@ -99,7 +99,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
 
         setLocalStorageItem('listTypes', currentStorage);
         setCatType(newType);
-    }, [slug, catType]);
+    }, [slug, catType, isVisible]);
 
     return (
         <div 
@@ -124,13 +124,13 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     {currentViewType?.title || ''}
                 </div>
             </div>
-            <Carousel
+            {(index < 2 || isVisible )&& <Carousel
                 items={items}
                 viewType={catType}
                 backToStartColor={textColor}
                 initialStart={index === 0}
                 dots={true}
-            />
+            />}
         </div>
     );
 };

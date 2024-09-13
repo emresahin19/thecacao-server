@@ -51,19 +51,19 @@ export class ImageService {
         height,
         format = 'webp',
         quality = 80,
-        type = 'compressed',  
+        type = 'custom',  
     }: {
         imagePath: string;
         width?: number;
         height?: number;
         format?: 'png' | 'webp';
         quality?: number;
-        type?: 'compressed' | 'product' | 'product-detail' | 'slider' | 'extra'
+        type?: 'custom' | 'product' | 'product-detail' | 'slider' | 'extra'
     }): Promise<string> {
         const inputFilePath = join(this.inputDir, imagePath);
         // Create dynamic output directory based on type
         const dynamicOutputDir = join(this.outputDir, type);  // E.g., compressed/product or compressed/slider
-        
+
         if (!existsSync(dynamicOutputDir)) {
             mkdirSync(dynamicOutputDir, { recursive: true });  // Ensure the directory exists
         }

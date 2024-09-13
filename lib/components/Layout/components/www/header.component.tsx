@@ -26,6 +26,7 @@ const Header: React.FC = () => {
             image="menu-logo.png"
             width={60}
             height={60}
+            style={{margin: '0 auto'}}
           />
 
           <div className="h-side">
