@@ -9,23 +9,21 @@ const Menu: React.FC<MenuProps> = ({ data, contacts }) => {
 
     return (
         <>
-            <div className="menu-container">
-                {data && <CategoryCarousel data={catData as CategoryCarouselItemProps[]} />}
-                {data && data.map((category, i) => (
-                    <CategorySection
-                        key={category.id}
-                        id={category.id}
-                        index={i}
-                        order={category.order}
-                        slug={category.slug}
-                        name={category.name}
-                        products={category.products}
-                        color={category.color}
-                        textColor={category.textColor}
-                        isActive={false}
-                    />
-                ))}
-            </div>
+            {data && <CategoryCarousel data={catData as CategoryCarouselItemProps[]} />}
+            {data && data.map((category, i) => (
+                <CategorySection
+                    key={category.id}
+                    id={category.id}
+                    index={i}
+                    order={category.order}
+                    slug={category.slug}
+                    name={category.name}
+                    products={category.products}
+                    color={category.color}
+                    textColor={category.textColor}
+                    isActive={false}
+                />
+            ))}
         </>
     );
 };
