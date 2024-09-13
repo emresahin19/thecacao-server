@@ -65,47 +65,17 @@ export class ImageService {
         height,
         format = 'webp',
         quality = 80,
-        type
     }: {
         imagePath: string;
         width?: number;
         height?: number;
         format?: 'png' | 'webp';
         quality?: number;
-        type?: 'product' | 'product-detail' | 'slider' | 'extra';
     }): Promise<string> {
         const inputFilePath = join(this.inputDir, imagePath);
-        const sizes = {
-            'product': { 
-                width: productVariantWidth,
-                height: productVariantHeight,
-                quality: productVariantQuality,
-            },
-            'product-detail': { 
-                width: productDetailVariantWidth,
-                height: productDetailVariantHeight,
-                quality: productDetailVariantQuality,
-            },
-            'slider': { 
-                width: sliderVariantWidth,
-                height: sliderVariantHeight,
-                quality: sliderVariantQuality,
-            },
-            'extra': { 
-                width: extraImageWidth,
-                height: extraImageHeight,
-                quality: extraImageQuality,
-            }
-        };
-    
-        // Determine the final width and height based on type or provided dimensions
-        const finalWidth = width || (type ? sizes[type].width : 300); // Default to 300 if not provided
-        const finalHeight = height || (type ? sizes[type].height : 300); // Default to 300 if not provided
-        const finalQuality = quality || (type ? sizes[type].quality : 80); // Default to 80 if not provided
-    
         // Dynamic file name: image name + parameters (width, height, format, quality)
         const imageName = imagePath.split('/').pop()?.split('.')[0]; // Image name without extension
-        const outputFileName = `${imageName}-${finalWidth}x${finalHeight}-${finalQuality}.${format}`;
+        const outputFileName = `${imageName}-${width}x${height}-${quality}.${format}`;
         const outputPath = join(this.outputDir, outputFileName);
     
         // Check if the file already exists
@@ -117,16 +87,16 @@ export class ImageService {
         }
     
         // Proceed with image processing if no valid file exists
-        let image = sharp(inputFilePath).resize(finalWidth, finalHeight, {
+        let image = sharp(inputFilePath).resize(width, height, {
             fit: sharp.fit.cover, // Cover to ensure image fills the dimensions
             position: sharp.strategy.entropy // Choose the most "interesting" part of the image
         });
     
         // Compress the image based on format
         if (format === 'png') {
-            image = image.png({ quality: finalQuality });
+            image = image.png({ quality });
         } else if (format === 'webp') {
-            image = image.webp({ quality: finalQuality });
+            image = image.webp({ quality });
         }
     
         // Save the processed image

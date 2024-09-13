@@ -86,8 +86,12 @@ export class ImageController {
                 format: 'webp' as const
             }
         };
-    
-       const { width, height, format = 'webp', quality }: ImageVariant = sizes[type];
+        
+        if(!sizes[type]) {
+            return res.status(404).send('Invalid image type');
+        }
+
+        const { width, height, format = 'webp', quality }: ImageVariant = sizes[type];
 
         // Compress the image based on the type and get the file path
         const compressedImagePath = await this.imageService.compressImage({imagePath, width, height, format, quality});
