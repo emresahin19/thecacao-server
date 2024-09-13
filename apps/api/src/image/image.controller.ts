@@ -29,7 +29,7 @@ export interface ImageVariant {
 export class ImageController {
     constructor(private readonly imageService: ImageService) {}
 
-    @Get('crop/*')
+    @Get('crop,w=:width,h=:height,f=:format,q=:quality/*')
     async getCroppedImage(
         @Param('width', new ParseIntPipe()) width: number,  // Get width as an integer using ParseIntPipe
         @Param('height', new ParseIntPipe()) height: number,  // Get height as an integer using ParseIntPipe
