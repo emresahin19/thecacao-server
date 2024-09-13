@@ -114,4 +114,5 @@ export interface ImageToCdnUrlProps {
   width?: number;
   height?: number;
   type?: 'product' | 'product-detail' | 'slider' | 'extra';
+  quality?: number;
 }

@@ -10,6 +10,7 @@ export const APP_DOMAIN = process.env.API_DOMAIN || 'localhost:4040';
 
 export const DASH_URL = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:3000';
 
+export const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || 'https://cdn.asimthecat.com';
 export const productVariantWidth = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_WIDTH || '360');
 export const productVariantHeight = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_HEIGHT || '300');
 export const productVariantQuality = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_QUALITY || '80');

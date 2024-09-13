@@ -3,14 +3,34 @@ import { ImageService } from './image.service';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 import { Response } from 'express'; 
+import {
+    productVariantWidth,
+    productVariantHeight,
+    productVariantQuality,
+    productDetailVariantWidth,
+    productDetailVariantHeight,
+    productDetailVariantQuality,
+    sliderVariantWidth,
+    sliderVariantHeight,
+    sliderVariantQuality,
+    extraImageWidth,
+    extraImageHeight,
+    extraImageQuality,
+} from '../common/constants/constants';
+
+export interface ImageVariant {
+    width: number;
+    height: number;
+    format: 'png' | 'webp';
+    quality: number;
+}
 
 @Controller('images')
 export class ImageController {
     constructor(private readonly imageService: ImageService) {}
 
-    @Get('crop,t=:type,w=:width,h=:height,f=:format,q=:quality/*')
+    @Get('crop,w=:width,h=:height,f=:format,q=:quality/*')
     async getCroppedImage(
-        @Param('type') type: 'product' | 'product-detail' | 'slider' | 'extra',  // Get type if present
         @Param('width', new ParseIntPipe()) width: number,  // Get width as an integer using ParseIntPipe
         @Param('height', new ParseIntPipe()) height: number,  // Get height as an integer using ParseIntPipe
         @Param('format') format: 'png' | 'webp',  // Get format as a string
@@ -18,36 +38,64 @@ export class ImageController {
         @Param() params: any,
         @Res() res: Response,
     ) {
-        console.log('params', params);
-        // Default values if not provided
+        // Handle dynamic crop requests
         const _format = format || 'webp';  // Default format
         const _quality = !isNaN(quality) && quality || 80;  // Default quality
         const imagePath = params['0']; 
 
-        // Define sizes based on type if provided
-        const sizes = {
-            'product': { width: 300, height: 400 },
-            'product-detail': { width: 500, height: 600 },
-            'slider': { width: 1200, height: 800 },
-            'extra': { width: 100, height: 100 }
-        };
+        const _width = width || 300;  // Default width
+        const _height = height || 300;  // Default height
 
-        let _width = width || 300;  // Default width
-        let _height = height || 300;  // Default height
-
-        // If type is provided, use its dimensions
-        if (type && sizes[type]) {
-            _width = sizes[type].width;
-            _height = sizes[type].height;
-        }
-
-        // Compress the image based on type or dimensions and get the file path
+        // Compress the image based on provided dimensions
         const compressedImagePath = await this.imageService.compressImage({imagePath, width: _width, height: _height, format: _format, quality: _quality});
         
         // Send the image file to the browser
         res.sendFile(compressedImagePath);
     }
+
+    @Get(':type/*')
+    async getImageByType(
+        @Param('type') type: 'product' | 'product-detail' | 'slider' | 'extra',
+        @Param() params: any,
+        @Res() res: Response,
+    ) {
+        const imagePath = params['0']; 
+        const sizes = {
+            'product': { 
+                width: productVariantWidth,
+                height: productVariantHeight,
+                quality: productVariantQuality,
+                format: 'webp' as const
+            },
+            'product-detail': { 
+                width: productDetailVariantWidth,
+                height: productDetailVariantHeight,
+                quality: productDetailVariantQuality,
+                format: 'webp' as const
+            },
+            'slider': { 
+                width: sliderVariantWidth,
+                height: sliderVariantHeight,
+                quality: sliderVariantQuality,
+                format: 'webp' as const
+            },
+            'extra': { 
+                width: extraImageWidth,
+                height: extraImageHeight,
+                quality: extraImageQuality,
+                format: 'webp' as const
+            }
+        };
     
+       const { width, height, format = 'webp', quality }: ImageVariant = sizes[type];
+
+        // Compress the image based on the type and get the file path
+        const compressedImagePath = await this.imageService.compressImage({imagePath, width, height, format, quality});
+
+        // Send the image file to the browser
+        res.sendFile(compressedImagePath);
+    }
+
     @Post()
     create(@Body() createImageDto: CreateImageDto) {
         return this.imageService.create(createImageDto);

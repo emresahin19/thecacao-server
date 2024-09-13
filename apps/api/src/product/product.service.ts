@@ -6,6 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Image } from '../image/entities/image.entity';
 import { Extra } from '../extra/entities/extra.entity';
+import { cdnUrl } from '../common/constants';
 
 @Injectable()
 export class ProductService {
@@ -61,7 +62,7 @@ export class ProductService {
             .whereInIds(image_ids)
             .getMany();
 
-        return images.map((image) => image.filename);
+        return images.map((image) => `${cdnUrl}/images/products/${image.filename}`);
     }
 
     async getCfImageUrls(image_ids: number[]): Promise<string[]> {
