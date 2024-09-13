@@ -6,12 +6,12 @@ import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 import sharp from 'sharp';
 import { join } from 'path';
-import { existsSync, mkdirSync } from 'fs';
+import { existsSync, mkdirSync, statSync } from 'fs';
 
 @Injectable()
 export class ImageService {
     private readonly inputDir = join(__dirname, '..', '..', '..', '..', 'media', 'storage', 'image');
-    private readonly outputDir = join(__dirname, '..', '..', '..', '..', 'media', 'storage', 'output-images');
+    private readonly outputDir = join(__dirname, '..', '..', '..', '..', 'media', 'storage', 'compressed');
   
     constructor(
         @InjectRepository(Image)
@@ -47,30 +47,41 @@ export class ImageService {
 
     async compressImage(imagePath: string, width: number, height: number, format: 'png' | 'webp', quality: number): Promise<string> {
         const inputFilePath = join(this.inputDir, imagePath);
-    
-        // Dinamik dosya adı: resim adı + parametreler (width, height, format, quality)
-        const imageName = imagePath.split('/').pop()?.split('.')[0]; // Resmin adı (dosya uzantısı olmadan)
+        
+        // Dynamic file name: image name + parameters (width, height, format, quality)
+        const imageName = imagePath.split('/').pop()?.split('.')[0]; // Image name without extension
         const outputFileName = `${imageName}-${width}x${height}-${quality}.${format}`;
         const outputPath = join(this.outputDir, outputFileName);
-    
-        // Dosya zaten var mı kontrol et
+        
+        // Check if the file already exists
         if (existsSync(outputPath)) {
-            return outputPath; // Dosya zaten varsa onu döndür
-        }
+            try {
+                // Get file stats and check if it's accessible
+                const stats = statSync(outputPath);
     
+                // If file is non-empty and exists, return the path
+                if (stats.size > 0) {
+                    return outputPath;
+                }
+            } catch (err) {
+                console.error('Error accessing the file:', err);
+            }
+        }
+        
+        // Proceed with image processing if no valid file exists
         let image = sharp(inputFilePath).resize(width, height, {
-            fit: sharp.fit.cover, // Resmi tam kaplayacak şekilde kesme
-            position: sharp.strategy.entropy, // Odak noktasını seçme
+            fit: sharp.fit.cover, // Cover to ensure image fills the dimensions
+            position: sharp.strategy.entropy, // Choose the most "interesting" part of the image
         });
     
-        // Resmi ilgili formata göre sıkıştır
+        // Compress the image based on format
         if (format === 'png') {
             image = image.png({ quality: quality });
         } else if (format === 'webp') {
             image = image.webp({ quality: quality });
         }
     
-        // Resmi belirtilen formatta kaydet
+        // Save the image in the desired format
         await image.toFile(outputPath);
         return outputPath;
     }
