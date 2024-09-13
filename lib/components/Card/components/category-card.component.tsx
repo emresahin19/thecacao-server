@@ -1,6 +1,6 @@
 import type { CarouselProps, CategoryProps, ProductProps } from "@asim-ui/interfaces";
 import { Carousel } from "@asim-ui/components";
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { defaultColor } from "@asim-ui/constants";
 import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/utils";
 import { useModal } from "@asim-ui/contexts";
@@ -8,10 +8,10 @@ import { useModal } from "@asim-ui/contexts";
 import ProductCard from "../../Card/components/product-card.component";
 import dynamic from "next/dynamic";
 
-const CiViewList = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewList), { ssr: false });
-const CiViewBoard = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewBoard), { ssr: false });
+const CiViewList = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewList), { ssr: false, loading: () => <svg></svg> });
+const CiViewBoard = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewBoard), { ssr: false, loading: () => <svg></svg> });
 const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
-const LogoIcon = dynamic(() => import("../../Logo/components/logo-icon.component"), { ssr: false });
+const LogoIcon = dynamic(() => import("../../Logo/components/logo-icon.component"), { ssr: false, loading: () => <svg></svg> });
 
 const viewTypes = [
     {
@@ -31,7 +31,26 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     const listTypeStorage = getLocalStorageItem('listTypes') || {};
     const [catType, setCatType] = useState<CarouselProps['viewType']>(listTypeStorage[slug] ?? viewType);
     const { handleShow } = useModal();
-    
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsVisible(entry.isIntersecting),
+            { rootMargin: '100px' }
+        );
+
+        if (ref.current) {
+            observer.observe(ref.current);
+        }
+
+        return () => {
+            if (ref.current) {
+                observer.unobserve(ref.current);
+            }
+        };
+    }, [ref]);
+
     const handleClick = (product: ProductProps) => {
         handleShow({
             show: true,
@@ -83,10 +102,15 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     }, [slug, catType]);
 
     return (
-        <div id={`category-${id}`} className="category-section" style={{ background: color ? hexToRgba(color, 0.25) : '' }}>
+        <div 
+            id={`category-${id}`} 
+            className="category-section" 
+            style={{ background: color ? hexToRgba(color, 0.25) : '' }}
+            ref={ref}    
+        >
             <div className="category-header">
                 <div className="category-title" style={{ color: textColor }}>
-                    <LogoIcon width={20} color={textColor} />
+                    {isVisible && <LogoIcon width={20} color={textColor} />}
                     {name}
                 </div>
                 <div
@@ -96,7 +120,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     aria-label={currentViewType?.title || 'Show All'}
                     style={{ color: textColor }}
                 >
-                    {currentViewType?.icon}
+                    {isVisible && currentViewType?.icon}
                     {currentViewType?.title || ''}
                 </div>
             </div>

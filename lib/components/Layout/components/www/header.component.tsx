@@ -1,6 +1,7 @@
 import React, { memo } from "react"
-import Logo from "../../../Logo/components/logo-image.component";
+import Logo from "../../../Logo/components/logo.component";
 import dynamic from "next/dynamic";
+import { defaultColor } from "@asim-ui/constants";
 
 const Sidebar = dynamic(() => import('./sidebar.component'), { ssr: false })
 const SearchModule = dynamic(() => import('../../../Search/components/search.component'), { ssr: false })
@@ -25,9 +26,8 @@ const Header: React.FC = () => {
           </div>
 
           <Logo
-            image="menu-logo.png"
-            width={60}
-            height={60}
+            width={58}
+            color={defaultColor}
           />
 
           <div className="h-side">
