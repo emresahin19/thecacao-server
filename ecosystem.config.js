@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 const path = require('path');
 
-// .env dosyasını manuel yükleyelim
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 module.exports = {

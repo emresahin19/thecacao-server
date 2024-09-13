@@ -10,6 +10,18 @@
       "options": {
         "command": "npx sass --style compressed --no-source-map lib/assets/scss/variables.scss lib/assets/css/style.css"
       }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx build www",
+          "pm2 restart demo-www",
+          "rm -rf /var/cache/nginx/*",
+          "nginx -s reload"
+        ],
+        "parallel": false
+      }
     }
   }
 }
