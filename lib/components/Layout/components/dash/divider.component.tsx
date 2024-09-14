@@ -1,4 +1,4 @@
-import { DividerProps } from "@asim-ui/interfaces";
+import { DividerProps } from "../../../../interfaces";
 import React from "react";
 
 const Divider: React.FC<DividerProps> = ({ className = "" }) => {

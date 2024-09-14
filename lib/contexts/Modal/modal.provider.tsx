@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
-import { ModalProps } from '@asim-ui/interfaces';
-import { useVariable } from '@asim-ui/contexts';
-import { clearSelected } from '@asim-ui/store';
-import { useShallowRouting } from '@asim-ui/utils';
+import { ModalProps } from 'lib/interfaces';
+import { useVariable } from 'lib/contexts';
+import { clearSelected } from 'lib/store';
+import { useShallowRouting } from 'lib/utils';
 import { useRouter } from 'next/router';
 import { ModalContextType, ModalProviderProps } from './modal.props';
 import { ModalContext } from './modal.context';

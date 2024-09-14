@@ -1,10 +1,10 @@
-import { ProductProps } from '@asim-ui/interfaces';
+import { ProductProps } from 'lib/interfaces';
 import React, { memo } from 'react';
 import Carousel from "lib/components/Carousel/components/carousel.component";
 import ProductImage from '../../Image/components/product-image.component';
 import PlaceholderImage from '../../Image/components/placeholder-image.component';
 
-import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality } from '@asim-ui/constants';
+import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality } from 'lib/constants';
 
 const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, image_urls }) => {
     const imageItems = image_urls && image_urls.map((image) => 

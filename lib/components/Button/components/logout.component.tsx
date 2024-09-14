@@ -1,7 +1,7 @@
 import React from 'react';
 import IconButton from './icon-button.component';
 // import { CiLogin } from "react-icons/ci";
-import { useAuth } from '@asim-ui/contexts';
+import { useAuth } from '../../../contexts';
 
 const LogoutButton: React.FC = () => {
     const { handleLogout } = useAuth();

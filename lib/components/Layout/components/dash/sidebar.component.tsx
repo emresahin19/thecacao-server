@@ -3,8 +3,8 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { SidebarItemProps, SidebarProps } from "../../layout.props";
-import { useModal, useVariable } from "@asim-ui/contexts";
-import { dashRoutes } from "@asim-ui/utils";
+import { useModal, useVariable } from "lib/contexts";
+import dashRoutes from "lib/utils/dash-route.config";
 
 const Logo = dynamic(() => import('../../../Logo/components/logo.component'), { ssr: false });
 const transition = '0.3s cubic-bezier(.22,.61,.36,1) transform';

@@ -1,4 +1,4 @@
-import { ColorOptions } from "@asim-ui/interfaces";
+import { ColorOptions } from "../../interfaces";
 
 export type IconButtonProps = {
     icon?: string;

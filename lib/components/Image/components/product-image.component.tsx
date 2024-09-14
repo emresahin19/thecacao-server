@@ -1,7 +1,8 @@
 import type { ImageProps } from '../image.props';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { cdnUrl } from '@asim-ui/constants';
+import { cdnUrl } from 'lib/constants';
+import { customLoader } from 'lib/utils';
 
 const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, height, loading = "lazy", backgroundColor }) => {
     const [error, setError] = useState<boolean>(false);
@@ -30,7 +31,7 @@ const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, h
     return (
         <>
             <Image
-                // loader={customLoader}
+                loader={customLoader}
                 src={image}
                 alt={alt}
                 className='image'

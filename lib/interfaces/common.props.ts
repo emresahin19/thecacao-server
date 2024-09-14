@@ -1,4 +1,4 @@
-import { ImageObject } from "@asim-ui/interfaces";
+import { ImageObject } from "lib/interfaces";
 import { Draft } from "@reduxjs/toolkit";
 import { NextPage } from "next";
 import { AppProps } from "next/app";

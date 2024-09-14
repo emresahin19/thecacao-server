@@ -1,1 +1,1 @@
-import { ImageObject } from "@asim-ui/interfaces";
+import { ImageObject } from "lib/interfaces";

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CategoryProps, ContactProps, ProductProps } from '@asim-ui/interfaces';
+import { CategoryProps, ContactProps, ProductProps } from 'lib/interfaces';
 import { MenuState } from './store.props';
 
 const initialState: MenuState = {

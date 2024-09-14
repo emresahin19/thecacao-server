@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import IconButton from './icon-button.component';
-import { getLocalStorageItem } from '@asim-ui/utils';
-import { setDarkMode, useAppDispatch } from '@asim-ui/store';
+import { getLocalStorageItem } from '../../../utils/localStorage';
+import { setDarkMode, useAppDispatch } from '../../../store';
 // import { CiCloudMoon, CiSun } from "react-icons/ci";
 
 const ThemeSwitcher: React.FC = () => {

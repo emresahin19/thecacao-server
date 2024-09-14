@@ -1,15 +1,16 @@
-import type { CarouselProps, CategoryProps, ProductProps } from "@asim-ui/interfaces";
-import Carousel from "lib/components/Carousel/components/carousel.component";
+import type { CarouselProps, CategoryProps, ProductProps } from "../../../interfaces";
+import Carousel from "../../Carousel/components/carousel.component";
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import { defaultColor } from "@asim-ui/constants";
-import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/utils";
-import { useModal } from "@asim-ui/contexts";
+import { defaultColor } from "../../../constants";
+import { getLocalStorageItem, setLocalStorageItem } from "../../../utils/localStorage";
+import { useModal } from "../../../contexts";
 import CiViewList from 'lib/assets/icon/svg/CiViewList.svg'
 import CiViewBoard from 'lib/assets/icon/svg/CiViewBoard.svg'
-import LogoIcon from "lib/components/Logo/components/logo-icon.component";
+import LogoIcon from "../../Logo/components/logo-icon.component";
 
 import ProductCard from "../../Card/components/product-card.component";
 import dynamic from "next/dynamic";
+import { hexToRgba } from "lib/utils";
 
 // const CarouselSkeleton = dynamic(() => import("../../Skeleton/components/carousel.component"), { ssr: false });
 const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
@@ -44,7 +45,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     setViewed(true); // Set 'viewed' to true when the category is visible
                 }
             },
-            { rootMargin: '300px' }
+            { rootMargin: '150px' }
         );
 
         if (ref.current) {

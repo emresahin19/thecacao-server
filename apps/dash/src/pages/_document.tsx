@@ -14,7 +14,7 @@ import {
   metaImageHeight,
   metaImageWidth,
   metaTitle,
-} from '@asim-ui/constants';
+} from 'lib/constants';
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {

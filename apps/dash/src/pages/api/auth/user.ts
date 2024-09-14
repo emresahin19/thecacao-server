@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import Cookies from 'cookies';
-import { apiUrl } from '@asim-ui/constants';
+import { apiUrl } from 'lib/constants';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const cookies = new Cookies(req, res);

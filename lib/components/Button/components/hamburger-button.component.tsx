@@ -1,6 +1,6 @@
 import React from 'react';
 import IconButton from './icon-button.component';
-import { useVariable } from '@asim-ui/contexts';
+import { useVariable } from '../../../contexts';
 import MdMenu from 'lib/assets/icon/svg/MdMenu.svg'
 
 const HamburgerButton: React.FC = () => {

@@ -1,5 +1,5 @@
-// import { ProductTable } from '@asim-ui/components'
-import { LayoutAuthenticated } from '@asim-ui/layouts'
+// import { ProductTable } from 'lib/components'
+import LayoutAuthenticated from '../../layouts/authenticated'
 import React from 'react'
 import type { ReactElement } from 'react'
 

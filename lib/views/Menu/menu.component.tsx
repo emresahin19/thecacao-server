@@ -1,4 +1,4 @@
-import type { CategoryCarouselItemProps, MenuProps } from "@asim-ui/interfaces";
+import type { CategoryCarouselItemProps, MenuProps } from "../../interfaces";
 import React from "react";
 
 import CategorySection from '../../components/Card/components/category-card.component';

@@ -4,10 +4,10 @@ import React from "react"
 import { useEffect, useState, useRef, TouchEvent } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import { routes } from "@asim-ui/utils";
-import { useModal, useVariable } from "@asim-ui/contexts";
-import { RootState } from "@asim-ui/store";
-import { ContactProps } from "@asim-ui/interfaces";
+import { routes } from "lib/utils/route.config";
+import { useModal, useVariable } from "lib/contexts";
+import { RootState } from "lib/store";
+import { ContactProps } from "lib/interfaces";
 import Logo from "../../../Logo/components/logo-image.component";
 
 const Sidebar: React.FC<SidebarProps> = () => {

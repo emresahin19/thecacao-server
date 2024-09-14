@@ -1,5 +1,5 @@
-import { ImageProps } from "@asim-ui/interfaces"
-import { imageToCdnUrl } from "@asim-ui/utils";
+import { ImageProps } from "lib/interfaces"
+import { imageToCdnUrl } from "lib/utils";
 import Image from "next/image"
 import React from "react"
 

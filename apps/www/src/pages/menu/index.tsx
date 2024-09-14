@@ -1,6 +1,6 @@
 // apps/www/src/pages/menu/index.tsx
-import type { CategoryProps, ContactProps, MenuProps } from "@asim-ui/interfaces";
-import { apiUrl } from "@asim-ui/constants";
+import type { CategoryProps, ContactProps, MenuProps } from "lib/interfaces";
+import { apiUrl } from "lib/constants";
 import axios from "axios";
 import Head from "next/head";
 import Menu from "lib/views/Menu/menu.component";

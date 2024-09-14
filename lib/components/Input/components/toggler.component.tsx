@@ -1,6 +1,6 @@
 import React from "react"
 import { TogglerProps } from "../input.props"
-// import { Logo } from "@asim-ui/components"
+// import { Logo } from "lib/components"
 
 const Toggler: React.FC<TogglerProps> = ({label, value, name, onChange}) => {
     return (

@@ -1,3 +1,3 @@
-import { DDashboardPage } from '@asim-ui/pages'
+import { DDashboardPage } from 'lib/pages'
 
 export default DDashboardPage

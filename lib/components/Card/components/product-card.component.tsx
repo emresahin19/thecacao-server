@@ -1,7 +1,7 @@
-import type { ProductProps } from '@asim-ui/interfaces';
+import type { ProductProps } from '../../../interfaces';
 import React, { memo, useMemo, useCallback } from 'react';
-import { useModal } from '@asim-ui/contexts';
-import { productVariantWidth, productVariantHeight, productVariantQuality } from '@asim-ui/constants';
+import { useModal } from '../../../contexts';
+import { productVariantWidth, productVariantHeight, productVariantQuality } from '../../../constants';
 import ProductImage from '../../Image/components/product-image.component';
 import PlaceholderImage from '../../Image/components/placeholder-image.component';
 import Carousel from '../../Carousel/components/carousel.component';

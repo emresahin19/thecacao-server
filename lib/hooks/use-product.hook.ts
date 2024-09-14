@@ -1,5 +1,5 @@
 import useSWR, { mutate } from 'swr';
-import { fetcher } from '@asim-ui/utils';
+import { fetcher } from 'lib/utils';
 
 export const useProduct = (id: number | string | null) => {
     if(!id) return { product: null, isLoading: false, isError: false, mutateProduct: () => {} };

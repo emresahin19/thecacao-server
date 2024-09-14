@@ -1,5 +1,5 @@
 import React from "react"
-import { getLocalStorageItem, setLocalStorageItem } from "@asim-ui/utils"
+import { getLocalStorageItem, setLocalStorageItem } from "lib/utils/localStorage"
 import { useEffect, useState } from "react"
 import CloseButton from "lib/components/Button/components/close.component";
 

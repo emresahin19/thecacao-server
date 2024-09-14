@@ -1,6 +1,6 @@
 import type { EditableInputProps } from '../input.props';
 import React, { useState, useRef, useEffect } from 'react';
-import { dateToString } from '@asim-ui/utils';
+import { dateToString } from 'lib/utils';
 
 const EditableInput: React.FC<EditableInputProps> = ({ name, value, onChange, onSave, onCancel, type = 'text' }) => {
     const [isEditing, setIsEditing] = useState(false);

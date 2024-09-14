@@ -1,5 +1,5 @@
-import { LoginFormProps } from '@asim-ui/interfaces';
-import { axiosInstance } from '@asim-ui/utils';
+import { LoginFormProps } from 'lib/interfaces';
+import { axiosInstance } from 'lib/utils';
 
 export const fetchAuthenticatedUser = async () => {
     return await axiosInstance.get(`/api/auth/user`); 

@@ -1,5 +1,5 @@
 import React from 'react';
-import IconImage from 'lib/components/Image/components/icon-image.component';
+import IconImage from '../../Image/components/icon-image.component';
 import { IconButtonProps } from '../button.props';
 
 

@@ -1,5 +1,5 @@
-import { axiosInstance } from '@asim-ui/utils';
-import { ProductDataProps } from '@asim-ui/interfaces';
+import { axiosInstance } from 'lib/utils';
+import { ProductDataProps } from 'lib/interfaces';
 
 export const fetchProduct = async (id: string | number) => {
     try {

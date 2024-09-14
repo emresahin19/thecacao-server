@@ -1,4 +1,4 @@
-import { ColorOptions, InputSize, InputType } from "@asim-ui/interfaces";
+import { ColorOptions, InputSize, InputType } from "lib/interfaces";
 import { ChangeEvent } from "react";
 
 export interface CheckboxProps {

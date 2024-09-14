@@ -1,5 +1,5 @@
 import useSWR, { mutate } from 'swr';
-import { fetcher, serializeFilters } from '@asim-ui/utils';
+import { fetcher, serializeFilters } from 'lib/utils';
 
 export const useProducts = (page = 1, perPage = 10, filters = {}) => {
     const filterQuery = serializeFilters(filters);

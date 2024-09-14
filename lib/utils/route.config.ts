@@ -1,4 +1,4 @@
-import { RouteProps } from "@asim-ui/interfaces";
+import { RouteProps } from "../interfaces";
 
 export const routes: RouteProps[] = [
     {

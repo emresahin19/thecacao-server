@@ -1,6 +1,6 @@
 import useSWR, { mutate } from 'swr';
-import { fetcher, serializeFilters } from '@asim-ui/utils';
-import { apiUrl, dashUrl } from '@asim-ui/constants';
+import { fetcher, serializeFilters } from 'lib/utils';
+import { apiUrl, dashUrl } from 'lib/constants';
 
 export const useCategories = (page = 1, perPage = 10, filters = {}, domain = dashUrl) => {
     const filterQuery = serializeFilters(filters);

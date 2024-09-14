@@ -2,7 +2,7 @@ import React, { useState, ReactNode } from 'react';
 import { ToastContext } from './toast.context';
 import { AxiosError } from 'axios';
 import { ShowToastProps } from './toast.props';
-import { ToastProps } from '@asim-ui/interfaces';
+import { ToastProps } from 'lib/interfaces';
 import Toaster from 'lib/components/Toaster/components/toaster.component'; 
 
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link"
 
 const Footer: React.FC = () => {
 
@@ -7,7 +6,7 @@ const Footer: React.FC = () => {
         <footer className="dash-footer">
             <div className="f-container">
                 Made by 
-                <Link className="atc-link" href="https://asimthecat.com" target="_blank">asimthecat.com</Link>
+                {/* <Link className="atc-link" href="https://asimthecat.com" target="_blank">asimthecat.com</Link> */}
                 w
                 <i className="gg-heart" style={{ marginLeft: 6, top: 2 }}></i>
             </div>

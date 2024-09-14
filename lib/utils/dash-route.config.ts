@@ -1,6 +1,6 @@
-import { SidebarItemProps } from "@asim-ui/interfaces";
+import { SidebarItemProps } from "../interfaces";
 
-export const dashRoutes: SidebarItemProps[] = [
+const dashRoutes: SidebarItemProps[] = [
   {
     label: 'Analitik',
     children: [
@@ -42,3 +42,4 @@ export const dashRoutes: SidebarItemProps[] = [
     label: 'Genel Ayarlar',
   },
 ]
+export default dashRoutes;

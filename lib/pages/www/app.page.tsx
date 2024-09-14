@@ -1,11 +1,12 @@
 import React from 'react';
 import Head from "next/head";
 import { Provider } from 'react-redux';
-import { VariableProvider, ModalProvider, LoadingProvider } from '@asim-ui/contexts';
-import { LayoutContainer } from "@asim-ui/layouts";
-import { store } from '@asim-ui/store';
+import { VariableProvider, ModalProvider, LoadingProvider } from '../../contexts';
+import { LayoutContainer } from "../../layouts";
+import { store } from '../../store';
+import '../../assets/scss/index.scss';
 
-// import { apiDomain, googleTagManagerId, appMode } from "@asim-ui/constants";
+// import { apiDomain, googleTagManagerId, appMode } from "lib/constants";
 // import Script from "next/script";
 
 function TheApp({ children }: { children: React.ReactNode }) {

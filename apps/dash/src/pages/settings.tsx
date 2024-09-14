@@ -1,3 +1,3 @@
-import { DSettingsPage } from '@asim-ui/pages'
+import { DSettingsPage } from 'lib/pages'
 
 export default DSettingsPage

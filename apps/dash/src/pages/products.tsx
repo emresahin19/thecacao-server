@@ -1,3 +1,3 @@
-import { DProductsPage } from '@asim-ui/pages'
+import { DProductsPage } from 'lib/pages'
 
 export default DProductsPage

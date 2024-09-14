@@ -1,5 +1,5 @@
 import React from "react"
-import { CategoryCarouselItemProps, CategoryCarouselProps } from "@asim-ui/interfaces";
+import { CategoryCarouselItemProps, CategoryCarouselProps } from "lib/interfaces";
 
 
 const CategoryCarousel: React.FC<CategoryCarouselProps> = ({data}) => {

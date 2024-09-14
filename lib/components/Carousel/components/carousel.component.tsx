@@ -2,8 +2,8 @@
 import type { CarouselProps } from '../carousel.props';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import BackToStart from './back-to-start.component';
-import { carouselLengthOnScreen, cdnUrl, slideWidthDefault } from '@asim-ui/constants';
-import { sleep } from '@asim-ui/utils';
+import { carouselLengthOnScreen, cdnUrl, slideWidthDefault } from 'lib/constants';
+import { sleep } from 'lib/utils';
 
 const Carousel: React.FC<CarouselProps> = ({ 
     items, 

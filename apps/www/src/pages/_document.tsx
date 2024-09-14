@@ -14,7 +14,7 @@ import {
   metaImageHeight,
   metaImageWidth,
   metaTitle,
-} from '@asim-ui/constants';
+} from 'lib/constants';
 
 const metaImageSizes = [
   {
@@ -138,7 +138,7 @@ class MyDocument extends Document {
           <meta property="twitter:image:src" content={metaImage} />
           <meta property="twitter:image:width" content={metaImageWidth.toString()} />
           <meta property="twitter:image:height" content={metaImageHeight.toString()} />
-          <meta property="twitter:site" content="@asim-ui" />
+          <meta property="twitter:site" content="@asim" />
 
           <meta name="msapplication-TileColor" content={defaultColor} />
           <meta name="msapplication-TileImage" content="/icons/apple-icon-144x144.png" />

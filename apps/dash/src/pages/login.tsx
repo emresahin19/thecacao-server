@@ -1,3 +1,3 @@
-import { DLoginPage } from '@asim-ui/pages'
+import { DLoginPage } from 'lib/pages'
 
 export default DLoginPage

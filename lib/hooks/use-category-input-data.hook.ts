@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { fetcher } from '@asim-ui/utils';
+import { fetcher } from 'lib/utils';
 
 export const useCategoryInputData = () => {
     const { data, error }: {data: any, error: any} = useSWR(`/api/categories/input-data`, fetcher);

@@ -1,6 +1,6 @@
-import { DTheApp } from '@asim-ui/pages';
-// import { GlobalLoading } from "@asim-ui/components";
-import { AppPropsWithLayout } from "@asim-ui/interfaces";
+import { DTheApp } from 'lib/pages';
+// import { GlobalLoading } from "lib/components";
+import { AppPropsWithLayout } from "lib/interfaces";
 import '../assets/scss/variables.css';
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {

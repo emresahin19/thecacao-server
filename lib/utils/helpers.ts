@@ -1,8 +1,7 @@
-import { cdnUrl, cfCdnUrl, dashUrl, productVariantQuality } from "@asim-ui/constants";
-import { HexToRgba, ImageToCdnUrlProps } from "@asim-ui/interfaces";
+import { cdnUrl, dashUrl } from "../constants";
+import { HexToRgba, ImageToCdnUrlProps } from "../interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { 
-    apiUrl, 
     extraImageHeight, 
     extraImageWidth, 
     productDetailVariantHeight, 
@@ -11,7 +10,7 @@ import {
     productVariantWidth, 
     sliderVariantHeight, 
     sliderVariantWidth 
-} from '@asim-ui/constants';
+} from '../constants';
 import { ImageLoader } from "next/image";
 
 const sleep = (ms: number) => {

@@ -1,4 +1,4 @@
-import { LayoutAuthenticated } from '@asim-ui/layouts'
+import LayoutAuthenticated from '../../layouts/authenticated'
 import React from 'react'
 import type { ReactElement } from 'react'
 

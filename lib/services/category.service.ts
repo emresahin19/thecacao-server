@@ -1,5 +1,5 @@
-import { axiosInstance } from '@asim-ui/utils';
-import { CategoryDataProps } from '@asim-ui/interfaces';
+import { axiosInstance } from 'lib/utils';
+import { CategoryDataProps } from 'lib/interfaces';
 
 export const fetchCategory = async (id: string | number) => {
     try {

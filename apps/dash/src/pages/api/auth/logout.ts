@@ -1,9 +1,9 @@
 // pages/api/user.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import { apiUrl } from '@asim-ui/constants';
+import { apiUrl } from 'lib/constants';
 import Cookies from 'cookies';
-import { handleErrorResponse } from '@asim-ui/utils';
+import { handleErrorResponse } from 'lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {

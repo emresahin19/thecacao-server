@@ -1,4 +1,4 @@
-import { setLocalStorageItem } from '@asim-ui/utils'
+import { setLocalStorageItem } from 'lib/utils/localStorage'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DarkModeState } from './store.props'
 

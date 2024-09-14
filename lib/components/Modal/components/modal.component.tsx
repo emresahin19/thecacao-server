@@ -1,9 +1,7 @@
-"use client";
 import type { ModalInitialProps } from "../modal.props";
 import React, { useEffect, useRef, useState, TouchEvent } from "react";
 import dynamic from "next/dynamic";
-import { useModal } from "@asim-ui/contexts";
-import { getLocalStorageItem } from "@asim-ui/utils";
+import { useModal } from "lib/contexts";
 
 const Logo = dynamic(() => import("../../Logo/components/logo-image.component"), { ssr: false });
 
@@ -14,7 +12,6 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const [startY, setStartY] = useState<number>(0);
     const [moveY, setMoveY] = useState<number>(0);
-    const isDarkMode = getLocalStorageItem('darkMode') === 'true';
 
     const handleClose = () => {
         setMoveY(0);

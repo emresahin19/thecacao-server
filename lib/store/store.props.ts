@@ -1,5 +1,5 @@
 
-import { CategoryProps, ContactProps, ProductProps } from '@asim-ui/interfaces';
+import { CategoryProps, ContactProps, ProductProps } from 'lib/interfaces';
 import { Draft } from 'immer';
 import store from './reducer';
 

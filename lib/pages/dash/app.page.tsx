@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { VariableProvider, ModalProvider, AuthProvider, LoadingProvider, ToastProvider } from '@asim-ui/contexts';
-import { store } from '@asim-ui/store';
+import { VariableProvider, ModalProvider, AuthProvider, LoadingProvider, ToastProvider } from '../../contexts';
+import { store } from '../../store';
 import "../../assets/scss/variables.scss";
 
 function TheApp({ children }: { children: React.ReactNode }) {

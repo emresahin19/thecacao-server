@@ -1,4 +1,4 @@
-import { InputType, OptionsProps } from "@asim-ui/interfaces";
+import { InputType, OptionsProps } from "lib/interfaces";
 
 export interface PaginationProps {
     totalPages: number;

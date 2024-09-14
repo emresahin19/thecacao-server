@@ -1,5 +1,5 @@
 import { AppProps } from 'next/app';
-import { TheApp } from "@asim-ui/pages";
+import TheApp from 'lib/pages/www/app.page';
 import "../assets/scss/variables.css";
 
 function MyApp({ Component, pageProps }: AppProps) {

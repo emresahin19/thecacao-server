@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { apiUrl } from '@asim-ui/constants';
 
 const axiosInstance = axios.create({
     withCredentials: true,

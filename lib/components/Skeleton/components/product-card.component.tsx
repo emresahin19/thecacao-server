@@ -1,6 +1,6 @@
 import React from "react"
 import { Skeleton } from "."
-import { productVariantHeight, productVariantWidth } from "@asim-ui/constants"
+import { productVariantHeight, productVariantWidth } from "lib/constants"
 
 const ProductSkeletonCard: React.FC = () => {
     return (

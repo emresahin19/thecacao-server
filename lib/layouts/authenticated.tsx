@@ -1,10 +1,10 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { closeSidebar, openSidebar, useAppDispatch, useAppSelector } from '@asim-ui/store';
+import { closeSidebar, openSidebar, useAppDispatch, useAppSelector } from '../store';
 import { useRouter } from 'next/router';
-import { useLoading } from '@asim-ui/contexts';
-import DashHeader from 'lib/components/Layout/components/dash/header.component';
-import Modal from 'lib/components/Modal/components/modal.component';
-import Footer from 'lib/components/Layout/components/dash/footer.component';
+import { useLoading } from '../contexts';
+import DashHeader from '../components/Layout/components/dash/header.component';
+import Modal from '../components/Modal/components/modal.component';
+import Footer from '../components/Layout/components/dash/footer.component';
 
 type Props = {
     children: ReactNode;

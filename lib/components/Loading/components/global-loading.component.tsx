@@ -1,6 +1,6 @@
 import React from 'react';
 import Spinner from './spinner.component';
-import { useLoading } from '@asim-ui/contexts';
+import { useLoading } from 'lib/contexts';
 
 const GlobalLoading = () => {
     const { loaded } = useLoading();

@@ -1,5 +1,5 @@
 import useSWR, { mutate } from 'swr';
-import { fetcher } from '@asim-ui/utils';
+import { fetcher } from 'lib/utils';
 
 export const useCategory = (id: number | string | null) => {
     if (!id) return { category: null, isLoading: false, isError: false, mutateCategory: () => {} };

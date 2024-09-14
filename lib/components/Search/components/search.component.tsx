@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
-import { CategoryProps, ProductProps } from "@asim-ui/interfaces";
-import { hexToRgba } from "@asim-ui/utils";
-import { useVariable } from "@asim-ui/contexts";
-import { defaultColor } from "@asim-ui/constants";
-import { RootState } from "@asim-ui/store";
+import { CategoryProps, ProductProps } from "lib/interfaces";
+import { hexToRgba } from "lib/utils";
+import { useVariable } from "lib/contexts";
+import { defaultColor } from "lib/constants";
+import { RootState } from "lib/store";
 import MdOutlineSearch from 'lib/assets/icon/svg/MdOutlineSearch.svg'
 import MdOutlineSearchOff from 'lib/assets/icon/svg/MdOutlineSearchOff.svg'
 import CategorySection from "../../Card/components/category-card.component";

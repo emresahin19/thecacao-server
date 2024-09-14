@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import Cookies from 'cookies';
-import { apiUrl } from '@asim-ui/constants';
-import { handleErrorResponse } from '@asim-ui/utils';
+import { apiUrl } from 'lib/constants';
+import { handleErrorResponse } from 'lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {

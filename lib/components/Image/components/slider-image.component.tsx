@@ -1,7 +1,7 @@
 import type { ImageProps } from '../image.props';
 import React from 'react';
 import Image from 'next/image';
-import { sliderVariantHeight, sliderVariantWidth } from "@asim-ui/constants";
+import { sliderVariantHeight, sliderVariantWidth } from "lib/constants";
 
 const SliderImage: React.FC<ImageProps> = ({image, alt = 'The Cacao', loading = "lazy" }) => {
     return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import IconButton from './icon-button.component';
-import { useVariable } from '@asim-ui/contexts';
+import { useVariable } from '../../../contexts';
 import MdOutlineSearch from 'lib/assets/icon/svg/MdOutlineSearch.svg'
 import MdOutlineSearchOff from 'lib/assets/icon/svg/MdOutlineSearchOff.svg'
 

@@ -1,4 +1,4 @@
-import { CategoryProps, ContactProps, ProductProps } from "@asim-ui/interfaces";
+import { CategoryProps, ContactProps, ProductProps } from "lib/interfaces";
 
 export interface MenuProps {
     data?: CategoryProps[];

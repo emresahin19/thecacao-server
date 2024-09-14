@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcryptjs';
+import { compare } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -40,6 +40,6 @@ export class UserService {
     }
 
     async validatePassword(password: string, storedPassword: string): Promise<boolean> {
-        return bcrypt.compare(password, storedPassword);
+        return compare(password, storedPassword);
     }
 }

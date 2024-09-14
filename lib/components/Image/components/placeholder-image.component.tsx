@@ -6,8 +6,8 @@ import {
     productVariantHeight, 
     defaultColor, 
     placeholderProductImage, 
-} from '@asim-ui/constants';
-import { imageToCdnUrl } from '@asim-ui/utils';
+} from 'lib/constants';
+import { imageToCdnUrl } from 'lib/utils';
 
 const PlaceholderImage: React.FC<PlaceholderImageProps> = ({ 
     alt, 

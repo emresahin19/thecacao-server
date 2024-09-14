@@ -7,12 +7,21 @@ const { composePlugins, withNx } = require('@nx/next');
 
 const devMode = process.env.NEXT_PUBLIC_APP_MODE === 'development';
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: !devMode,
+});
+  
 const nextConfig = {
-    webpack(config) {
+    webpack(config, { isServer }) {
         config.module.rules.push({
             test: /\.svg$/,
             use: ['@svgr/webpack'],
         });
+        if (!isServer) {
+            config.optimization.usedExports = true;
+            config.optimization.sideEffects = true;
+            config.resolve.alias['buffer'] = false;
+        }
         return config;
     },
     nx: {
@@ -68,6 +77,7 @@ const nextConfig = {
 const plugins = [
     // Add more Next.js plugins to this list if needed.
     withNx,
+    withBundleAnalyzer,
   ];
   
 module.exports = composePlugins(...plugins)(nextConfig);

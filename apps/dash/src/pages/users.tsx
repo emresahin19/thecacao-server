@@ -1,3 +1,3 @@
-import { DUsersPage } from '@asim-ui/pages'
+import DUsersPage from 'lib/pages/dash/users.page'
 
 export default DUsersPage

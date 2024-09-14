@@ -1,4 +1,4 @@
-import { ModalProps } from "@asim-ui/interfaces";
+import { ModalProps } from "lib/interfaces";
 import { ReactNode } from "react";
 
 export interface ModalProviderProps {
