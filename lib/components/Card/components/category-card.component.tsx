@@ -44,7 +44,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     setViewed(true); // Set 'viewed' to true when the category is visible
                 }
             },
-            { rootMargin: '100px' }
+            { rootMargin: '300px' }
         );
 
         if (ref.current) {
@@ -68,7 +68,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     
     const renderContent = () => {
         if (!viewed) {
-            return <CarouselSkeleton />;
+            return <></>;
         }
 
         const items = products.map((product, i) => {

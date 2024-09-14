@@ -12,6 +12,7 @@ import {
     sliderVariantHeight, 
     sliderVariantWidth 
 } from '@asim-ui/constants';
+import { ImageLoader } from "next/image";
 
 const sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -142,6 +143,10 @@ const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
     return `${cdnUrl}/images${size}/${image}`;
 }
 
+const customLoader: ImageLoader = ({ src, width, quality }) => {
+    return `${src}`;
+};
+
 export {
     sleep,
     useShallowRouting,
@@ -153,4 +158,5 @@ export {
     handleErrorResponse,
     serializeFilters,
     imageToCdnUrl,
+    customLoader,
 }

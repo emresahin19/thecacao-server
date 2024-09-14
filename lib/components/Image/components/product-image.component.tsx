@@ -30,6 +30,7 @@ const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, h
     return (
         <>
             <Image
+                // loader={customLoader}
                 src={image}
                 alt={alt}
                 className='image'
