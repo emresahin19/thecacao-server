@@ -1,14 +1,17 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { ProductProps } from '@asim-ui/interfaces';
-import { useProducts } from '@asim-ui/hooks';
-import { useCategoryInputData } from '@asim-ui/hooks';
-import { dateToString, imageToCdnUrl } from '@asim-ui/utils';
-import { placeholderProductImageBg } from '@asim-ui/constants';
-import { Table, ProductEditCard, Button, DeleteModal } from '@asim-ui/components';
-import { useModal } from '@asim-ui/contexts';
-import { deleteProduct } from '@asim-ui/services';
-import { useToast } from '@asim-ui/contexts';
+import { ProductProps } from '../../../interfaces';
+import { useProducts } from '../../../hooks';
+import { useCategoryInputData } from '../../../hooks';
+import { dateToString, imageToCdnUrl } from '../../../utils';
+import { placeholderProductImageBg } from '../../../constants';
+import Table from "../../Table/components/table.component";
+import Button from "../../Button/components/button.component";
+import DeleteModal from "../../Modal/components/delete-modal.component";
+import ProductEditCard from "../../Card/components/product-edit-card.component";
+import { useModal } from '../../../contexts';
+import { deleteProduct } from '../../../services';
+import { useToast } from '../../../contexts';
 
 const ProductTable = () => {
     const perPage = 10;

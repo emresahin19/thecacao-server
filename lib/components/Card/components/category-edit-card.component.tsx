@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Input, Button, DashDivider, Checkbox, Spinner, CategoryEditProps } from "@asim-ui/components";
-import { useCategory } from "@asim-ui/hooks";
-import { saveCategory } from '@asim-ui/services';
-import { useToast } from "@asim-ui/contexts";
-import { CategoryDataProps } from "../card.props";
+import Input from "../../Input/components/input.component";
+import Button from "../../Button/components/button.component";
+import Checkbox from "../../Input/components/checkbox.component";
+import Spinner from "../../Loading/components/spinner.component";
+import DashDivider from "../../Layout/components/dash/divider.component";
+import { useCategory } from "../../../hooks";
+import { saveCategory } from '../../../services';
+import { useToast } from "../../../contexts";
+import { CategoryDataProps, CategoryEditProps } from "../card.props";
 
 const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => {
     const [initialCategory, setInitialCategory] = useState<CategoryDataProps | null>(null);

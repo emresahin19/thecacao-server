@@ -4,10 +4,11 @@ import { CategoryProps, ProductProps } from "@asim-ui/interfaces";
 import { hexToRgba } from "@asim-ui/utils";
 import { useVariable } from "@asim-ui/contexts";
 import { defaultColor } from "@asim-ui/constants";
-import { CategorySection, IconButton } from "@asim-ui/components";
 import { RootState } from "@asim-ui/store";
 import MdOutlineSearch from 'lib/assets/icon/svg/MdOutlineSearch.svg'
 import MdOutlineSearchOff from 'lib/assets/icon/svg/MdOutlineSearchOff.svg'
+import CategorySection from "../../Card/components/category-card.component";
+import IconButton from "../../Button/components/icon-button.component";
 
 const SearchModule: React.FC = () => {
     const { searchOpen, setSearchOpen, setIsOverflow } = useVariable();

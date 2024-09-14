@@ -1,7 +1,7 @@
 import React from "react"
 import { getLocalStorageItem, setLocalStorageItem } from "@asim-ui/utils"
 import { useEffect, useState } from "react"
-import { CloseButton } from "@asim-ui/components";
+import CloseButton from "lib/components/Button/components/close.component";
 
 const CookieUsage = () => {
     const [allowed, setAllowed] = useState(true);

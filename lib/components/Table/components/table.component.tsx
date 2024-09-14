@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { Checkbox, Input, SelectBox, Pagination, EditableInput, TableProps, Button } from '@asim-ui/components';
-import { placeholderProductImageBg } from '@asim-ui/constants';
-import { imageToCdnUrl } from '@asim-ui/utils';
+import { placeholderProductImageBg } from '../../../constants';
+import { imageToCdnUrl } from '../../../utils';
+import { TableProps } from '../table.props';
+import Button from '../../Button/components/button.component';
+import Checkbox from '../../Input/components/checkbox.component';
+import Input from '../../Input/components/input.component';
+import SelectBox from '../../Input/components/selectbox.component';
+import Pagination from '../../Table/components/pagination.component';
+import EditableInput from '../../Input/components/editable-input.component';
 
 const Table = <T extends { id: string | number, passive?: number }>({
     data = [],

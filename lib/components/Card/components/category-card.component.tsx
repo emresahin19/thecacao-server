@@ -1,5 +1,5 @@
 import type { CarouselProps, CategoryProps, ProductProps } from "@asim-ui/interfaces";
-import { Carousel } from "@asim-ui/components";
+import Carousel from "lib/components/Carousel/components/carousel.component";
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { defaultColor } from "@asim-ui/constants";
 import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/utils";
@@ -11,7 +11,7 @@ import LogoIcon from "lib/components/Logo/components/logo-icon.component";
 import ProductCard from "../../Card/components/product-card.component";
 import dynamic from "next/dynamic";
 
-const CarouselSkeleton = dynamic(() => import("../../Skeleton/components/carousel.component"), { ssr: false });
+// const CarouselSkeleton = dynamic(() => import("../../Skeleton/components/carousel.component"), { ssr: false });
 const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
 
 const viewTypes = [

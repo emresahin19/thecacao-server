@@ -1,10 +1,15 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { CategoryProps } from '@asim-ui/interfaces';
-import { useToast, useModal } from '@asim-ui/contexts';
-import { useCategories } from '@asim-ui/hooks';
-import { Table, Button, DeleteModal, CategoryEditCard } from '@asim-ui/components';
-import { deleteCategory } from '@asim-ui/services';
+import { CategoryProps } from '../../../interfaces';
+import { useToast, useModal } from '../../../contexts';
+import { useCategories } from '../../../hooks';
+
+import Table from "../../Table/components/table.component";
+import Button from "../../Button/components/button.component";
+import DeleteModal from "../../Modal/components/delete-modal.component";
+import CategoryEditCard from "../../Card/components/category-edit-card.component";
+
+import { deleteCategory } from '../../../services';
 
 const CategoryTable = () => {
     const perPage = 10;

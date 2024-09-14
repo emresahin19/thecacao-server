@@ -2,9 +2,11 @@ import React, { useEffect, useRef } from 'react'
 import type { ReactElement } from 'react'
 import { useAuth } from '@asim-ui/contexts'
 import { LoginFormProps } from '@asim-ui/interfaces'
-import { Button, Checkbox, Input } from '@asim-ui/components'
 import { useLoading } from '@asim-ui/contexts'
 import { LayoutGuest } from '@asim-ui/layouts'
+import Button from 'lib/components/Button/components/button.component';
+import Checkbox from 'lib/components/Input/components/checkbox.component';
+import Input from 'lib/components/Input/components/input.component';
 
 const LoginPage = () => {
     const { handleLogin } = useAuth();

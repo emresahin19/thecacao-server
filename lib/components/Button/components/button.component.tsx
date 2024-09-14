@@ -1,6 +1,6 @@
 import { ButtonProps } from '../button.props';
 import React from 'react';
-import { Spinner } from '@asim-ui/components';
+import Spinner from '../../Loading/components/spinner.component';
 
 const Button: React.FC<ButtonProps> = ({ 
     children, 

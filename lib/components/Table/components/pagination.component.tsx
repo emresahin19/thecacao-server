@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { PaginationProps } from '../table.props';
-import { Button } from '@asim-ui/components';
+import Button from '../../Button/components/button.component';
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPageChange, loading = false }) => {
     const prevTotalPages = useRef(totalPages);

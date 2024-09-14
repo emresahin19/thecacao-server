@@ -1,4 +1,4 @@
-import { CategoryTable } from '@asim-ui/components'
+// import { CategoryTable } from '@asim-ui/components'
 import { LayoutAuthenticated } from '@asim-ui/layouts'
 import React from 'react'
 import type { ReactElement } from 'react'
@@ -6,7 +6,7 @@ import type { ReactElement } from 'react'
 const CategoriesPage = () => {
   return (
     <>
-      <CategoryTable />
+      {/* <CategoryTable /> */}
     </>
   )
 }

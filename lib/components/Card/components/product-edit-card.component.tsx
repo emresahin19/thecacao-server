@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Input, SelectBox, Button, DashDivider, Checkbox, MultipleImageInput, MultipleSelectBox, Spinner } from "@asim-ui/components";
-import { useCategoryInputData } from "@asim-ui/hooks";
-import { ImageObject } from "@asim-ui/interfaces";
-import { useExtraInputData } from "@asim-ui/hooks";
-import { useLoading } from "@asim-ui/contexts";
-import { useProduct } from "@asim-ui/hooks";
-import { saveProduct } from '@asim-ui/services';
-import { useToast } from "@asim-ui/contexts";
+import Input from "../../Input/components/input.component";
+import Button from "../../Button/components/button.component";
+import Checkbox from "../../Input/components/checkbox.component";
+import Spinner from "../../Loading/components/spinner.component";
+import DashDivider from "../../Layout/components/dash/divider.component";
+import MultipleImageInput from "../../Input/components/multiple-image-input.component";
+import MultipleSelectBox from "../../Input/components/multiple-selectbox.component";
+import SelectBox from "../../Input/components/selectbox.component";
+
+import { useCategoryInputData, useExtraInputData, useProduct } from "../../../hooks";
+import { ImageObject } from "../../../interfaces";
+import { useLoading, useToast } from "../../../contexts";
+import { saveProduct } from '../../../services';
 import { AxiosError } from "axios";
 import { ProductDataProps, ProductEditProps } from "../card.props";
 

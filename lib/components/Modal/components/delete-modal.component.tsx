@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, DashDivider } from '@asim-ui/components';
 import { DeleteModalProps } from '../modal.props';
+import Button from "../../Button/components/button.component";
+import DashDivider from "../../Layout/components/dash/divider.component";
 
 const DeleteModal: React.FC<DeleteModalProps> = ({ onConfirm, onCancel, itemName = 'Ürünü' }) => {
     return (

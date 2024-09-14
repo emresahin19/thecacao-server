@@ -1,4 +1,4 @@
-import { SidebarItemProps } from "@asim-ui/components"
+import { SidebarItemProps } from "@asim-ui/interfaces";
 
 export const dashRoutes: SidebarItemProps[] = [
   {

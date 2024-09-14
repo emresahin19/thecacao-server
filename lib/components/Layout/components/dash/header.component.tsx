@@ -1,5 +1,8 @@
 import React from "react";
-import { IconButton, LogoutButton, ThemeSwitcher } from "@asim-ui/components";
+import IconButton from "lib/components/Button/components/icon-button.component";
+import LogoutButton from "lib/components/Button/components/logout.component";
+import ThemeSwitcher from "lib/components/Button/components/theme-switcher.component";
+
 import { useAppDispatch } from "@asim-ui/store";
 import DashSidebar from "./sidebar.component";
 import MdMenu from 'lib/assets/icon/svg/MdOutlineSearch.svg'
