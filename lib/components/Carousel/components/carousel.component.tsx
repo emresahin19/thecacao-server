@@ -248,7 +248,7 @@ const Carousel: React.FC<CarouselProps> = ({
     };
 
     return (
-        <div className={`carousel ${viewType}`}>
+        <div className={`carousel ${viewType != 'carousel' && viewType || ''}`}>
             {arrows && viewType === 'carousel' && 
                 <button 
                     className="carousel-button prev" 

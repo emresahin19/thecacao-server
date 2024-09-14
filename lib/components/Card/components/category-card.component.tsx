@@ -31,7 +31,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     const listTypeStorage = getLocalStorageItem('listTypes') || {};
     const [catType, setCatType] = useState<CarouselProps['viewType']>(listTypeStorage[slug] ?? viewType);
     const { handleShow } = useModal();
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(index < 3 || false);
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -124,7 +124,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     {currentViewType?.title || ''}
                 </div>
             </div>
-            {(index < 2 || isVisible )&& <Carousel
+            {isVisible && <Carousel
                 items={items}
                 viewType={catType}
                 backToStartColor={textColor}

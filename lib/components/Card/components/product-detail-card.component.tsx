@@ -29,18 +29,15 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
                     </p>
                 </div>
                 <div className="extra-items">
-                    {extra.map((item, index) => {
-                        const extraImageUrl = item.image && item.image.url;
-                        return (
+                    {extra.map((item, index) => (
                             <div key={index} className="extra-item">
-                                {item.image && item.image.url && <img src={`${extraImageUrl}`} alt="" />}
+                                {item && item.image && <img src={`${item.image}`} alt="" />}
                                 <div className="extra-item-content">
                                     <span className="extra-item-title">{item.name}</span>
                                     <span className="extra-item-price">{item.price}₺</span>
                                 </div>
                             </div>
-                        )
-                    })}
+                        ))}
                 </div>
             </div>
         );

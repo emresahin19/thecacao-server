@@ -1,3 +1,4 @@
+import { ImageObject } from "@asim-ui/components";
 import { Draft } from "@reduxjs/toolkit";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -71,8 +72,8 @@ export interface ProductProps {
     price: number;
     category_id: number;
     recipe: string;
-    extra?: Array<any>;
-    images?: Array<any>;
+    extra?: Array<ExtraProps>;
+    images?: Array<ImageObject>;
     cfImages?: Array<any>;
     image_urls?: Array<string>;
     passive: number;
@@ -83,6 +84,17 @@ export interface ProductProps {
     createdAt?: string;
     updatedAt?: string;
     onClick?: (product: ProductProps) => void;
+}
+
+export interface ExtraProps {
+    name: string;
+    price: number;
+    image: string;
+    order: number;
+    passive: number;
+    category_name: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface ContactProps {

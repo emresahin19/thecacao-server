@@ -43,7 +43,7 @@ const SearchModule: React.FC = () => {
 
     useEffect(() => {
         if (searchTerm) {
-            let filteredProducts: ProductProps[] = [];
+            const filteredProducts: ProductProps[] = [];
 
             for (let i = 0; i < data.length; i++) {
                 const category = data[i];

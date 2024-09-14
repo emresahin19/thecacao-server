@@ -1,6 +1,5 @@
 import { LayoutAuthenticated } from '@asim-ui/layouts'
-import Head from 'next/head'
-import React, { useState } from 'react'
+import React from 'react'
 import type { ReactElement } from 'react'
 
 const SettingsPage = () => {

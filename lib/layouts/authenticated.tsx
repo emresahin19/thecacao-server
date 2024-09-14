@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { DashFooter, DashHeader, Footer, Modal } from '@asim-ui/components';
+import { DashHeader, Footer, Modal } from '@asim-ui/components';
 import { closeSidebar, openSidebar, useAppDispatch, useAppSelector } from '@asim-ui/store';
 import { useRouter } from 'next/router';
 import { useLoading } from '@asim-ui/contexts';

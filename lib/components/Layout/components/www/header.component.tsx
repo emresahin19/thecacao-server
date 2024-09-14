@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import Logo from "../../../Logo/components/logo-image.component";
+import Logo from "../../../Logo/components/logo.component";
 import dynamic from "next/dynamic";
 
 const Sidebar = dynamic(() => import('./sidebar.component'), { ssr: false })
@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   return (
     <>
       <header className="h-header">
-        <div className="h-container" style={{display:'flex',justifyContent:'space-between'}}>
+        <div className="h-container" style={{display:'flex',justifyContent:'space-between',height: 60}}>
 
           <div className="h-side">
             <ul className="header-list">
@@ -23,10 +23,7 @@ const Header: React.FC = () => {
           </div>
 
           <Logo
-            image="menu-logo.png"
-            width={60}
-            height={60}
-            style={{margin: '0 auto'}}
+            width={58}
           />
 
           <div className="h-side">

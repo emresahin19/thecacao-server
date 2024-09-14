@@ -4,8 +4,8 @@ import React from "react";
 import CategorySection from '../../components/Card/components/category-card.component';
 import CategoryCarousel from '../../components/Layout/components/www/category-thumbnail.component';
 
-const Menu: React.FC<MenuProps> = ({ data, contacts }) => {
-    const catData = data && data.map((category, i) => ({id: category.id, name: category.name, isActive: false}));
+const Menu: React.FC<MenuProps> = ({ data }) => {
+    const catData = data && data.map(category => ({id: category.id, name: category.name, isActive: false}));
 
     return (
         <>

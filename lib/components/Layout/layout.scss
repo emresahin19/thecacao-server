@@ -103,14 +103,13 @@
 // www
 .h-header {
     height: var(--header-height);
-    height: 60px;
     width: 100%;
-    position: fixed;
+    position: sticky;
     transition: var(--transition);
     z-index: 99;
     color: var(--text-color);
     background-color: var(--header-background-color);
-    
+    top: 0;
     .h-container {
         height: 100%;
         display: flex;
@@ -300,13 +299,12 @@
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     background-color: #fff;
-    padding: 4px 0 12px;
-    position: fixed;
+    position: sticky;
     top: 60px;
     width: 100%;
-    z-index: 99;
     left: 0;
     right: 0;
+    z-index: 9;
 
     &::-webkit-scrollbar {
         height: 0px;
@@ -326,7 +324,6 @@
         padding: 8px 12px;
         text-align: center;
         white-space: nowrap;
-        margin-right: 8px;
         background-color: #fff;
         border: 1px solid rgba(var(--primary-rgb), 0.4);
         border: none;
@@ -335,6 +332,7 @@
         cursor: pointer;
         color: var(--primary);
         font-size: 12px;
+        margin: 4px;
         &:last-child {
             margin-right: 0;
         }

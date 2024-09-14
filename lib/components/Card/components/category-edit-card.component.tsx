@@ -3,7 +3,6 @@ import { Input, Button, DashDivider, Checkbox, Spinner, CategoryEditProps } from
 import { useCategory } from "@asim-ui/hooks";
 import { saveCategory } from '@asim-ui/services';
 import { useToast } from "@asim-ui/contexts";
-import { AxiosError } from "axios";
 import { CategoryDataProps } from "../card.props";
 
 const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => {
@@ -49,7 +48,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
 
             showToast({message, type: status ? 'success' : 'danger'});
             onSave && onSave(status);
-        } catch (error: AxiosError | any) {
+        } catch (error: any) {
             handleRequestError(error);
         } finally {
             mutateCategory();

@@ -49,6 +49,7 @@
     gap: 8px;
     background-color: rgba(var(--primary-rgb), 0.2);
     padding: 12px 8px;
+    width: calc(100% - 16px);
     .category-header {
         display: flex;
         justify-content: space-between;

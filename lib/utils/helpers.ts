@@ -45,7 +45,7 @@ const hexToRgba: HexToRgba = (hex, opacity) => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-function logError({ url, options, error = '', message = '', status = 500 }: { url: string, options: any, error?: string, message?: string, status?: number }) {
+function logError({ url, options, error = '', message = '', status = 500 }: { url: string, options: object, error?: string, message?: string, status?: number }) {
     console.error(`URL: ${url}`);
     console.error(`Error: ${error}`);
     console.error(`Message: ${message}`);
@@ -142,14 +142,6 @@ const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
     return `${cdnUrl}/images${size}/${image}`;
 }
 
-const imageToCFCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
-    if(!image) return `${cdnUrl}/images/${image}`;
-
-    const size = `w=${productVariantWidth},h=${productVariantHeight},fit=${productVariantQuality}`;
-    
-    return `${image}${size}`;
-}
-
 export {
     sleep,
     useShallowRouting,
@@ -161,5 +153,4 @@ export {
     handleErrorResponse,
     serializeFilters,
     imageToCdnUrl,
-    imageToCFCdnUrl,
 }
