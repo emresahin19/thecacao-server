@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@asim-ui": ["lib/index"],
+      "@asim-ui/assets": ["lib/assets/*"],
       "@asim-ui/components": ["lib/components/index"],
       "@asim-ui/interfaces": ["lib/interfaces/index"],
       "@asim-ui/layouts": ["lib/layouts/index"],

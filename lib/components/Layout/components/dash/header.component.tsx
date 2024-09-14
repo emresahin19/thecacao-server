@@ -1,8 +1,8 @@
 import React from "react";
 import { IconButton, LogoutButton, ThemeSwitcher } from "@asim-ui/components";
-import { toggleSidebar, useAppDispatch } from "@asim-ui/store";
-import { MdMenu } from "react-icons/md";
+import { useAppDispatch } from "@asim-ui/store";
 import DashSidebar from "./sidebar.component";
+import MdMenu from 'lib/assets/icon/svg/MdOutlineSearch.svg'
 
 const Header: React.FC<{isOpen: boolean}> = ({ isOpen }) => {
   const dispatch = useAppDispatch();

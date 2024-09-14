@@ -1,7 +1,7 @@
 import React from 'react';
 import { LogoProps } from '../logo.props';
 
-const LogoIcon: React.FC<LogoProps> = ({color='#ffffff', width}) => {
+const LogoIcon: React.FC<LogoProps> = React.memo(({color='#ffffff', width}) => {
     const _width = width 
         ? typeof width === 'number' 
             ? `${width}px` 
@@ -30,6 +30,6 @@ const LogoIcon: React.FC<LogoProps> = ({color='#ffffff', width}) => {
             </g>
         </svg>
     )
-}
+})
 
 export default LogoIcon;

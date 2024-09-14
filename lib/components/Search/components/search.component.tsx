@@ -6,7 +6,8 @@ import { useVariable } from "@asim-ui/contexts";
 import { defaultColor } from "@asim-ui/constants";
 import { CategorySection, IconButton } from "@asim-ui/components";
 import { RootState } from "@asim-ui/store";
-import { MdOutlineSearch, MdOutlineSearchOff } from "react-icons/md";
+import MdOutlineSearch from 'lib/assets/icon/svg/MdOutlineSearch.svg'
+import MdOutlineSearchOff from 'lib/assets/icon/svg/MdOutlineSearchOff.svg'
 
 const SearchModule: React.FC = () => {
     const { searchOpen, setSearchOpen, setIsOverflow } = useVariable();

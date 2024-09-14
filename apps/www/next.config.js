@@ -8,6 +8,13 @@ const { composePlugins, withNx } = require('@nx/next');
 const devMode = process.env.NEXT_PUBLIC_APP_MODE === 'development';
 
 const nextConfig = {
+    webpack(config) {
+        config.module.rules.push({
+            test: /\.svg$/,
+            use: ['@svgr/webpack'],
+        });
+        return config;
+    },
     nx: {
       // Set this to true if you would like to use SVGR
       // See: https://github.com/gregberge/svgr

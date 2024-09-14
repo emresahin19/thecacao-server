@@ -4,12 +4,12 @@ import React, { useState, useCallback, useEffect, useMemo, useRef } from "react"
 import { defaultColor } from "@asim-ui/constants";
 import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/utils";
 import { useModal } from "@asim-ui/contexts";
+import CiViewList from 'lib/assets/icon/svg/CiViewList.svg'
+import CiViewBoard from 'lib/assets/icon/svg/CiViewBoard.svg'
 
 import ProductCard from "../../Card/components/product-card.component";
 import dynamic from "next/dynamic";
 
-const CiViewList = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewList), { ssr: false, loading: () => <svg></svg> });
-const CiViewBoard = dynamic(() => import("react-icons/ci").then((icon) => icon.CiViewBoard), { ssr: false, loading: () => <svg></svg> });
 const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
 const LogoIcon = dynamic(() => import("../../Logo/components/logo-icon.component"), { ssr: false, loading: () => <svg></svg> });
 

@@ -16,6 +16,74 @@ import {
   metaTitle,
 } from '@asim-ui/constants';
 
+const metaImageSizes = [
+  {
+    rel: 'apple-touch-icon',
+    width: 57,
+    height: 57,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 60,
+    height: 60,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 72,
+    height: 72,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 76,
+    height: 76,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 114,
+    height: 114,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 120,
+    height: 120,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 144,
+    height: 144,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 152,
+    height: 152,
+  },
+  {
+    rel: 'apple-touch-icon',
+    width: 180,
+    height: 180,
+  },
+  {
+    rel: 'icon',
+    width: 192,
+    height: 192,
+  },
+  {
+    rel: 'icon',
+    width: 32,
+    height: 32,
+  },
+  {
+    rel: 'icon',
+    width: 96,
+    height: 96,
+  },
+  {
+    rel: 'icon',
+    width: 16,
+    height: 16,
+  },
+]
+
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const originalRenderPage = ctx.renderPage;
@@ -40,21 +108,14 @@ class MyDocument extends Document {
           {/* <link rel="preload" href="https://fonts.cdnfonts.com/css/sf-pro-display" as="style" />
           <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display" /> */}
 
-          <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png" />
-          <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png" />
-          <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-icon-72x72.png" />
-          <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png" />
-          <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-icon-114x114.png" />
-          <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png" />
-          <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-icon-144x144.png" />
-          <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png" />
-          <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png" />
-
-          <link rel="icon" type="image/png" sizes="192x192" href="/icons/android-icon-192x192.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
-
+          {metaImageSizes.map(({ rel, width, height }) => (
+            <link
+              key={`${rel}-${width}x${height}`}
+              rel={rel}
+              sizes={`${width}x${height}`}
+              href={`https://cdn.asimthecat.com/images/crop,w=${width},h=${height},f=png,q=80/the-cacao-logo.png`}
+            />
+          ))}
           <link rel="manifest" href="/manifest.json" />
 
           <meta name="description" content={metaDescription} />

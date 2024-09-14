@@ -1,7 +1,8 @@
 import React from 'react';
 import IconButton from './icon-button.component';
 import { useVariable } from '@asim-ui/contexts';
-import { MdOutlineSearch, MdOutlineSearchOff } from "react-icons/md";
+import MdOutlineSearch from 'lib/assets/icon/svg/MdOutlineSearch.svg'
+import MdOutlineSearchOff from 'lib/assets/icon/svg/MdOutlineSearchOff.svg'
 
 const SearchButton: React.FC = () => {
     const { 

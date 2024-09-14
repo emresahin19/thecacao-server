@@ -1,7 +1,7 @@
 import React from 'react';
-import { MdMenu } from 'react-icons/md';
 import IconButton from './icon-button.component';
 import { useVariable } from '@asim-ui/contexts';
+import MdMenu from 'lib/assets/icon/svg/MdMenu.svg'
 
 const HamburgerButton: React.FC = () => {
     const { 

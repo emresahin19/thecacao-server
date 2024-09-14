@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import IconButton from './icon-button.component';
 import { getLocalStorageItem } from '@asim-ui/utils';
 import { setDarkMode, useAppDispatch } from '@asim-ui/store';
-import { CiCloudMoon, CiSun } from "react-icons/ci";
+// import { CiCloudMoon, CiSun } from "react-icons/ci";
 
 const ThemeSwitcher: React.FC = () => {
     const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
@@ -30,7 +30,7 @@ const ThemeSwitcher: React.FC = () => {
             ariaLabel="Tema Değiştir"
             className="menu-button"
         >
-            {isDarkModeEnabled ? <CiCloudMoon /> : <CiSun />}
+            {/* {isDarkModeEnabled ? <CiCloudMoon /> : <CiSun />} */}
         </IconButton>
     )
 }
