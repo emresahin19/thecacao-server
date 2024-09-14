@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import type { ReactElement } from 'react'
 import { useAuth } from '@asim-ui/contexts'
 import { LoginFormProps } from '@asim-ui/interfaces'
-import { Button, Checkbox, Input, LogoText } from '@asim-ui/components'
+import { Button, Checkbox, Input } from '@asim-ui/components'
 import { useLoading } from '@asim-ui/contexts'
 import { LayoutGuest } from '@asim-ui/layouts'
 
@@ -56,7 +56,7 @@ const LoginPage = () => {
     return (
         <div className='login-container'>
             <div className="logo-bg">
-                <LogoText width={420} />
+                {/* <LogoText width={420} /> */}
             </div>
             <div className='card'>
                 <form onSubmit={handleSubmit}>

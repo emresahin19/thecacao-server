@@ -3,14 +3,12 @@ import type { SidebarProps } from "../../layout.props";
 import React from "react"
 import { useEffect, useState, useRef, TouchEvent } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 import { routes } from "@asim-ui/utils";
 import { useModal, useVariable } from "@asim-ui/contexts";
 import { RootState } from "@asim-ui/store";
 import { ContactProps } from "@asim-ui/interfaces";
-
-const Logo = dynamic(() => import('../../../Logo/components/logo.component'), { ssr: false });
+import Logo from "../../../Logo/components/logo-image.component";
 
 const Sidebar: React.FC<SidebarProps> = () => {
     const [contact, setContact] = useState<ContactProps>({
@@ -105,7 +103,11 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     onTouchEnd={handleTouchEnd}
                 >
                     <div className="s-logo">
-                        <Logo color="#fff" width={'100%'} />
+                        <Logo
+                            image="menu-logo.png"
+                            width={118}
+                            height={118}
+                        />
                     </div>
                     <ul className="s-list">
                         {routes.map((route, index) => (

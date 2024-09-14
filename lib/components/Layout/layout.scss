@@ -192,6 +192,9 @@
             max-width: 100%;
             display: flex;
             padding: 32px;
+            img {
+                filter: invert(100%) brightness(3);
+            }
             .logo {
                 background: transparent;
                 width: 50%;

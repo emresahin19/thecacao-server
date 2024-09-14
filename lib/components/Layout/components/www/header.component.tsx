@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import Logo from "../../../Logo/components/logo.component";
+import Logo from "../../../Logo/components/logo-image.component";
 import dynamic from "next/dynamic";
 
 const Sidebar = dynamic(() => import('./sidebar.component'), { ssr: false })
@@ -23,7 +23,9 @@ const Header: React.FC = () => {
           </div>
 
           <Logo
-            width={58}
+            image="menu-logo.png"
+            width={60}
+            height={60}
           />
 
           <div className="h-side">

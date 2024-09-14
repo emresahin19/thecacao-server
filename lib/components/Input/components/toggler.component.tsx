@@ -1,6 +1,6 @@
 import React from "react"
 import { TogglerProps } from "../input.props"
-import { Logo } from "@asim-ui/components"
+// import { Logo } from "@asim-ui/components"
 
 const Toggler: React.FC<TogglerProps> = ({label, value, name, onChange}) => {
     return (
@@ -8,7 +8,7 @@ const Toggler: React.FC<TogglerProps> = ({label, value, name, onChange}) => {
             <label className="switch">
                 <input type="checkbox" name={name} checked={value} onChange={onChange} />
                 <span>
-                    <Logo />
+                    {/* <Logo /> */}
                 </span>
             </label>
             <span className="text">{label || ''}</span>

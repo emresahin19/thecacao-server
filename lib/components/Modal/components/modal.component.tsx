@@ -3,10 +3,9 @@ import type { ModalInitialProps } from "../modal.props";
 import React, { useEffect, useRef, useState, TouchEvent } from "react";
 import dynamic from "next/dynamic";
 import { useModal } from "@asim-ui/contexts";
-import { CloseButton } from "@asim-ui/components";
 import { getLocalStorageItem } from "@asim-ui/utils";
 
-const Logo = dynamic(() => import('../../Logo/components/logo.component'), { ssr: false });
+const Logo = dynamic(() => import("../../Logo/components/logo-image.component"), { ssr: false });
 
 const modalTop = 0;
 
@@ -130,7 +129,11 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
                 ref={modalRef}
             >
                 <div className="modal-header">
-                    <Logo color='#ffffff' width={60} />
+                    <Logo
+                        image="menu-logo.png"
+                        width={60}
+                        height={60}
+                    />
                     <button 
                         className="close"
                         onClick={resetModal} 

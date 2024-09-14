@@ -113,7 +113,7 @@ class MyDocument extends Document {
               key={`${rel}-${width}x${height}`}
               rel={rel}
               sizes={`${width}x${height}`}
-              href={`https://cdn.asimthecat.com/images/crop,w=${width},h=${height},f=png,q=80/the-cacao-logo.png`}
+              href={`${cdnUrl}/images/crop,w=${width},h=${height},f=png,q=80/the-cacao-logo.png`}
             />
           ))}
           <link rel="manifest" href="/manifest.json" />

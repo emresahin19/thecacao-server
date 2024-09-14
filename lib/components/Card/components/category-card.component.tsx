@@ -6,12 +6,13 @@ import { getLocalStorageItem, setLocalStorageItem, hexToRgba } from "@asim-ui/ut
 import { useModal } from "@asim-ui/contexts";
 import CiViewList from 'lib/assets/icon/svg/CiViewList.svg'
 import CiViewBoard from 'lib/assets/icon/svg/CiViewBoard.svg'
+import LogoIcon from "lib/components/Logo/components/logo-icon.component";
 
 import ProductCard from "../../Card/components/product-card.component";
 import dynamic from "next/dynamic";
 
+const CarouselSkeleton = dynamic(() => import("../../Skeleton/components/carousel.component"), { ssr: false });
 const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
-const LogoIcon = dynamic(() => import("../../Logo/components/logo-icon.component"), { ssr: false, loading: () => <svg></svg> });
 
 const viewTypes = [
     {
@@ -30,13 +31,19 @@ const viewTypes = [
 const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel' }) => {
     const listTypeStorage = getLocalStorageItem('listTypes') || {};
     const [catType, setCatType] = useState<CarouselProps['viewType']>(listTypeStorage[slug] ?? viewType);
+    const [viewed, setViewed] = useState(index < 3);
     const { handleShow } = useModal();
-    const [isVisible, setIsVisible] = useState(index < 3 || false);
+    const [isVisible, setIsVisible] = useState(index < 3);
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
-            ([entry]) => setIsVisible(entry.isIntersecting),
+            ([entry]) => {
+                if (entry.isIntersecting && !viewed) {
+                    setIsVisible(true);
+                    setViewed(true); // Set 'viewed' to true when the category is visible
+                }
+            },
             { rootMargin: '100px' }
         );
 
@@ -49,21 +56,25 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                 observer.unobserve(ref.current);
             }
         };
-    }, [ref]);
+    }, [ref, viewed]); // Add 'viewed' to the dependency array
 
-    const handleClick = (product: ProductProps) => {
+    const handleClick = useCallback((product: ProductProps) => {
         handleShow({
             show: true,
             component: <ProductDetailCard {...product} />,
             route: `menu/${product.fullpath}`
         });
-    };
+    }, [handleShow]);
     
-    const items = useMemo(() => {
-        return products.map((product, i) => {
+    const renderContent = () => {
+        if (!viewed) {
+            return <CarouselSkeleton />;
+        }
+
+        const items = products.map((product, i) => {
             const { id, name, slug, description, fullpath, price, category_id, recipe, extra, image_urls, passive, diy, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
-           
+            
             return (
                 <ProductCard
                     key={id}
@@ -87,7 +98,17 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                 />
             );
         });
-    }, [products, catType, textColor, index, slug]);
+        
+        return (
+            <Carousel
+                items={items}
+                viewType={catType}
+                backToStartColor={textColor}
+                initialStart={index === 0}
+                dots={true}
+            />
+        );
+    };
 
     const currentViewType = useMemo(() => viewTypes.find((type) => type.value === catType), [catType]);
 
@@ -124,13 +145,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     {currentViewType?.title || ''}
                 </div>
             </div>
-            {isVisible && <Carousel
-                items={items}
-                viewType={catType}
-                backToStartColor={textColor}
-                initialStart={index === 0}
-                dots={true}
-            />}
+            {renderContent()}
         </div>
     );
 };
