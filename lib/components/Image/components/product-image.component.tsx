@@ -1,6 +1,10 @@
 import type { ImageProps } from '../image.props';
 import React, { useState } from 'react';
-import Image from 'next/image';
+import Image, { ImageLoader } from 'next/image';
+
+const customLoader: ImageLoader = ({ src, width, quality }) => {
+    return `https://cdn.asimthecat.com/_next/image?url=${src}&w=${width}&q=${quality || 75}`;
+};
 
 const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, height, loading = "lazy", backgroundColor }) => {
     const [error, setError] = useState<boolean>(false);
@@ -29,6 +33,7 @@ const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, h
     return (
         <>
             <Image
+                loader={customLoader}
                 src={image}
                 alt={alt}
                 className='image'

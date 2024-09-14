@@ -16,8 +16,6 @@ const nextConfig = {
         return config;
     },
     nx: {
-      // Set this to true if you would like to use SVGR
-      // See: https://github.com/gregberge/svgr
       svgr: false,
     },
     async redirects() {
@@ -29,23 +27,6 @@ const nextConfig = {
             permanent: false
         }
       ]
-    },
-    async headers() {
-        return [
-            {
-                // Apply these headers to all routes in your application.
-                source: "/fonts/:path*",
-                headers: [
-                    { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-                ],
-            },
-            // {
-            //     source: "/critical-path.css",
-            //     headers: [
-            //         { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-            //     ],
-            // },
-        ];
     },
     // compress: true,
     reactStrictMode: true,

@@ -96,7 +96,7 @@ const SearchModule: React.FC = () => {
     }, [searchOpen])
     
     return searchOpen && (
-        <div className={`search-section ${searchOpen ? 'active' : ''}`}>
+        <div className={`search-section active`}>
             <div className="s-input-area">
                 <IconButton 
                   width={24}
@@ -136,7 +136,7 @@ const SearchModule: React.FC = () => {
                 </div>
             )}
 
-        </div> || <></>
+        </div>
     );
 };
 
