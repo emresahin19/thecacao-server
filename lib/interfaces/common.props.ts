@@ -46,7 +46,7 @@ export type ColorOptions =
   }
 
   export interface CategoryProps {
-      ref?: React.RefObject<HTMLDivElement>;
+      ref?: Draft<React.RefObject<HTMLDivElement>>;
       id: number;
       index: number;
       name: string;
