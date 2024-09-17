@@ -40,7 +40,6 @@ const CustomImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, ty
                         rel="preload" 
                         as="image" 
                         imageSrcSet={srcSet} 
-                        fetchPriority='high'
                     />
                 </Head>
             )}

@@ -7,25 +7,28 @@ const Logo = dynamic(() => import("../../Logo/components/logo-image.component"),
 
 const modalTop = 0;
 
-const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
+const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
     const { show, component, resetModal } = useModal();
     const modalRef = useRef<HTMLDivElement>(null);
     const [startY, setStartY] = useState<number>(0);
     const [moveY, setMoveY] = useState<number>(0);
-    const scrollYRef = useRef<number>(0);
+    const scrollYRef = useRef<number>(0); // To store scroll position
 
     const handleClose = () => {
         setMoveY(0);
 
         const mainContent = document.getElementById('main');
         if (mainContent) {
+            // Remove fixed positioning styles
             mainContent.style.position = '';
             mainContent.style.top = '';
             mainContent.style.left = '';
             mainContent.style.right = '';
             mainContent.style.overflow = '';
-            mainContent.scrollTo(0, scrollYRef.current); // Restore the scroll position
         }
+
+        // Restore the window's scroll position
+        window.scrollTo(0, scrollYRef.current);
 
         if (modalRef.current) {
             modalRef.current.style.transform = `translateY(calc(100% + ${modalTop}px)) scale(.85)`;
@@ -38,16 +41,18 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
 
     const handleOpen = () => {
         setMoveY(0);
-        // Store the scroll position and fix the body
         const mainContent = document.getElementById('main');
         if (mainContent) {
+            // Store the current scroll position
             scrollYRef.current = window.scrollY || window.pageYOffset;
+            // Fix the mainContent div to prevent background scrolling
             mainContent.style.position = 'fixed';
             mainContent.style.top = `-${scrollYRef.current}px`;
             mainContent.style.left = '0';
             mainContent.style.right = '0';
             mainContent.style.overflow = 'hidden';
         }
+
         if (modalRef.current) {
             modalRef.current.style.transform = `translateY(${modalTop}px) scale(1)`;
             modalRef.current.style.transition = 'transform 0.3s ease';
@@ -63,7 +68,7 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
         } else {
             handleClose();
         }
-    }, [show])
+    }, [show]);
 
     const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
@@ -84,15 +89,15 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
         const maxMoveY = windowH - modalHeight - modalTop;
         const diffY = Math.max(currentY - startY, maxMoveY);
 
-        if(diffY < maxMoveY) return;
+        if (diffY < maxMoveY) return;
 
         setMoveY(diffY);
 
-        if(diffY >= 0){
+        if (diffY >= 0) {
             const scale = 1 - Math.min(diffY / window.innerHeight, 0.15);
             modalRef.current!.style.transform = `translateY(${modalTop}px) scale(${scale})`;
 
-            if(scale <= 0.85){
+            if (scale <= 0.85) {
                 const adjustedDiffY = diffY - (windowH * 0.15);
                 modalRef.current!.style.transform = `translateY(${adjustedDiffY}px) scale(0.85)`;
             }
@@ -100,7 +105,7 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
             modalRef.current!.style.transform = `translateY(${diffY}px) scale(1)`;
         }
 
-        if(blurrable){
+        if (blurrable) {
             const blur = Math.max(((windowH - modalTop - diffY) / 100), 0);
             modalRef.current!.style.backdropFilter = `blur(${blur}px)`;
         }
@@ -110,9 +115,9 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
         const modalHeight = modalRef.current!.offsetHeight;
         const maxMoveY = window.innerHeight - modalHeight - modalTop;
         const diffY = Math.max(moveY, maxMoveY);
-        const limit = Math.min(window.innerHeight / 5, window.innerHeight*0.85);
-        
-        if(diffY >= 0){
+        const limit = Math.min(window.innerHeight / 5, window.innerHeight * 0.85);
+
+        if (diffY >= 0) {
             if (moveY > limit) {
                 if (modalRef.current) {
                     modalRef.current.style.transform = `translateY(calc(100% + ${modalTop}px)) scale(${0.85})`;
@@ -148,11 +153,7 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
                     ref={modalRef}
                 >
                     <div className="modal-header">
-                        <Logo
-                            image="menu-logo.png"
-                            width={60}
-                            height={60}
-                        />
+                        <Logo image="menu-logo.png" width={60} height={60} />
                         <button
                             className="close"
                             onClick={resetModal}
