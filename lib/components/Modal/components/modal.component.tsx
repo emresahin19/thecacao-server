@@ -12,30 +12,45 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const [startY, setStartY] = useState<number>(0);
     const [moveY, setMoveY] = useState<number>(0);
+    const scrollYRef = useRef<number>(0);
 
     const handleClose = () => {
         setMoveY(0);
+        // Restore body styles and scroll position
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
         document.body.style.overflow = '';
+        window.scrollTo(0, scrollYRef.current); // Restore the scroll position
+
         if (modalRef.current) {
             modalRef.current.style.transform = `translateY(calc(100% + ${modalTop}px)) scale(.85)`;
             modalRef.current.style.transition = 'transform 0.3s ease';
-            if(blurrable){
+            if (blurrable) {
                 modalRef.current.style.backdropFilter = `blur(${0}px)`;
             }
         }
-    }
+    };
 
     const handleOpen = () => {
         setMoveY(0);
+        // Store the scroll position and fix the body
+        scrollYRef.current = window.scrollY || window.pageYOffset;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollYRef.current}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
         document.body.style.overflow = 'hidden';
+
         if (modalRef.current) {
             modalRef.current.style.transform = `translateY(${modalTop}px) scale(1)`;
             modalRef.current.style.transition = 'transform 0.3s ease';
-            if(blurrable){
+            if (blurrable) {
                 modalRef.current.style.backdropFilter = `blur(${7}px)`;
             }
         }
-    }
+    };
 
     useEffect(() => {
         if (show) {
@@ -118,33 +133,34 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
     }
 
     return (
-        show && <div className={`modal-container ${show ? 'show' : ''}`} >
-            <div className="modal"
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-                ref={modalRef}
-            >
-                <div className="modal-header">
-                    <Logo
-                        image="menu-logo.png"
-                        width={60}
-                        height={60}
-                    />
-                    <button 
-                        className="close"
-                        onClick={resetModal} 
-                        role="button"
-                        aria-label="Pencereyi Kapat"
-                    >
-                        Kapat
-                    </button>
-                </div>
-                <div className="modal-body">
-                    {component}
+        show && (
+            <div className={`modal-container ${show ? 'show' : ''}`}>
+                <div
+                    className="modal"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    ref={modalRef}
+                >
+                    <div className="modal-header">
+                        <Logo
+                            image="menu-logo.png"
+                            width={60}
+                            height={60}
+                        />
+                        <button
+                            className="close"
+                            onClick={resetModal}
+                            role="button"
+                            aria-label="Pencereyi Kapat"
+                        >
+                            Kapat
+                        </button>
+                    </div>
+                    <div className="modal-body">{component}</div>
                 </div>
             </div>
-        </div>
+        )
     );
 };
 

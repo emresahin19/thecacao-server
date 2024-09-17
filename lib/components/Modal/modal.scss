@@ -13,7 +13,8 @@
     transform: translateY(calc(100% + 70px));
     background-color: rgba(var(--black-rgb), 0.3);
     backdrop-filter: blur(7px);
-
+    top: 0;
+    
     &.show {
         transform: translateY(0) scale(1);
     }

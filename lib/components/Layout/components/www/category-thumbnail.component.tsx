@@ -4,6 +4,7 @@ import { CategoryCarouselItemProps, CategoryCarouselProps } from "lib/interfaces
 const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ data }) => {
     const [activeCategory, setActiveCategory] = useState<number | null>(null);
     const carouselRef = useRef<HTMLDivElement | null>(null);
+    const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleCategoryClick = (id: number) => {
         const element = document.getElementById(`category-${id}`);
@@ -47,16 +48,26 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ data }) => {
 
     useEffect(() => {
         if (activeCategory !== null && carouselRef.current) {
-            const activeElement = carouselRef.current?.querySelector(`.cc-item[data-id='${activeCategory}']`) as HTMLElement;
-            if (activeElement && carouselRef.current) {
-                const carouselWidth = carouselRef.current.offsetWidth;
-                const activeElementLeft = activeElement.offsetLeft;
-                const activeElementWidth = activeElement.offsetWidth;
-
-                const scrollLeft = activeElementLeft - (carouselWidth / 2) + (activeElementWidth / 2);
-                carouselRef.current?.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            if (scrollTimeoutRef.current) {
+                clearTimeout(scrollTimeoutRef.current);
             }
+            scrollTimeoutRef.current = setTimeout(() => {
+                const activeElement = carouselRef.current?.querySelector(`.cc-item[data-id='${activeCategory}']`) as HTMLElement;
+                if (activeElement && carouselRef.current) {
+                    const carouselWidth = carouselRef.current.offsetWidth;
+                    const activeElementLeft = activeElement.offsetLeft;
+                    const activeElementWidth = activeElement.offsetWidth;
+
+                    const scrollLeft = activeElementLeft - (carouselWidth / 2) + (activeElementWidth / 2);
+                    carouselRef.current?.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                }
+            }, 100);
         }
+        return () => {
+            if (scrollTimeoutRef.current) {
+                clearTimeout(scrollTimeoutRef.current);
+            }
+        };
     }, [activeCategory]);
 
     return (
