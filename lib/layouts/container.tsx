@@ -7,7 +7,7 @@ const Container = ({children}: {children: React.ReactNode}) => {
     return (
         <>
             <Header />
-            <main className='main'>
+            <main id='main'>
                 {children}
             </main>
             <Footer />
