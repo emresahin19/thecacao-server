@@ -49,6 +49,7 @@ export class MenuService {
                 category.products = await Promise.all(
                     category.products.map(async (product) => {
                         product.image_urls = await this.productService.getImageUrls(product.image_ids);
+                        product.images = await this.productService.getImages(product.image_ids); 
                         delete product.image_ids; 
                         return product;
                     })

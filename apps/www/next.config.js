@@ -48,6 +48,8 @@ const nextConfig = {
     },
     assetPrefix: devMode ? '' : 'https://cdn.asimthecat.com',
     images: {
+        // loader: 'custom',
+        // loaderFile: './path/to/your/customImageLoader.js',
         remotePatterns: [
             {
                 protocol: 'http',
@@ -77,7 +79,7 @@ const nextConfig = {
 const plugins = [
     // Add more Next.js plugins to this list if needed.
     withNx,
-    withBundleAnalyzer,
+    // withBundleAnalyzer,
   ];
   
 module.exports = composePlugins(...plugins)(nextConfig);

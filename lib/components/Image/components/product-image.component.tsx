@@ -1,50 +1,21 @@
 import type { ImageProps } from '../image.props';
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { cdnUrl } from 'lib/constants';
-import { customLoader } from 'lib/utils';
+import React from 'react';
+import CustomImage from './custom-image.component';
 
-const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, height, loading = "lazy", backgroundColor }) => {
-    const [error, setError] = useState<boolean>(false);
-
-    const handleImageError = (e: any) => {
-        setError(true);
-    };
-
-    if(error) return (
-        <Image
-            src={`${cdnUrl}/images/the-cacao-logo.webp`}
+const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, height, type, format, loading = "lazy", backgroundColor, quality = 80 }) => {
+    return (
+        <CustomImage
+            image={image}
             alt={alt}
-            className='image'
             width={width}
             height={height}
-            priority={loading === 'eager'}
             loading={loading}
-            draggable={false}
-            onError={handleImageError}
-            style={{
-                backgroundColor: 'rgba(var(--primary-rgb), 0.4)'
-            }}
+            quality={quality}
+            type={type}
+            format={format}
+            {...backgroundColor && { style: { backgroundColor } }}
         />
-    )
-
-    return (
-        <>
-            <Image
-                loader={customLoader}
-                src={image}
-                alt={alt}
-                className='image'
-                width={width}
-                height={height}
-                priority={loading === 'eager'}
-                loading={loading}
-                draggable={false}
-                onError={handleImageError}
-                {...backgroundColor && { style: { backgroundColor } }}
-            />
-        </>
-    )
-}
+    );
+};
 
 export default ProductImage;

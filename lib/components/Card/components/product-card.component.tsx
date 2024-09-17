@@ -8,47 +8,38 @@ import Carousel from '../../Carousel/components/carousel.component';
 
 const ProductCard: React.FC<ProductProps> = memo((product) => {
     const  { 
-        id, 
         name, 
-        slug, 
-        fullpath, 
-        description, 
         price, 
-        category_id, 
-        recipe, 
-        extra, 
-        image_urls, 
+        images,
         textColor, 
-        passive, 
-        diy, 
-        order, 
         loading, 
         listView, 
+        order,
         onClick 
     } = product;
     
     const { handleShow } = useModal();
 
-    const imageItems = image_urls && useMemo(() => image_urls.map((image, index) => (
+    const imageItems = images && useMemo(() => images.map((image, index) => (
         <ProductImage 
             key={index}
-            image={`${image}`} 
+            image={`${image.filename}`} 
             alt={name} 
             width={productVariantWidth}
             height={productVariantHeight}
             quality={productVariantQuality}
-            loading={loading}
+            loading={loading === 'eager' && index === 0 ? 'eager' : 'lazy'}
         />
-    )), [image_urls, name, loading]);
+    )), [images, name, loading]);
 
     const handleClick = useCallback(() => {
-        onClick && onClick({id, name, slug, fullpath, description, price, category_id, recipe, extra, image_urls, passive, diy, order});
-    }, [handleShow, id, name, slug, fullpath, description, price, category_id, recipe, extra, image_urls, passive, diy, order]);
+        onClick && onClick(product);
+    }, [handleShow, product]);
 
     return (
         <div className={`card ${listView ? 'list' : ''}`} onClick={handleClick} role="button" aria-label={`${name} Detay`}>
             <div className="card-image">
-                {imageItems && image_urls.length > 1 ? (
+                {imageItems && imageItems.length > 1 ? (
                     <Carousel 
                         items={imageItems} 
                         rowItemsCount={1}
@@ -62,6 +53,7 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
                             <PlaceholderImage 
                                 alt={name} 
                                 loading={loading}
+                                backgroundColor='rgba(var(--primary-rgb), 0.4)'
                             />
                         )}
                         <div className='counter' />

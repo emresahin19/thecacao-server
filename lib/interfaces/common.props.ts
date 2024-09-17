@@ -1,8 +1,8 @@
-import { ImageObject } from "lib/interfaces";
 import { Draft } from "@reduxjs/toolkit";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { ReactElement, ReactNode, RefObject } from "react";
+import { ImageObject } from "../components/Input/input.props";
 
 export type InputSize = 'sm' | 'md' | 'lg';
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'date' | 'time' | 'datetime-local' | 'select' | 'datetime' | 'textarea' | 'color' | 'file' | 'checkbox' | 'radio';
@@ -70,14 +70,14 @@ export interface ProductProps {
     fullpath?: string;
     description: string;
     price: number;
-    category_id: number;
-    recipe: string;
+    category_id?: number;
+    recipe?: string;
     extra?: Array<ExtraProps>;
     images?: Array<ImageObject>;
     cfImages?: Array<any>;
     image_urls?: Array<string>;
-    passive: number;
-    diy: Array<any> | null;
+    passive?: number;
+    diy?: Array<any> | null;
     order: number;
     textColor?: string;
     listView?: boolean;
@@ -121,10 +121,11 @@ export interface HexToRgba {
 }
 
 
-export interface ImageToCdnUrlProps {
-  image: string | null | undefined;
-  width?: number;
-  height?: number;
+export interface CustomImageProps {
+  image?: string | null | undefined;
+  width?: number | null;
+  height?: number | null;
   type?: 'product' | 'product-detail' | 'slider' | 'extra';
-  quality?: number;
+  format?: 'webp' | 'jpg' | 'png';
+  quality?: number | null;
 }

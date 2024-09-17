@@ -74,6 +74,7 @@ export interface TogglerProps {
 export interface ImageObject {
     id: string | null;
     file: File | null;
+    filename?: string;
     url: string;
 };
 

@@ -1,18 +1,15 @@
 import { ImageProps } from "lib/interfaces"
 import { imageToCdnUrl } from "lib/utils";
-import Image from "next/image"
 import React from "react"
+import CustomImage from "../../Image/components/custom-image.component";
 
 const LogoImage: React.FC<ImageProps> = ({image, width=16, height=16, style}) => {
-    const url = imageToCdnUrl({ image, width: width * 2, height: height * 2, quality: 100 });
-    
     return (
-        <Image 
-            src={url} 
+        <CustomImage 
+            image={image} 
             width={width}
             height={height}
             alt="icon"
-            priority={true}
             loading="eager"
             // {...style && {style}}
             

@@ -1,13 +1,12 @@
 import type { PlaceholderImageProps } from '../image.props';
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React from 'react';
 import { 
     productVariantWidth, 
     productVariantHeight, 
     defaultColor, 
     placeholderProductImage, 
 } from 'lib/constants';
-import { imageToCdnUrl } from 'lib/utils';
+import CustomImage from './custom-image.component';
 
 const PlaceholderImage: React.FC<PlaceholderImageProps> = ({ 
     alt, 
@@ -16,27 +15,16 @@ const PlaceholderImage: React.FC<PlaceholderImageProps> = ({
     width = productVariantWidth,
     height = productVariantHeight
 }) => {
-    const url = imageToCdnUrl({ image: placeholderProductImage, width, height });
-    const [imageSrc, setImageSrc] = useState<string>(url); 
-
-    const handleImageError = (e: any) => {
-        setImageSrc('/images/the-cacao-logo.webp');
-    };
-
     return (
-        <Image
-            src={imageSrc} 
+        <CustomImage
+            image={placeholderProductImage} 
             className="placeholder-image"
             alt={alt} 
             width={width}
             height={height}
             loading={loading}
-            priority={loading === 'eager'}
-            onError={handleImageError}
-            draggable={false}
-            style={{...backgroundColor && { backgroundColor }}}
+            {...backgroundColor && { style: { backgroundColor }}}
         />
-        // </div>
 )};
 
 export default PlaceholderImage;

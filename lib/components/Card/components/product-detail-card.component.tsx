@@ -6,15 +6,16 @@ import PlaceholderImage from '../../Image/components/placeholder-image.component
 
 import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality } from 'lib/constants';
 
-const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, image_urls }) => {
-    const imageItems = image_urls && image_urls.map((image) => 
+const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, images }) => {
+    const imageItems = images && images.map((image) => 
         <ProductImage 
-            image={`${image}`} 
+            key={image.id}
+            image={`${image.filename}`} 
             alt={name} 
             width={productDetailVariantWidth}
             height={productDetailVariantHeight}
             quality={productDetailVariantQuality}
-            loading='eager'
+            loading='lazy'
         />
     );
     
@@ -49,7 +50,7 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
     return (
         <div className='detail-card'>
             <div className="image">
-                {imageItems && image_urls.length > 1 ? (
+                {imageItems && imageItems.length > 1 ? (
                     <Carousel 
                         items={imageItems} 
                         rowItemsCount={1}

@@ -1,5 +1,5 @@
 import { cdnUrl, dashUrl } from "../constants";
-import { HexToRgba, ImageToCdnUrlProps } from "../interfaces";
+import { HexToRgba, CustomImageProps, ImageProps } from "../interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { 
     extraImageHeight, 
@@ -110,40 +110,121 @@ const serializeFilters = (filters: { [key: string]: any }) => {
         .join('&');
 };
 
-const imageToCdnUrl = ({image, width, height, type}: ImageToCdnUrlProps) => {
-    if(!image) return '/images/the-cacao-logo.webp';
+const imageToCdnUrl = ({ image, width, height, type, format = 'webp', quality = 80 }: ImageProps) => {
+    if (!image) return `${cdnUrl}/images/the-cacao-logo.webp`;
 
+    const { w, h } = imageSizeCalc({ width, height, type });
+
+    const size = w && h ? `/crop,w=${w},h=${h},f=${format},q=${quality}` : '';
+    return `${cdnUrl}/images${size}/${image}`;
+};
+
+const imageToCdnSet = ({ image, width, height, type, format, quality }: ImageProps) => {
+    if (!image) return {
+        src: `${cdnUrl}/images/the-cacao-logo.webp`,
+    };
+
+    const { w, h } = imageSizeCalc({ width, height, type });
+
+    if (!w || !h) return {
+        src: `${cdnUrl}/images/the-cacao-logo.webp`,
+    };
+
+    const x1 = {
+        key: '1x',
+        w: Math.ceil(w * 0.8),
+        h: Math.ceil(h * 0.8),
+        q: quality
+    }
+
+    const x2 = {
+        key: '2x',
+        w: w,
+        h: h,
+        q: quality
+    }
+
+    const x3 = {
+        key: '3x',
+        w: Math.ceil(w * 1.5),
+        h: Math.ceil(h * 1.5),
+        q: quality
+    }
+
+    const x1Src = imageToCdnUrl({ image, width: x1.w, height: x1.h, format, quality });
+    const x2Src = imageToCdnUrl({ image, width: x2.w, height: x2.h, format, quality });
+    const x3Src = imageToCdnUrl({ image, width: x3.w, height: x3.h, format, quality });
+
+    return {
+        srcSet: `${x1Src} 1x, ${x2Src} 2x`,
+        sizes: `(max-width: 900px) ${x1.w}px, ${x2.w}px`,
+        src: x1Src,
+    };
+};
+
+
+const imageSizeCalc = ({ width, height, type }: ImageProps) => {
     const sizes = {
         'product': {
-            _width: productVariantWidth,
-            _height: productVariantHeight,
+            w: productVariantWidth,
+            h: productVariantHeight,
         },
         'product-detail': {
-            _width: productDetailVariantWidth,
-            _height: productDetailVariantHeight,
+            w: productDetailVariantWidth,
+            h: productDetailVariantHeight,
         },
         'slider': {
-            _width: sliderVariantWidth,
-            _height: sliderVariantHeight,
+            w: sliderVariantWidth,
+            h: sliderVariantHeight,
         },
         'extra': {
-            _width: extraImageWidth,
-            _height: extraImageHeight,
+            w: extraImageWidth,
+            h: extraImageHeight,
         }
     };
 
-    const { _width, _height } = type 
-        ? sizes[type] 
-        : width && height 
-            ? { _width: width, _height: height }
-            : { _width: null, _height: null }
-
-    const size = _width && _height ? `/crop,w=${_width},h=${_height},f=webp,q=80` : '';
-    return `${cdnUrl}/images${size}/${image}`;
-}
+    const { w, h } = type ? sizes[type] : { w: width, h: height };
+    return { w, h };
+};
 
 const customLoader: ImageLoader = ({ src, width, quality }) => {
-    return `${src}`;
+    // Varsayılan kalite
+    const newQuality = quality || 80;
+    const format = 'webp'; // Varsayılan format
+
+    // URL'deki mevcut width ve height değerlerini yakalamak için regex
+    const regex = /crop,w=(\d+),h=(\d+),f=([a-zA-Z]+),q=(\d+)/;
+    const match = src.match(regex);
+
+    let newWidth = width;
+    let newHeight;
+
+    if (match) {
+        // Mevcut width ve height değerlerini yakala
+        const currentWidth = parseInt(match[1], 10);
+        const currentHeight = parseInt(match[2], 10);
+
+        // Oranı koruyarak yeni height'ı hesapla
+        const aspectRatio = currentHeight / currentWidth;
+        newHeight = Math.round(newWidth * aspectRatio);
+    }
+
+    // Yeni src'yi oluştur
+    const newSrc = src.replace(regex, `crop,w=${newWidth},h=${newHeight},f=${format},q=${newQuality}`);
+
+    return newSrc;
+};
+
+// Custom srcSet oluşturma fonksiyonu
+const generateSrcSet = (src: string, width: number, quality: number = 80) => {
+    // 1x, 2x ve 3x boyutları için URL'leri oluştur
+    const sizes = [1, 2, 3].map((scale) => {
+        const newWidth = width * scale;
+        const newHeight = Math.round(newWidth * 0.833); // Oranı koruyor (360x300'ün 0.833 oranı)
+        return `${src.replace(/crop,w=\d+,h=\d+,/, `crop,w=${newWidth},h=${newHeight},`)} ${newWidth}w`;
+    });
+
+    return sizes.join(', ');
 };
 
 export {
@@ -157,5 +238,8 @@ export {
     handleErrorResponse,
     serializeFilters,
     imageToCdnUrl,
+    imageToCdnSet,
+    imageSizeCalc,
     customLoader,
+    generateSrcSet,
 }

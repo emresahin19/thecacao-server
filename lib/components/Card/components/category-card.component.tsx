@@ -28,21 +28,26 @@ const viewTypes = [
     },
 ];
 
-
 const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel' }) => {
-    const listTypeStorage = getLocalStorageItem('listTypes') || {};
-    const [catType, setCatType] = useState<CarouselProps['viewType']>(listTypeStorage[slug] ?? viewType);
+    const [catType, setCatType] = useState<CarouselProps['viewType']>(viewType);
     const [viewed, setViewed] = useState(index < 3);
     const { handleShow } = useModal();
     const [isVisible, setIsVisible] = useState(index < 3);
     const ref = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+        const listTypeStorage = getLocalStorageItem('listTypes') || {};
+        if (listTypeStorage[slug]) {
+            setCatType(listTypeStorage[slug]);
+        }
+    }, [slug]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting && !viewed) {
                     setIsVisible(true);
-                    setViewed(true); // Set 'viewed' to true when the category is visible
+                    setViewed(true); 
                 }
             },
             { rootMargin: '150px' }
@@ -57,7 +62,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                 observer.unobserve(ref.current);
             }
         };
-    }, [ref, viewed]); // Add 'viewed' to the dependency array
+    }, [ref, viewed]);
 
     const handleClick = useCallback((product: ProductProps) => {
         handleShow({
@@ -73,7 +78,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
         }
 
         const items = products.map((product, i) => {
-            const { id, name, slug, description, fullpath, price, category_id, recipe, extra, image_urls, passive, diy, order }: ProductProps = product;
+            const { id, name, slug, description, fullpath, price, category_id, recipe, extra, images, image_urls, passive, diy, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
             
             return (
@@ -85,12 +90,8 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     fullpath={fullpath ?? `${slug}`}
                     description={description}
                     price={price}
-                    category_id={category_id}
-                    recipe={recipe}
                     extra={extra}
-                    image_urls={image_urls}
-                    passive={passive}
-                    diy={diy}
+                    images={images}
                     order={order}
                     loading={isEager ? 'eager' : 'lazy'}
                     textColor={textColor}

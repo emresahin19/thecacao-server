@@ -12,6 +12,7 @@ import {
     serializeFilters,
     imageToCdnUrl,
     customLoader,
+    generateSrcSet,
 } from './helpers';
 
 export { 
@@ -28,4 +29,5 @@ export {
     serializeFilters,
     imageToCdnUrl,
     customLoader,
+    generateSrcSet,
 };
