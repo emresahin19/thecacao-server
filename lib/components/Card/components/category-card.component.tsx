@@ -1,6 +1,6 @@
 import type { CarouselProps, CategoryProps, ProductProps } from "../../../interfaces";
 import Carousel from "../../Carousel/components/carousel.component";
-import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useState, useCallback, useEffect, useMemo, forwardRef } from "react";
 import { defaultColor } from "../../../constants";
 import { getLocalStorageItem, setLocalStorageItem } from "../../../utils/localStorage";
 import { useModal } from "../../../contexts";
@@ -11,6 +11,7 @@ import LogoIcon from "../../Logo/components/logo-icon.component";
 import ProductCard from "../../Card/components/product-card.component";
 import dynamic from "next/dynamic";
 import { hexToRgba } from "lib/utils";
+
 
 // const CarouselSkeleton = dynamic(() => import("../../Skeleton/components/carousel.component"), { ssr: false });
 const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
@@ -28,12 +29,21 @@ const viewTypes = [
     },
 ];
 
-const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel' }) => {
+const CategorySection = forwardRef<HTMLDivElement, CategoryProps>((props, ref) => {
+    const {
+        id,
+        name,
+        slug,
+        products,
+        color,
+        index,
+        textColor,
+        viewType = 'carousel',
+        isVisible
+    } = props;
+
     const [catType, setCatType] = useState<CarouselProps['viewType']>(viewType);
-    const [viewed, setViewed] = useState(index < 3);
     const { handleShow } = useModal();
-    const [isVisible, setIsVisible] = useState(index < 3);
-    const ref = useRef<HTMLDivElement>(null);
     
     useEffect(() => {
         const listTypeStorage = getLocalStorageItem('listTypes') || {};
@@ -41,28 +51,6 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
             setCatType(listTypeStorage[slug]);
         }
     }, [slug]);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting && !viewed) {
-                    setIsVisible(true);
-                    setViewed(true); 
-                }
-            },
-            { rootMargin: '150px' }
-        );
-
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
-
-        return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
-        };
-    }, [ref, viewed]);
 
     const handleClick = useCallback((product: ProductProps) => {
         handleShow({
@@ -73,14 +61,14 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
     }, [handleShow]);
     
     const renderContent = () => {
-        if (!viewed) {
-            return <></>;
+        if (!isVisible) {
+            return null;
         }
 
         const items = products.map((product, i) => {
-            const { id, name, slug, description, fullpath, price, category_id, recipe, extra, images, image_urls, passive, diy, order }: ProductProps = product;
-            const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
-            
+            const { id, name, slug, description, fullpath, price, extra, images, order }: ProductProps = product;
+            const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // İlk iki öğe eager yüklenir
+
             return (
                 <ProductCard
                     key={id}
@@ -100,7 +88,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                 />
             );
         });
-        
+
         return (
             <Carousel
                 items={items}
@@ -129,7 +117,8 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
             id={`category-${id}`} 
             className="category-section" 
             style={{ background: color ? hexToRgba(color, 0.25) : '' }}
-            ref={ref}    
+            ref={ref as React.RefObject<HTMLDivElement>}
+            data-id={id} 
         >
             <div className="category-header">
                 <div className="category-title" style={{ color: textColor }}>
@@ -150,6 +139,6 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
             {renderContent()}
         </div>
     );
-};
+});
 
 export default CategorySection;

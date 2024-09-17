@@ -36,4 +36,5 @@ export interface CategoryCarouselItemProps {
 
 export interface CategoryCarouselProps {
     data: CategoryCarouselItemProps[];
+    activeCategory?: number | null;
 }

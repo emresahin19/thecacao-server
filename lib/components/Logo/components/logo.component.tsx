@@ -2,10 +2,12 @@ import React from 'react';
 import { defaultColor } from 'lib/constants';
 import { useVariable, useModal } from 'lib/contexts';
 import { LogoProps } from '../logo.props';
+import { useRouter } from 'next/router';
 
-const Logo:React.FC<LogoProps> = ({color = defaultColor, width}) => {
+const Logo:React.FC<LogoProps> = ({color = defaultColor, width, homePath = '/'}) => {
     const { resetModal } = useModal();
     const { resetVariables } = useVariable();
+    const router = useRouter();
 
     const _width = width 
         ? typeof width === 'number' 
@@ -14,11 +16,14 @@ const Logo:React.FC<LogoProps> = ({color = defaultColor, width}) => {
         : '62px'
 
     const comingHome = () => {
-        if (typeof window !== 'undefined' && window.location.pathname === '/') {
-            resetModal();
-            resetVariables();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
+        if (typeof window !== 'undefined') {
+            if (window.location.pathname === homePath)
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            else
+                router.push(homePath);
         }
         resetModal();
         resetVariables();

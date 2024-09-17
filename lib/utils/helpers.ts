@@ -1,4 +1,4 @@
-import { cdnUrl, dashUrl } from "../constants";
+import { cdnUrl, dashUrl, placeholderProductImage } from "../constants";
 import { HexToRgba, CustomImageProps, ImageProps } from "../interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { 
@@ -120,9 +120,7 @@ const imageToCdnUrl = ({ image, width, height, type, format = 'webp', quality = 
 };
 
 const imageToCdnSet = ({ image, width, height, type, format, quality }: ImageProps) => {
-    if (!image) return {
-        src: `${cdnUrl}/images/the-cacao-logo.webp`,
-    };
+    image = image || placeholderProductImage;
 
     const { w, h } = imageSizeCalc({ width, height, type });
 

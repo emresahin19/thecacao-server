@@ -301,7 +301,6 @@
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
-    background-color: #fff;
     position: sticky;
     top: 60px;
     width: 100%;
@@ -336,11 +335,24 @@
         color: var(--primary);
         font-size: 12px;
         margin: 4px;
+        position: relative;
         &:last-child {
             margin-right: 0;
         }
+        &.active {
+            font-weight: 600;
+        }
     }
 
+}
+
+@keyframes cc-item-active {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
 }
 
 .cookie-usage {

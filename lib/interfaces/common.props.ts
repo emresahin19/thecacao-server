@@ -44,22 +44,25 @@ export type ColorOptions =
   export type AppPropsWithLayout = AppProps & {
     Component: NextPageWithLayout
   }
+
   export interface CategoryProps {
-    ref?: Draft<RefObject<HTMLDivElement>> | null;
-    id: number;
-    index: number;
-    name: string;
-    slug: string;
-    order: number;
-    products: ProductProps[];
-    image?: string;
-    color?: string;
-    textColor?: string;
-    isActive?: boolean;
-    viewType?: 'grid' | 'list' | 'carousel';
-    createdAt?: string;
-    updatedAt?: string;
-}
+      ref?: React.RefObject<HTMLDivElement>;
+      id: number;
+      index: number;
+      name: string;
+      slug: string;
+      order: number;
+      products: ProductProps[];
+      image?: string;
+      color?: string;
+      textColor?: string;
+      isActive?: boolean;
+      viewType?: 'grid' | 'list' | 'carousel';
+      createdAt?: string;
+      updatedAt?: string;
+      setActiveCategory?: (id: number) => void;
+      isVisible?: boolean;
+  }
 
 export interface ProductProps {
     id: number;
