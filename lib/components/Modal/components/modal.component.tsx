@@ -16,9 +16,15 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
 
     const handleClose = () => {
         setMoveY(0);
+
         const mainContent = document.getElementById('main');
         if (mainContent) {
-            mainContent.style.overflow = 'hidden';
+            mainContent.style.position = '';
+            mainContent.style.top = '';
+            mainContent.style.left = '';
+            mainContent.style.right = '';
+            mainContent.style.overflow = '';
+            mainContent.scrollTo(0, scrollYRef.current); // Restore the scroll position
         }
 
         if (modalRef.current) {
@@ -35,6 +41,11 @@ const Modal: React.FC<ModalInitialProps> = ({blurrable = false}) => {
         // Store the scroll position and fix the body
         const mainContent = document.getElementById('main');
         if (mainContent) {
+            scrollYRef.current = window.scrollY || window.pageYOffset;
+            mainContent.style.position = 'fixed';
+            mainContent.style.top = `-${scrollYRef.current}px`;
+            mainContent.style.left = '0';
+            mainContent.style.right = '0';
             mainContent.style.overflow = 'hidden';
         }
         if (modalRef.current) {
