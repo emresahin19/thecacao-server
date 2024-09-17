@@ -18,7 +18,7 @@ const nextConfig = {
             use: ['@svgr/webpack'],
         });
         if (!isServer) {
-            config.optimization.usedExports = true;
+            // config.optimization.usedExports = true;
             config.optimization.sideEffects = true;
             config.resolve.alias['buffer'] = false;
         }

@@ -56,7 +56,7 @@ const CustomImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, ty
                 loading={loading}
                 decoding={isLazy ? 'async' : 'sync'}
                 draggable={false}
-                {...(!isLazy && { fetchPriority: 'high' })}
+                {...(!isLazy && { fetchpriority: 'high' })}
                 {...style && { style }}
             />
         </>
