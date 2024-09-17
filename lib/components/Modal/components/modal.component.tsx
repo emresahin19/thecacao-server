@@ -53,16 +53,6 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
             }
         }
 
-        // After the animation duration, finalize the close
-        setTimeout(() => {
-            finalizeClose();
-        }, 300); // Duration matches the CSS transition
-    };
-
-    // Finalize the closing process
-    const finalizeClose = () => {
-        setIsClosing(false); // Reset the closing state
-
         // Remove scroll locking
         const mainContent = document.getElementById('main');
         if (mainContent) {
@@ -71,24 +61,22 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
             mainContent.style.left = '';
             mainContent.style.right = '';
             mainContent.style.overflow = '';
+            window.scrollTo(0, scrollYRef.current);
         }
 
-        // Restore the window's scroll position
-        window.scrollTo(0, scrollYRef.current);
-
-        // Reset the modal context to unmount the modal
-        resetModal();
+        setTimeout(() => {
+            setIsClosing(false);
+            resetModal();
+        }, 300); 
     };
 
-    // Effect to handle opening and closing based on 'show' prop
     useEffect(() => {
         if (show) {
             handleOpen();
-            setIsClosing(false); // Ensure it's not in closing state when opening
+            setIsClosing(false); 
         }
     }, [show]);
 
-    // Handle closing via button or swipe gesture
     const handleClose = () => {
         if (!isClosing) {
             initiateClose();
@@ -164,8 +152,8 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
     };
 
     return (
-        (show || isClosing) && (
-            <div className={`modal-container ${show && !isClosing ? 'show' : 'closing'}`}>
+        show && (
+            <div className={`modal-container ${show && 'show' || ''}`}>
                 <div
                     className="modal"
                     onTouchStart={handleTouchStart}

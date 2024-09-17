@@ -5,7 +5,7 @@ import { imageToCdnSet, imageToCdnUrl } from '../../../utils/helpers';
 import { cdnUrl, placeholderProductImage } from '../../../constants';
 import Image from 'next/image';
 
-const CustomImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, type, height, loading = "lazy", backgroundColor, format, quality = 80, style }) => {
+const CustomImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, type, height, loading = "lazy", format, quality = 80, style }) => {
     const [error, setError] = useState<boolean>(false);
     // const { srcSet, sizes, src } = imageToCdnSet({ image, width, height, type, format, quality });
     const src = imageToCdnUrl({ image, width, height, type, format, quality });
@@ -44,7 +44,7 @@ const CustomImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, ty
                 priority={loading === 'eager'}
                 loading={loading}
                 draggable={false}
-                {...backgroundColor && { style: { backgroundColor } }}
+                {...style && { style }}
             />
             {/* {!isLazy && (
                 <Head>
