@@ -27,6 +27,7 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
             alt={name} 
             width={productVariantWidth}
             height={productVariantHeight}
+            type='product'
             quality={productVariantQuality}
             loading={loading === 'eager' && index === 0 ? 'eager' : 'lazy'}
         />

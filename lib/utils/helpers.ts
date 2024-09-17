@@ -115,7 +115,12 @@ const imageToCdnUrl = ({ image, width, height, type, format = 'webp', quality = 
 
     const { w, h } = imageSizeCalc({ width, height, type });
 
-    const size = w && h ? `/crop,w=${w},h=${h},f=${format},q=${quality}` : '';
+    const size = type 
+        ? `/${type}` 
+        : w && h 
+            ? `/crop,w=${w},h=${h},f=${format},q=${quality}` 
+            : '';
+            
     return `${cdnUrl}/images${size}/${image}`;
 };
 

@@ -15,6 +15,7 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
             width={productDetailVariantWidth}
             height={productDetailVariantHeight}
             quality={productDetailVariantQuality}
+            type='product-detail'
             loading='lazy'
         />
     );
