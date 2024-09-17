@@ -10,7 +10,7 @@ const CustomImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, ty
     // const { srcSet, sizes, src } = imageToCdnSet({ image, width, height, type, format, quality });
     const src = imageToCdnUrl({ image, width, height, type, format, quality });
     // const isLazy = loading === 'lazy';
-    console.log(src)
+
     const handleImageError = () => {
         setError(true);
     };

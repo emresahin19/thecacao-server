@@ -11,7 +11,7 @@ import CategorySection from "../../Card/components/category-card.component";
 import IconButton from "../../Button/components/icon-button.component";
 
 const SearchModule: React.FC = () => {
-    const { searchOpen, setSearchOpen, setIsOverflow } = useVariable();
+    const { searchOpen, setSearchOpen } = useVariable();
     const [searchTerm, setSearchTerm] = useState<string>('');
     const { data } = useSelector((state: RootState) => state.menu);
 
@@ -90,9 +90,11 @@ const SearchModule: React.FC = () => {
     }
     
     useEffect(() => {
-        setIsOverflow(searchOpen);
         if(searchOpen) {
             document.getElementById('search-input')?.focus();
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
         }
     }, [searchOpen])
     

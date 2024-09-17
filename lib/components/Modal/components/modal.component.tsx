@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState, TouchEvent } from "react";
 import dynamic from "next/dynamic";
 import { useModal } from "lib/contexts";
 
-const Logo = dynamic(() => import("../../Logo/components/logo-image.component"), { ssr: false });
+const Logo = dynamic(() => import("../../Logo/components/logo.component"), { ssr: false });
 
 const modalTop = 0;
 
@@ -13,23 +13,10 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
     const [isClosing, setIsClosing] = useState(false); // Internal state to manage closing
     const [startY, setStartY] = useState<number>(0);
     const [moveY, setMoveY] = useState<number>(0);
-    const scrollYRef = useRef<number>(0); // To store scroll position
 
     // Handle opening the modal
     const handleOpen = () => {
         setMoveY(0);
-        const mainContent = document.getElementById('main');
-        if (mainContent) {
-            // Store the current scroll position
-            scrollYRef.current = window.scrollY || window.pageYOffset;
-            // Fix the mainContent div to prevent background scrolling
-            mainContent.style.position = 'fixed';
-            mainContent.style.top = `-${scrollYRef.current}px`;
-            mainContent.style.left = '0';
-            mainContent.style.right = '0';
-            mainContent.style.overflow = 'hidden';
-        }
-
         if (modalRef.current) {
             // Apply opening transformations
             modalRef.current.style.transform = `translateY(${modalTop}px) scale(1)`;
@@ -51,17 +38,6 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
             if (blurrable) {
                 modalRef.current.style.backdropFilter = `blur(${0}px)`;
             }
-        }
-
-        // Remove scroll locking
-        const mainContent = document.getElementById('main');
-        if (mainContent) {
-            mainContent.style.position = '';
-            mainContent.style.top = '';
-            mainContent.style.left = '';
-            mainContent.style.right = '';
-            mainContent.style.overflow = '';
-            window.scrollTo(0, scrollYRef.current);
         }
 
         setTimeout(() => {
@@ -162,7 +138,7 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
                     ref={modalRef}
                 >
                     <div className="modal-header">
-                        <Logo image="menu-logo.png" width={60} height={60} />
+                        <Logo width={60} homePath="/menu"/>
                         <button
                             className="close"
                             onClick={handleClose} // Change to handleClose

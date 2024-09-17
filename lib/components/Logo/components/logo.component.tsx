@@ -2,12 +2,9 @@ import React from 'react';
 import { defaultColor } from 'lib/constants';
 import { useVariable, useModal } from 'lib/contexts';
 import { LogoProps } from '../logo.props';
-import { useRouter } from 'next/router';
 
 const Logo:React.FC<LogoProps> = ({color = defaultColor, width, homePath = '/'}) => {
-    const { resetModal } = useModal();
-    const { resetVariables } = useVariable();
-    const router = useRouter();
+    const { goHome } = useVariable();
 
     const _width = width 
         ? typeof width === 'number' 
@@ -15,22 +12,8 @@ const Logo:React.FC<LogoProps> = ({color = defaultColor, width, homePath = '/'})
             : width
         : '62px'
 
-    const comingHome = () => {
-        if (typeof window !== 'undefined') {
-            if (window.location.pathname === homePath)
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            else
-                router.push(homePath);
-        }
-        resetModal();
-        resetVariables();
-    }
-
     return (
-        <div role='button' className='logo' onClick={comingHome} aria-label="Anasayfaya Git">
+        <div role='button' className='logo' onClick={e => goHome(homePath)} aria-label="Anasayfaya Git">
             <svg width={_width} viewBox="0 0 62 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M23.9916 13.5901H22.2119V12.3696H27.0799V13.5901H25.3002V23.8876H23.9916V13.5901Z" fill={color}/>
                 <path d="M27.9756 12.3695H29.2935V17.3906H32.0152V12.3695H33.3401V23.8875H32.0152V18.6041H29.2935V23.8875H27.9756V12.3695Z" fill={color}/>

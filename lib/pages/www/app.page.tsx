@@ -14,8 +14,8 @@ function TheApp({ children }: { children: React.ReactNode }) {
     <>
       <Provider store={store}>
         <LoadingProvider>
-          <VariableProvider>
-            <ModalProvider>
+          <ModalProvider>
+            <VariableProvider>
               <LayoutContainer>
                 <Head>
                   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,8 +45,8 @@ function TheApp({ children }: { children: React.ReactNode }) {
                 )} */}
                 {children}
               </LayoutContainer>
-            </ModalProvider>
-          </VariableProvider>
+            </VariableProvider>
+          </ModalProvider>
         </LoadingProvider>
       </Provider>
     </>

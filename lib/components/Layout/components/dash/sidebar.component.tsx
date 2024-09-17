@@ -14,7 +14,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
     const startXRef = useRef<number>(0);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const { resetModal } = useModal();
-    const { setIsOverflow } = useVariable();
     const router = useRouter();
 
     const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
@@ -86,7 +85,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
             }
         }
-        setIsOverflow(!!open)
     }, [open]);
 
     return (

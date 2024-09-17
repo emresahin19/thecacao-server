@@ -27,7 +27,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
     const { 
         menuOpen, 
         setMenuOpen,
-        // setIsOverflow
     } = useVariable();
     
     useEffect(() => {
@@ -88,7 +87,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
             } else {
                 sidebarRef.current.style.transform = 'translateX(-100%)';
             }
-            // setIsOverflow(!!menuOpen)
         }
     }, [menuOpen]);
 

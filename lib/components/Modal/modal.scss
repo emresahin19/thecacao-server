@@ -46,7 +46,7 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
-            img {
+            img, svg {
                 margin-left: 24px;
                 filter: invert(100%) brightness(3);
             }

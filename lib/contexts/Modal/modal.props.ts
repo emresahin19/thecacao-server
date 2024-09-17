@@ -12,5 +12,6 @@ export interface ModalContextType {
     component?: ReactNode;
     setComponent: (component: ReactNode) => void;
     resetModal: () => void;
+    setWrapperStyle: (open: boolean) => void;
 }
   
