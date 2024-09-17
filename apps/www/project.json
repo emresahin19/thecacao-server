@@ -15,6 +15,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
+          "git pull",
           "nx build www",
           "pm2 restart demo-www",
           "redis-cli FLUSHALL",
