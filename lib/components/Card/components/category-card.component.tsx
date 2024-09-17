@@ -1,6 +1,6 @@
 import type { CarouselProps, CategoryProps, ProductProps } from "../../../interfaces";
 import Carousel from "../../Carousel/components/carousel.component";
-import React, { useState, useCallback, useEffect, useMemo, forwardRef } from "react";
+import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { defaultColor } from "../../../constants";
 import { getLocalStorageItem, setLocalStorageItem } from "../../../utils/localStorage";
 import { useModal } from "../../../contexts";
@@ -11,7 +11,6 @@ import LogoIcon from "../../Logo/components/logo-icon.component";
 import ProductCard from "../../Card/components/product-card.component";
 import dynamic from "next/dynamic";
 import { hexToRgba } from "lib/utils";
-
 
 // const CarouselSkeleton = dynamic(() => import("../../Skeleton/components/carousel.component"), { ssr: false });
 const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
@@ -29,21 +28,12 @@ const viewTypes = [
     },
 ];
 
-const CategorySection = forwardRef<HTMLDivElement, CategoryProps>((props, ref) => {
-    const {
-        id,
-        name,
-        slug,
-        products,
-        color,
-        index,
-        textColor,
-        viewType = 'carousel',
-        isVisible
-    } = props;
-
+const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel', setActiveCategory }) => {
     const [catType, setCatType] = useState<CarouselProps['viewType']>(viewType);
+    const [viewed, setViewed] = useState(index < 3);
     const { handleShow } = useModal();
+    const [isVisible, setIsVisible] = useState(index < 3);
+    const ref = useRef<HTMLDivElement>(null);
     
     useEffect(() => {
         const listTypeStorage = getLocalStorageItem('listTypes') || {};
@@ -51,6 +41,28 @@ const CategorySection = forwardRef<HTMLDivElement, CategoryProps>((props, ref) =
             setCatType(listTypeStorage[slug]);
         }
     }, [slug]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && !viewed) {
+                    setIsVisible(true);
+                    setViewed(true); 
+                }
+            },
+            { rootMargin: '150px' }
+        );
+
+        if (ref.current) {
+            observer.observe(ref.current);
+        }
+
+        return () => {
+            if (ref.current) {
+                observer.unobserve(ref.current);
+            }
+        };
+    }, [ref, viewed]);
 
     const handleClick = useCallback((product: ProductProps) => {
         handleShow({
@@ -61,14 +73,14 @@ const CategorySection = forwardRef<HTMLDivElement, CategoryProps>((props, ref) =
     }, [handleShow]);
     
     const renderContent = () => {
-        if (!isVisible) {
-            return null;
+        if (!viewed) {
+            return <></>;
         }
 
         const items = products.map((product, i) => {
-            const { id, name, slug, description, fullpath, price, extra, images, order }: ProductProps = product;
-            const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // İlk iki öğe eager yüklenir
-
+            const { id, name, slug, description, fullpath, price, category_id, recipe, extra, images, image_urls, passive, diy, order }: ProductProps = product;
+            const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
+            
             return (
                 <ProductCard
                     key={id}
@@ -88,7 +100,7 @@ const CategorySection = forwardRef<HTMLDivElement, CategoryProps>((props, ref) =
                 />
             );
         });
-
+        
         return (
             <Carousel
                 items={items}
@@ -117,8 +129,7 @@ const CategorySection = forwardRef<HTMLDivElement, CategoryProps>((props, ref) =
             id={`category-${id}`} 
             className="category-section" 
             style={{ background: color ? hexToRgba(color, 0.25) : '' }}
-            ref={ref as React.RefObject<HTMLDivElement>}
-            data-id={id} 
+            ref={ref}    
         >
             <div className="category-header">
                 <div className="category-title" style={{ color: textColor }}>
@@ -139,6 +150,6 @@ const CategorySection = forwardRef<HTMLDivElement, CategoryProps>((props, ref) =
             {renderContent()}
         </div>
     );
-});
+};
 
 export default CategorySection;
