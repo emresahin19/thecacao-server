@@ -4,6 +4,7 @@ export const appMode = process.env.NEXT_PUBLIC_APP_MODE || 'production';
 
 export const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4040';
 export const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || 'http://localhost:4040';
+export const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'http://localhost:4020';
 export const wwwUrl = process.env.NEXT_PUBLIC_WWW_URL || 'http://localhost:4020';
 export const dashUrl = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:4040';
 export const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:4040';

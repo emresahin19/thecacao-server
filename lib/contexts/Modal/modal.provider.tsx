@@ -22,21 +22,21 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
     }
 
     useEffect(() => {
-      const mainContent = document.getElementById('main');
-      if (!mainContent) return;
       if (show) {
-          scrollYRef.current = window.scrollY || window.pageYOffset;
-          mainContent.style.position = 'fixed';
-          mainContent.style.top = `-${scrollYRef.current}px`;
-          mainContent.style.left = '0';
-          mainContent.style.right = '0';
-          mainContent.style.overflow = 'hidden';
+        scrollYRef.current = window.scrollY || window.pageYOffset;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollYRef.current}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
       }else {
-        mainContent.style.position = '';
-        mainContent.style.top = '';
-        mainContent.style.left = '';
-        mainContent.style.right = '';
-        mainContent.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.overflow = '';
+        document.body.style.overflow = '';
         window.scrollTo(0, scrollYRef.current);
       }
     }, [show]);

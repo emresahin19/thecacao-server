@@ -27,6 +27,30 @@ const nextConfig = {
     nx: {
       svgr: false,
     },
+    // async headers() {
+    //     return [
+    //         {
+    //             // Statik dosyalar için önbellekleme
+    //             source: '/_next/static/(.*)',
+    //             headers: [
+    //                 {
+    //                     key: 'Cache-Control',
+    //                     value: 'public, max-age=31536000, immutable',
+    //                 },
+    //             ],
+    //         },
+    //         {
+    //             // Tüm sayfalar için önbellekleme
+    //             source: '/(.*)',
+    //             headers: [
+    //                 {
+    //                     key: 'Cache-Control',
+    //                     value: 'public, max-age=0, must-revalidate',
+    //                 },
+    //             ],
+    //         },
+    //     ];
+    // },
     async redirects() {
       return [
         {
@@ -46,7 +70,7 @@ const nextConfig = {
             // Add other turbo-specific configurations here
         },
     },
-    assetPrefix: devMode ? '' : 'https://cdn.asimthecat.com',
+    assetPrefix: devMode ? '' : 'https://cdn.thecacao.com.tr',
     images: {
         // loader: 'custom',
         // loaderFile: './path/to/your/customImageLoader.js',

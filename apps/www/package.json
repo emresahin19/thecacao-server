@@ -7,7 +7,8 @@
     "dev-turbo": "next dev --turbo -p 4020",
     "build": "next build",
     "start": "next start -p 4020",
-    "build-css": "npx sass lib/assets/variable.scss lib/assets/css/layout.css"
+    "build-css": "npx sass lib/assets/variable.scss lib/assets/css/layout.css",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",

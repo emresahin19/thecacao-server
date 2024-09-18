@@ -230,6 +230,11 @@ const generateSrcSet = (src: string, width: number, quality: number = 80) => {
     return sizes.join(', ');
 };
 
+// const customLoader: ImageLoader = ({ src, width, quality }) => {
+//     const serveUrl = 'https://serve.thecacao.com.tr';
+//     return `${serveUrl}/${src}?w=${width}&q=${quality || 80}`;
+// }
+
 export {
     sleep,
     useShallowRouting,

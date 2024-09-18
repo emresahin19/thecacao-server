@@ -22,7 +22,7 @@ const MenuHome: React.FC<MenuProps> = ({ data, contacts }) => {
         <>
             <Head>
                 <title>Menü - The Cacao</title>
-                <link rel="canonical" href="https://demo.asimthecat.com/menu" />
+                <link rel="canonical" href="https://thecacao.com.tr/menu" />
             </Head>
             <Menu 
                 data={data}

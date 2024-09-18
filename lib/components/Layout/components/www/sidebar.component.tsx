@@ -8,7 +8,7 @@ import { routes } from "lib/utils/route.config";
 import { useModal, useVariable } from "lib/contexts";
 import { RootState } from "lib/store";
 import { ContactProps } from "lib/interfaces";
-import Logo from "../../../Logo/components/logo-image.component";
+import Logo from "../../../Logo/components/logo.component";
 
 const Sidebar: React.FC<SidebarProps> = () => {
     const [contact, setContact] = useState<ContactProps>({
@@ -102,9 +102,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 >
                     <div className="s-logo">
                         <Logo
-                            image="menu-logo.png"
                             width={118}
-                            height={118}
+                            homePath="/menu"
+                            color="#fff"
                         />
                     </div>
                     <ul className="s-list">

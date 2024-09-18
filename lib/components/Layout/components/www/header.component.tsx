@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
           <Logo
             width={58}
-            homePath="menu"
+            homePath="/menu"
           />
 
           <div className="h-side">

@@ -1,5 +1,5 @@
 // next-sitemap.config.js
-const devMode = process.env.NEXT_PUBLIC_APP_MODE === 'development';
+const devMode = true || process.env.NEXT_PUBLIC_APP_MODE === 'development';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4040';
 
 module.exports = devMode ? {
@@ -20,8 +20,8 @@ module.exports = devMode ? {
             };
         }
 
-        const response = await fetch(`${apiUrl}/api/menu`, {
-            method: 'POST',
+        const response = await fetch(`${apiUrl}/menu`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
