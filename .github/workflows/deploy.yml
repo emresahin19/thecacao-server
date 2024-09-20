@@ -3,19 +3,17 @@ name: Test Environment Variables
 on:
   push:
     branches:
-      - main  # Yalnızca 'main' branch'e push yapıldığında çalışacak
+      - main 
 
 jobs:
   test-env:
     runs-on: ubuntu-latest
 
     steps:
-    # Kodu klonla
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Sunucudan .env dosyasını kopyala
-    - name: Fetch .env file from server
+    - name: Copy .env file from server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -24,8 +22,8 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         source: "/home/web/thecacao.com.tr/production/.env"
         target: "./.env"
+        tar_exec: ""
 
-    # Ortam değişkenini yükle ve ekrana yazdır
     - name: Apply environment variables and print
       run: |
         export $(cat ./.env | xargs)
