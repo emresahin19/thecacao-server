@@ -12,6 +12,22 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      
+    - name: Check if .env file exists and display content
+      uses: appleboy/ssh-action@v0.1.2
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        port: ${{ secrets.SERVER_PORT }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          if [ -f /home/web/thecacao.com.tr/production/.env ]; then
+            cat /home/web/thecacao.com.tr/production/.env
+            exit 1  # Script'i durdurmak için
+          else
+            echo ".env dosyası bulunamadı"
+            exit 1  # Hata kodu ile işlemi durdur
+          fi
 
     - name: Install Nx CLI
       run: npm install -g nx
