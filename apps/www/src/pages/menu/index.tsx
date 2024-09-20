@@ -6,6 +6,7 @@ import Head from "next/head";
 import Menu from "lib/views/Menu/menu.component";
 
 export const getStaticProps = async () => {
+    console.log(`${apiUrl}/menu`)
     const { data } = await axios.get(`${apiUrl}/menu`) ?? {};
     const { items, contacts }: { items: CategoryProps[], contacts: ContactProps} = data;
     
