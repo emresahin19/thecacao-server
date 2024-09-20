@@ -19,19 +19,15 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Fetch .env file from server
-      uses: appleboy/ssh-action@v0.1.2
+    - name: Copy .env file to current working directory
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         port: ${{ secrets.SERVER_PORT }}
         key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cat /home/web/thecacao.com.tr/production/.env > /home/runner/work/thecacao-server/thecacao-server/.env
-
-    - name: Apply environment variables
-      run: |
-        export $(cat /home/runner/work/thecacao-server/thecacao-server/.env | xargs)
+        source: "/home/web/thecacao.com.tr/production/.env"
+        target: "./.env"  # .env dosyasını current working directory'ye kopyalar
 
     - name: Build project with server .env
       run: |
