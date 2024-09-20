@@ -27,11 +27,11 @@ jobs:
         port: ${{ secrets.SERVER_PORT }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          cat /home/web/thecacao.com.tr/production/.env > /tmp/envfile
+          cat /home/web/thecacao.com.tr/production/.env > /home/runner/work/thecacao-server/thecacao-server/.env
 
     - name: Apply environment variables
       run: |
-        export $(cat /tmp/envfile | xargs)
+        export $(cat /home/runner/work/thecacao-server/thecacao-server/.env | xargs)
 
     - name: Build project with server .env
       run: |
