@@ -13,6 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Install Nx CLI
+      run: npm install -g nx
+
+    - name: Install dependencies
+      run: npm install
+
     - name: Fetch .env file from server
       uses: appleboy/ssh-action@v0.1.2
       with:
@@ -21,18 +27,11 @@ jobs:
         port: ${{ secrets.SERVER_PORT }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          cat /home/web/thecacao.com.tr/production/.env > /home/runner/work/thecacao-server/thecacao-server/.env
+          cat /home/web/thecacao.com.tr/production/.env > /tmp/envfile
 
     - name: Apply environment variables
       run: |
-        export $(cat /home/runner/work/thecacao-server/thecacao-server/.env | xargs)
-        echo $NEXT_PUBLIC_API_URL
-
-    - name: Install Nx CLI
-      run: npm install -g nx
-
-    - name: Install dependencies
-      run: npm install
+        export $(cat /tmp/envfile | xargs)
 
     - name: Build project with server .env
       run: |
