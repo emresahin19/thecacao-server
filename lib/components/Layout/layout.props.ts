@@ -38,3 +38,14 @@ export interface CategoryCarouselProps {
     data: CategoryCarouselItemProps[];
     activeCategory?: number | null;
 }
+
+export interface MetaDataProps {
+    name: string;
+    category: string;
+    description: string;
+    image: string | null | undefined;
+    src?: string;
+    slug: string;
+    price?: number;
+    availability?: boolean;
+}

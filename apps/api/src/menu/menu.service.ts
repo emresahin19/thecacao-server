@@ -24,18 +24,17 @@ export class MenuService {
         const cacheKey = 'menu_data';
         const cachedData = await this.redisService.get(cacheKey);
 
-        // Redis'te veri varsa direkt return et
         if (cachedData) {
             console.log('serve from cache');
             return cachedData;
         }
         console.log('serve from db');
-        // Redis'te veri yoksa sorguyu çalıştır
+
         const categories = await this.categoryRepository
             .createQueryBuilder('category')
             .select([
                 'category.id', 'category.name', 'category.slug', 'category.order', 'category.color', 'category.textColor',
-                'product.id', 'product.name', 'product.slug', 'product.price', 'product.description', 'product.order', 'product.category', 'product.image_ids'
+                'product.id', 'product.name', 'product.slug', 'product.price', 'product.description', 'product.order', 'product.category', 'product.category_id', 'product.image_ids'
             ])
             .leftJoin('category.products', 'product')
             .where('category.passive = :passive', { passive: 0 })

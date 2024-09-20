@@ -1,3 +1,13 @@
+body {
+    position: relative;
+    z-index: 1;
+    inset: 0;
+    &.overflow-disabled {
+        position: fixed;
+        overflow: hidden;
+        z-index: 999;
+    }
+}
 .menu-container {
     max-width: 700px;
     margin: auto;
@@ -110,6 +120,8 @@
     color: var(--text-color);
     background-color: var(--header-background-color);
     top: 0;
+    left: 0;
+    right: 0;
     .h-container {
         height: 100%;
         display: flex;
@@ -302,6 +314,7 @@
     margin: auto;
     max-width: 700px;
     overflow: auto;
+    position: relative;
 }
 
 .category-carousel {

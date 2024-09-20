@@ -1,87 +1,90 @@
-import type { ModalInitialProps } from "../modal.props";
-import React, { useEffect, useRef, useState, TouchEvent } from "react";
-import dynamic from "next/dynamic";
-import { useModal } from "lib/contexts";
-
-const Logo = dynamic(() => import("../../Logo/components/logo.component"), { ssr: false });
+import React, { useEffect, useRef, useState, TouchEvent, useCallback } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { closeModal } from 'lib/store/modal.slice';
+import { RootState } from 'lib/store';
+import ProductDetailCard from "lib/components/Card/components/product-detail-card.component";
+import Logo from "lib/components/Logo/components/logo.component";
+import { ModalInitialProps } from "../modal.props";
 
 const modalTop = 0;
 
-const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
-    const { show, component, resetModal } = useModal();
+const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
+    const dispatch = useDispatch();
     const modalRef = useRef<HTMLDivElement>(null);
-    const [isClosing, setIsClosing] = useState(false); // Internal state to manage closing
-    const [startY, setStartY] = useState<number>(0);
-    const [moveY, setMoveY] = useState<number>(0);
+    const scrollYRef = useRef<number>(0);
+    const startYRef = useRef<number>(0); // Changed to useRef for better performance
+    const moveYRef = useRef<number>(0); // Changed to useRef for better performance
+    const [isInitialDataUsed, setIsInitialDataUsed] = useState<boolean>(!!initialData);
 
-    // Handle opening the modal
-    const handleOpen = () => {
-        setMoveY(0);
+    // If initialData exists, use it only once, then fall back to Redux store
+    const modalState = useSelector((state: RootState) => state.modal);
+    const { show, component, data } = isInitialDataUsed && initialData ? initialData : modalState;
+
+    // Modal open logic
+    const handleOpen = useCallback(() => {
+        const wrapper = document.body;
+        if (wrapper) {
+            scrollYRef.current = window.scrollY || window.pageYOffset;
+            wrapper.style.top = `-${scrollYRef.current}px`;
+            wrapper.classList.add('overflow-disabled');
+        }
+        moveYRef.current = 0;
         if (modalRef.current) {
-            // Apply opening transformations
             modalRef.current.style.transform = `translateY(${modalTop}px) scale(1)`;
             modalRef.current.style.transition = 'transform 0.3s ease';
-            if (blurrable) {
-                modalRef.current.style.backdropFilter = `blur(${7}px)`;
-            }
         }
-    };
+    }, []);
 
-    // Handle initiating the closing process
-    const initiateClose = () => {
-        setIsClosing(true); // Start closing animation
-
-        // Apply closing transformations
+    // Modal close logic
+    const handleClose = useCallback(() => {
+        if (initialData) setIsInitialDataUsed(false);
+        dispatch(closeModal());
+        onClose && onClose();
+        const wrapper = document.body;
+        if (wrapper) {
+            wrapper.classList.remove('overflow-disabled');
+            wrapper.style.top = '';
+            window.scrollTo(0, scrollYRef.current);
+        }
         if (modalRef.current) {
             modalRef.current.style.transform = `translateY(calc(100% + ${modalTop}px)) scale(0.85)`;
             modalRef.current.style.transition = 'transform 0.3s ease';
-            if (blurrable) {
-                modalRef.current.style.backdropFilter = `blur(${0}px)`;
-            }
         }
+    }, [initialData, onClose, dispatch]);
 
-        setTimeout(() => {
-            setIsClosing(false);
-            resetModal();
-        }, 300); 
-    };
-
+    // Open or close modal based on 'show' state
     useEffect(() => {
         if (show) {
             handleOpen();
-            setIsClosing(false); 
+        } else {
+            handleClose();
         }
     }, [show]);
 
-    const handleClose = () => {
-        if (!isClosing) {
-            initiateClose();
-        }
-    };
-
-    // Touch event handlers remain unchanged
-    const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    // Handle touch start event
+    const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
-        const currentY = Math.min(moveY, 0);
+        const currentY = Math.min(moveYRef.current, 0);
         const clientY = e.touches[0].clientY;
-        setStartY(clientY - currentY);
+        startYRef.current = clientY - currentY;
         if (modalRef.current) {
             modalRef.current.style.transition = 'none';
             modalRef.current.style.overflow = 'hidden';
         }
-    };
+    }, []);
 
-    const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    // Handle touch move event
+    const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
         const modalHeight = modalRef.current!.offsetHeight;
         const currentY = e.touches[0].clientY;
         const windowH = window.innerHeight;
         const maxMoveY = windowH - modalHeight - modalTop;
-        const diffY = Math.max(currentY - startY, maxMoveY);
+        const diffY = Math.max(currentY - startYRef.current, maxMoveY);
 
         if (diffY < maxMoveY) return;
 
-        setMoveY(diffY);
+        moveYRef.current = diffY;
 
         if (diffY >= 0) {
             const scale = 1 - Math.min(diffY / window.innerHeight, 0.15);
@@ -94,22 +97,18 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
         } else if (diffY < 0) {
             modalRef.current!.style.transform = `translateY(${diffY}px) scale(1)`;
         }
+    }, []);
 
-        if (blurrable) {
-            const blur = Math.max(((windowH - modalTop - diffY) / 100), 0);
-            modalRef.current!.style.backdropFilter = `blur(${blur}px)`;
-        }
-    };
-
-    const handleTouchEnd = () => {
+    // Handle touch end event
+    const handleTouchEnd = useCallback(() => {
         const modalHeight = modalRef.current!.offsetHeight;
         const maxMoveY = window.innerHeight - modalHeight - modalTop;
-        const diffY = Math.max(moveY, maxMoveY);
+        const diffY = Math.max(moveYRef.current, maxMoveY);
         const limit = Math.min(window.innerHeight / 5, window.innerHeight * 0.85);
 
         if (diffY >= 0) {
-            if (moveY > limit) {
-                initiateClose(); // Use initiateClose instead of resetModal
+            if (moveYRef.current > limit) {
+                handleClose();
             } else {
                 if (modalRef.current) {
                     modalRef.current.style.transform = `translateY(${modalTop}px) scale(1)`;
@@ -124,12 +123,11 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
                 modalRef.current.style.overflow = '';
             }
         }
-        setMoveY(diffY);
-    };
+    }, [handleClose]);
 
     return (
-        show && (
-            <div className={`modal-container ${show && 'show' || ''}`}>
+        <div className={`modal-container ${show && 'show' || ''}`}>
+            {show && (
                 <div
                     className="modal"
                     onTouchStart={handleTouchStart}
@@ -138,21 +136,24 @@ const Modal: React.FC<ModalInitialProps> = ({ blurrable = false }) => {
                     ref={modalRef}
                 >
                     <div className="modal-header">
-                        <Logo width={60} homePath="/menu"/>
+                        <Logo width={60} homePath="/menu" />
                         <button
                             className="close"
-                            onClick={handleClose} // Change to handleClose
+                            onClick={handleClose}
                             role="button"
                             aria-label="Pencereyi Kapat"
                         >
                             Kapat
                         </button>
                     </div>
-                    <div className="modal-body">{component}</div>
+                    <div className="modal-body">
+                        {component === 'ProductDetailCard' && data && <ProductDetailCard {...data} />}
+                    </div>
                 </div>
-            </div>
-        )
+            )}
+        </div>
     );
 };
 
-export default Modal;
+// Memoize the Modal component to prevent unnecessary re-renders
+export default React.memo(Modal);

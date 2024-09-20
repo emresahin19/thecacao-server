@@ -134,8 +134,6 @@ const Carousel: React.FC<CarouselProps> = ({
                 } else if (Math.abs(touchDeltaX) > touchThreshold) {
                     touchMovedRef.current = true;
                 }
-            } else {
-                e.preventDefault();
             }
 
             let translateX = touchDeltaX;
@@ -214,7 +212,7 @@ const Carousel: React.FC<CarouselProps> = ({
     const handleCurrentIndex = useCallback(
         (e: React.MouseEvent, index: number) => {
             e.stopPropagation();
-            e.preventDefault();
+            // e.preventDefault();
             setCurrentIndex(index);
         },
         []

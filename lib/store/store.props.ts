@@ -3,9 +3,8 @@ import { CategoryProps, ContactProps, ProductProps } from 'lib/interfaces';
 import { Draft } from 'immer';
 import store from './reducer';
 
-export type RootState = ReturnType<typeof store.getState>
-
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<ReturnType<typeof store>['getState']>;
+export type AppDispatch = ReturnType<typeof store>['dispatch'];
 
 export interface UserPayloadObject {
     name: string
@@ -22,4 +21,10 @@ export interface MenuState {
     selectedCategory?: Draft<CategoryProps> | null;
     selectedProduct?: Draft<ProductProps> | null;
 }
-  
+
+export interface ModalState {
+    show: boolean;
+    component?: string | null;
+    backRoute?: string | null;
+    data?: any;
+}

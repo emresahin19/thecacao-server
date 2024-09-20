@@ -24,6 +24,20 @@ export const carouselLengthOnScreen = parseInt(process.env.NEXT_PUBLIC_CAROUSEL_
 
 export const defaultColor = `#${process.env.NEXT_PUBLIC_DEFAULT_COLOR || 'ffffff'}`;
 
+export const companyPhone = process.env.NEXT_PUBLIC_COMPANY_PHONE || '';
+export const companyEmail = process.env.NEXT_PUBLIC_COMPANY_EMAIL || '';
+export const companyName = process.env.NEXT_PUBLIC_COMPANY_NAME || '';
+export const companyFacebook = process.env.NEXT_PUBLIC_COMPANY_FACEBOOK || '';
+export const companyInstagram = process.env.NEXT_PUBLIC_COMPANY_INSTAGRAM || '';
+export const companyStreet = process.env.NEXT_PUBLIC_COMPANY_STREET || '';
+export const companyCity = process.env.NEXT_PUBLIC_COMPANY_CITY || '';
+export const companyZip = process.env.NEXT_PUBLIC_COMPANY_ZIP || '';
+export const companyCountry = process.env.NEXT_PUBLIC_COMPANY_COUNTRY || '';
+export const companyOpeningHours = process.env.NEXT_PUBLIC_COMPANY_OPENING_HOURS || '';
+export const companyClosingHours = process.env.NEXT_PUBLIC_COMPANY_CLOSING_HOURS || '';
+export const companyGeoLat = process.env.NEXT_PUBLIC_COMPANY_GEO_LAT || '';
+export const companyGeoLng = process.env.NEXT_PUBLIC_COMPANY_GEO_LNG || '';
+
 export const menuCacheKey = process.env.NEXT_PUBLIC_MENU_CACHE_KEY || 'menu';
 export const sliderCacheKey = process.env.NEXT_PUBLIC_SLIDER_CACHE_KEY || 'slider';
 
@@ -45,12 +59,14 @@ export const extraImageQuality = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_QU
 
 export const placeholderProductImage = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE
 export const placeholderProductImageBg = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_BG;
+export const logoImage = process.env.NEXT_PUBLIC_LOGO_IMAGE || 'the-cacao-logo.png';
 
 export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 
 export const metaTitle = `The Cacao Chocolate & Coffee`
-export const metaDescription = `The Cacao Chocolate & Coffee, Gebze'de çikolata ve kahve üzerine uzmanlaşmış, dünya mutfağından zengin yemek menüsü sunan bir mekandır. En kaliteli çikolata, kahve çeşitleri ve leziz yemekleriyle unutulmaz bir deneyim yaşayın. Gebze'nin en iyi çikolata ve kahve mekanını keşfedin!`
+export const metaDescription = `The Cacao, Gebze'de çikolata, kahve ve dünya mutfağından lezzetler sunan bir mekandır. Kaliteli çikolata, kahve çeşitleri ve yemeklerle keyifli bir deneyim yaşayın.`
+export const metaKeywords = `çikolata, kahve, dünya mutfağı, Gebze, The Cacao, tatlı, çikolata dükkanı, kahveci, restoran, lezzet`
 export const metaImageWidth = 1920;
 export const metaImageHeight = 960;
 
-export const metaImage = `${cdnUrl}/images/crop,w=${metaImageWidth},h=${metaImageHeight},f=webp,q=80/the-cacao-logo.png`
+export const metaImage = `${cdnUrl}/images/crop,w=${metaImageWidth},h=${metaImageHeight},f=webp,q=80/${logoImage}`;

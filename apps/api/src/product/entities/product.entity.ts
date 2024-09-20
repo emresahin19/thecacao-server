@@ -12,6 +12,9 @@ export class Product {
     @JoinColumn({ name: 'category_id' })
     category: Category;
 
+    @Column({ type: 'int', nullable: false })
+    category_id: number;
+
     @Column({ type: 'varchar', length: 255, nullable: true })
     name: string;
 
