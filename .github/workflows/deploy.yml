@@ -25,6 +25,7 @@ jobs:
     - name: Apply environment variables
       run: |
         export $(cat /tmp/envfile | xargs)
+        
       name: Test environment variables
       run: |
         echo $NEXT_PUBLIC_WWW_URL
