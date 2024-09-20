@@ -8,7 +8,7 @@ export interface ModalProviderProps {
 export interface ModalContextType {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    handleShow: ({show, component, route}: ModalProps) => void;
+    handleShow: ({show, component, route, backRoute}: ModalProps) => void;
     component?: ReactNode;
     setComponent: (component: ReactNode) => void;
     resetModal: () => void;

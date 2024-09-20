@@ -4,11 +4,12 @@ import Script from "next/script";
 import { Provider } from 'react-redux';
 import { VariableProvider, ModalProvider, LoadingProvider } from '../../contexts';
 import { LayoutContainer } from "../../layouts";
-import { store } from '../../store';
+import { wrapper } from '../../store';
 import { appDomain, appMode, googleTagManagerId } from 'lib/constants';
 import '../../assets/scss/index.scss';
 
-function TheApp({ children }: { children: React.ReactNode }) {
+function TheApp({ children, ...rest }: { children: React.ReactNode }) {
+  const { store, props } = wrapper.useWrappedStore(rest); 
   return (
     <>
       <Provider store={store}>

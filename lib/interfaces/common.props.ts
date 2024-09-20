@@ -45,26 +45,31 @@ export type ColorOptions =
     Component: NextPageWithLayout
   }
 
+  export interface MenuInitialProps {
+    items: CategoryProps[] | null;
+    contacts: ContactProps | null;
+}
+
   export interface CategoryProps {
-      ref?: Draft<React.RefObject<HTMLDivElement>>;
-      id: number;
-      index: number;
-      name: string;
-      slug: string;
-      order: number;
-      products: ProductProps[];
-      image?: string;
-      color?: string;
-      textColor?: string;
-      isActive?: boolean;
-      viewType?: 'grid' | 'list' | 'carousel';
-      createdAt?: string;
-      updatedAt?: string;
-      setActiveCategory?: (id: number) => void;
-      isVisible?: boolean;
+    ref?: Draft<React.RefObject<HTMLDivElement>>;
+    id: number;
+    index: number;
+    name: string;
+    slug: string;
+    order: number;
+    products: ProductProps[];
+    image?: string;
+    color?: string;
+    textColor?: string;
+    isActive?: boolean;
+    viewType?: 'grid' | 'list' | 'carousel';
+    createdAt?: string;
+    updatedAt?: string;
+    onProductClick?: ({productSlug} : {productSlug: string}) => void;
+    isVisible?: boolean;
   }
 
-export interface ProductProps {
+  export interface ProductProps {
     id: number;
     loading?: 'eager' | 'lazy';
     category?: CategoryProps;
@@ -86,8 +91,8 @@ export interface ProductProps {
     listView?: boolean;
     createdAt?: string;
     updatedAt?: string;
-    onClick?: (product: ProductProps) => void;
-}
+    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  }
 
 export interface ExtraProps {
     name: string;

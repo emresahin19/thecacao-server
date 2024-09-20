@@ -8,6 +8,8 @@ import Carousel from '../../Carousel/components/carousel.component';
 
 const ProductCard: React.FC<ProductProps> = memo((product) => {
     const  { 
+        id,
+        category_id,
         name, 
         price, 
         images,
@@ -15,10 +17,9 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
         loading, 
         listView, 
         order,
-        onClick 
+        onClick, 
     } = product;
     
-    const { handleShow } = useModal();
 
     const imageItems = images && useMemo(() => images.map((image, index) => (
         <ProductImage 
@@ -33,12 +34,8 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
         />
     )), [images, name, loading]);
 
-    const handleClick = useCallback(() => {
-        onClick && onClick(product);
-    }, [handleShow, product]);
-
     return (
-        <div className={`card ${listView ? 'list' : ''}`} onClick={handleClick} role="button" aria-label={`${name} Detay`}>
+        <div className={`card ${listView ? 'list' : ''}`} onClick={onClick} role="button" aria-label={`${name} Detay`}>
             <div className="card-image">
                 {imageItems && imageItems.length > 1 ? (
                     <Carousel 

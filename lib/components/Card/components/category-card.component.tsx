@@ -3,17 +3,11 @@ import Carousel from "../../Carousel/components/carousel.component";
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { defaultColor } from "../../../constants";
 import { getLocalStorageItem, setLocalStorageItem } from "../../../utils/localStorage";
-import { useModal } from "../../../contexts";
 import CiViewList from 'lib/assets/icon/svg/CiViewList.svg'
 import CiViewBoard from 'lib/assets/icon/svg/CiViewBoard.svg'
 import LogoIcon from "../../Logo/components/logo-icon.component";
-
 import ProductCard from "../../Card/components/product-card.component";
-import dynamic from "next/dynamic";
 import { hexToRgba } from "lib/utils";
-
-// const CarouselSkeleton = dynamic(() => import("../../Skeleton/components/carousel.component"), { ssr: false });
-const ProductDetailCard = dynamic(() => import("../../Card/components/product-detail-card.component"), { ssr: false });
 
 const viewTypes = [
     {
@@ -28,12 +22,12 @@ const viewTypes = [
     },
 ];
 
-const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel', setActiveCategory }) => {
+const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel', onProductClick }) => {
     const [catType, setCatType] = useState<CarouselProps['viewType']>(viewType);
     const [viewed, setViewed] = useState(index < 3);
-    const { handleShow } = useModal();
     const [isVisible, setIsVisible] = useState(index < 3);
     const ref = useRef<HTMLDivElement>(null);
+    const category_slug = slug;
     
     useEffect(() => {
         const listTypeStorage = getLocalStorageItem('listTypes') || {};
@@ -64,30 +58,28 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
         };
     }, [ref, viewed]);
 
-    const handleClick = useCallback((product: ProductProps) => {
-        handleShow({
-            show: true,
-            component: <ProductDetailCard {...product} />,
-            route: `menu/${product.fullpath}`
-        });
-    }, [handleShow]);
-    
+    const handleProductClick = useCallback(({productSlug} : {productSlug: string}) => {
+        onProductClick && onProductClick({productSlug});
+    }, [onProductClick]);
+
     const renderContent = () => {
         if (!viewed) {
             return <></>;
         }
 
         const items = products.map((product, i) => {
-            const { id, name, slug, description, fullpath, price, category_id, recipe, extra, images, image_urls, passive, diy, order }: ProductProps = product;
+            const { id, name, slug, description, price, category_id, recipe, extra, images, image_urls, passive, diy, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
+            const fullpath = `${category_slug}/${slug}`;
             
             return (
                 <ProductCard
                     key={id}
-                    id={i}
+                    id={id}
                     name={name}
                     slug={slug}
-                    fullpath={fullpath ?? `${slug}`}
+                    category_id={category_id}
+                    fullpath={fullpath}
                     description={description}
                     price={price}
                     extra={extra}
@@ -96,7 +88,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     loading={isEager ? 'eager' : 'lazy'}
                     textColor={textColor}
                     listView={catType === 'list'}
-                    onClick={handleClick}
+                    onClick={(e) => handleProductClick({ productSlug: slug })}
                 />
             );
         });
