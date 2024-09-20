@@ -13,6 +13,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Install Nx CLI
+      run: npm install -g nx
+
     - name: Install dependencies
       run: npm install
 
@@ -26,7 +29,7 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         port: ${{ secrets.SERVER_PORT }}
         key: ${{ secrets.SERVER_SSH_KEY }}
-        source: ".next/**, package.json"
+        source: "apps/www/.next/**, apps/www/package.json, .env"
         target: "/home/web/thecacao.com.tr/production"
 
     - name: Run build commands on server
