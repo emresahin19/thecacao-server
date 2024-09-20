@@ -1,12 +1,12 @@
-name: Deploy to Production
+name: Test Environment Variables
 
 on:
   push:
     branches:
-      - main  # Sadece main branch'e push yapıldığında çalışacak
+      - main  # Yalnızca 'main' branch'e push yapıldığında çalışacak
 
 jobs:
-  deploy:
+  test-env:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,14 +14,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Nx CLI ve bağımlılıkları yükle
-    - name: Install Nx CLI
-      run: npm install -g nx
-
-    - name: Install dependencies
-      run: npm install
-
-    # Sunucudaki .env dosyasını kopyala
+    # Sunucudan .env dosyasını kopyala
     - name: Fetch .env file from server
       uses: appleboy/scp-action@master
       with:
@@ -32,41 +25,8 @@ jobs:
         source: "/home/web/thecacao.com.tr/production/.env"
         target: "./.env"
 
-    # Ortam değişkenlerini yükle
-    - name: Apply environment variables
+    # Ortam değişkenini yükle ve ekrana yazdır
+    - name: Apply environment variables and print
       run: |
-        set -o allexport
-        source ./.env
-        set +o allexport
-
-    # Build işleminden önce .env dosyasının varlığını kontrol et
-    - name: List current directory files
-      run: ls -la
-
-    # NX build işlemi
-    - name: Build project with NX
-      run: |
-        nx build www
-
-    # Dosyaları sunucuya kopyala
-    - name: Copy build files to server
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        port: ${{ secrets.SERVER_PORT }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        source: "apps/www/.next/**, apps/www/package.json"
-        target: "/home/web/thecacao.com.tr/production"
-
-    # Sunucuda komutları çalıştır (isteğe bağlı)
-    - name: Run build commands on server
-      uses: appleboy/ssh-action@v0.1.2
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        port: ${{ secrets.SERVER_PORT }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cd /home/web/thecacao.com.tr/production
-          pm2 restart your-app
+        export $(cat ./.env | xargs)
+        echo $NEXT_PUBLIC_API_URL  # Test için belirli bir environment değişkenini ekrana yazdır
