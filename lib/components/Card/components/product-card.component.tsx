@@ -1,6 +1,5 @@
 import type { ProductProps } from '../../../interfaces';
-import React, { memo, useMemo, useCallback } from 'react';
-import { useModal } from '../../../contexts';
+import React, { memo, useMemo } from 'react';
 import { productVariantWidth, productVariantHeight, productVariantQuality } from '../../../constants';
 import ProductImage from '../../Image/components/product-image.component';
 import PlaceholderImage from '../../Image/components/placeholder-image.component';

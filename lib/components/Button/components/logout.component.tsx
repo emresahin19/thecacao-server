@@ -1,6 +1,6 @@
 import React from 'react';
 import IconButton from './icon-button.component';
-// import { CiLogin } from "react-icons/ci";
+import CiLogin from "lib/assets/icon/svg/CiLogin.svg";
 import { useAuth } from '../../../contexts';
 
 const LogoutButton: React.FC = () => {
@@ -11,7 +11,7 @@ const LogoutButton: React.FC = () => {
             onClick={handleLogout}
             ariaLabel="Çıkış Yap"
         >
-            {/* <CiLogin /> */}
+            <CiLogin />
         </IconButton>
     )
 }

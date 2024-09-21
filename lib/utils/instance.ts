@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { apiUrl } from 'lib/constants';
 
 const axiosInstance = axios.create({
-    baseURL: apiUrl,
     withCredentials: true,
 });
 

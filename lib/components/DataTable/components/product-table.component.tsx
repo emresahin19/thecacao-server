@@ -9,7 +9,6 @@ import Table from "../../Table/components/table.component";
 import Button from "../../Button/components/button.component";
 import DeleteModal from "../../Modal/components/delete-modal.component";
 import ProductEditCard from "../../Card/components/product-edit-card.component";
-import { useModal } from '../../../contexts';
 import { deleteProduct } from '../../../services';
 import { useToast } from '../../../contexts';
 
@@ -19,7 +18,6 @@ const ProductTable = () => {
     const [filters, setFilters] = useState<{ [key: string]: any }>({});
     const { products, total, isLoading, isError, mutateProduct } = useProducts(currentPage + 1, perPage, filters);
     const { categories } = useCategoryInputData();
-    const { handleShow } = useModal();
     const { showToast, handleRequestError } = useToast();
 
     const handleFilterChange = (newFilters: { [key: string]: any }) => {
@@ -35,34 +33,34 @@ const ProductTable = () => {
     const handleRowAction = (action: string, item: ProductProps | null) => {
         const { id, name } = item || { id: 0 };
         
-        if (action === 'view' || action === 'create') {
-            handleShow({
-                show: true,
-                component: (
-                    <ProductEditCard 
-                        id={id}
-                        onSave={onProductSave} 
-                        onCancel={onCancel} 
-                    />
-                ),
-            });
-        } else if (action === 'delete') {
-            handleShow({
-                show: true,
-                component: (
-                    <DeleteModal
-                        itemName={name}
-                        onConfirm={() => handleDelete(id)} 
-                        onCancel={onCancel}
-                    />
-                ),
-            });
-        }
+        // if (action === 'view' || action === 'create') {
+        //     handleShow({
+        //         show: true,
+        //         component: (
+        //             <ProductEditCard 
+        //                 id={id}
+        //                 onSave={onProductSave} 
+        //                 onCancel={onCancel} 
+        //             />
+        //         ),
+        //     });
+        // } else if (action === 'delete') {
+        //     handleShow({
+        //         show: true,
+        //         component: (
+        //             <DeleteModal
+        //                 itemName={name}
+        //                 onConfirm={() => handleDelete(id)} 
+        //                 onCancel={onCancel}
+        //             />
+        //         ),
+        //     });
+        // }
     };
 
     const onProductSave = async (status: boolean) => {
         if(status){
-            handleShow({ show: false });
+            // handleShow({ show: false });
             mutateProduct();
         }
     };
@@ -76,12 +74,12 @@ const ProductTable = () => {
             handleRequestError(error);
         } finally {
             mutateProduct();
-            handleShow({ show: false });
+            // handleShow({ show: false });
         }
     };
 
     const onCancel = () => {
-        handleShow({ show: false });
+        // handleShow({ show: false });
     }
 
     return (

@@ -129,7 +129,7 @@ class MyDocument extends Document {
 
         </Head>
 
-        <body>
+        <body id="www">
             <Main />
             <NextScript />
         </body>

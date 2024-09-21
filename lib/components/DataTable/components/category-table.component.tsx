@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { CategoryProps } from '../../../interfaces';
-import { useToast, useModal } from '../../../contexts';
+import { useToast } from '../../../contexts';
 import { useCategories } from '../../../hooks';
 
 import Table from "../../Table/components/table.component";
@@ -16,7 +16,6 @@ const CategoryTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [filters, setFilters] = useState<{ [key: string]: any }>({});
     const { categories, total, isLoading, isError, mutateCategories } = useCategories(currentPage + 1, perPage, filters);
-    const { handleShow } = useModal();
     const { showToast, handleRequestError } = useToast();
 
     const handleFilterChange = (newFilters: { [key: string]: any }) => {
@@ -33,33 +32,33 @@ const CategoryTable = () => {
         const { id, name } = item || { id: 0 };
         
         if (action === 'view' || action === 'create') {
-            handleShow({
-                show: true,
-                component: (
-                    <CategoryEditCard 
-                        id={id}
-                        onSave={onCategorySave} 
-                        onCancel={onCancel} 
-                    />
-                ),
-            });
-        } else if (action === 'delete') {
-            handleShow({
-                show: true,
-                component: (
-                    <DeleteModal
-                        itemName={name}
-                        onConfirm={() => handleDelete(id)} 
-                        onCancel={onCancel}
-                    />
-                ),
-            });
+            // handleShow({
+            //     show: true,
+            //     component: (
+            //         <CategoryEditCard 
+            //             id={id}
+            //             onSave={onCategorySave} 
+            //             onCancel={onCancel} 
+            //         />
+            //     ),
+            // });
+        // } else if (action === 'delete') {
+        //     handleShow({
+        //         show: true,
+        //         component: (
+        //             <DeleteModal
+        //                 itemName={name}
+        //                 onConfirm={() => handleDelete(id)} 
+        //                 onCancel={onCancel}
+        //             />
+        //         ),
+        //     });
         }
     };
 
     const onCategorySave = async (status: boolean) => {
         if (status) {
-            handleShow({ show: false });
+            // handleShow({ show: false });
             mutateCategories();
         }
     };
@@ -73,12 +72,12 @@ const CategoryTable = () => {
             handleRequestError(error);
         } finally {
             mutateCategories();
-            handleShow({ show: false });
+            // handleShow({ show: false });
         }
     };
 
     const onCancel = () => {
-        handleShow({ show: false });
+        // handleShow({ show: false });
     };
 
     return (

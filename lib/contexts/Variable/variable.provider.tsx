@@ -1,12 +1,10 @@
-import React, { useState, ReactNode, useEffect } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { VariableContext } from './variable.context';
-import { useModal } from '../Modal';
 import { useRouter } from 'next/router';
 
 export const VariableProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [searchOpen, setSearchOpen] = useState<boolean>(false);
-    const { resetModal } = useModal();
     const router = useRouter();
     
     const goHome = (home = '/') => {
@@ -26,7 +24,6 @@ export const VariableProvider: React.FC<{ children: ReactNode }> = ({ children }
     const resetVariables = () => {
         setMenuOpen(false);
         setSearchOpen(false);
-        resetModal();
     }
 
     const variables = {

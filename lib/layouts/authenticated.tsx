@@ -54,7 +54,7 @@ export default function LayoutAuthenticated({ children }: Props) {
 
     return (
         <>
-            <DashHeader isOpen={isOpen} />
+            <DashHeader />
             <main className={`dash-main ${isMounted && isOpen ? 'open' : ''}`}>
                 {children}
             </main>

@@ -5,7 +5,7 @@ import { useEffect, useState, useRef, TouchEvent } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { routes } from "lib/utils/route.config";
-import { useModal, useVariable } from "lib/contexts";
+import { useVariable } from "lib/contexts";
 import { RootState } from "lib/store";
 import { ContactProps } from "lib/interfaces";
 import Logo from "../../../Logo/components/logo.component";
@@ -22,7 +22,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
     const startXRef = useRef<number>(0);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const contacts = useSelector((state: RootState) => state.menu.contacts); 
-    const { resetModal } = useModal();
 
     const { 
         menuOpen, 
@@ -82,7 +81,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = 'transform 0.3s ease';
             if (menuOpen) {
-                resetModal();
                 sidebarRef.current.style.transform = 'translateX(0)';
             } else {
                 sidebarRef.current.style.transform = 'translateX(-100%)';

@@ -14,6 +14,16 @@ const nextConfig = {
             }
         ]
     },
+    webpack(config, { isServer }) {
+        config.module.rules.push({
+            test: /\.svg$/,
+            use: ['@svgr/webpack'],
+        });
+        return config;
+    },
+    nx: {
+      svgr: false,
+    },
     reactStrictMode: true,
     experimental: {
         turbo: {

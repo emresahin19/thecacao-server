@@ -2,18 +2,19 @@ import React, { useEffect, useState, useRef, TouchEvent } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { SidebarItemProps, SidebarProps } from "../../layout.props";
-import { useModal, useVariable } from "lib/contexts";
+import { SidebarItemProps } from "../../layout.props";
 import dashRoutes from "lib/utils/dash-route.config";
+import { useAppDispatch, useAppSelector, closeSidebar, openSidebar } from "lib/store";
 
 const Logo = dynamic(() => import('../../../Logo/components/logo.component'), { ssr: false });
 const transition = '0.3s cubic-bezier(.22,.61,.36,1) transform';
 
-const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
+const Sidebar: React.FC = () => {
     const sidebarRef = useRef<HTMLDivElement>(null);
     const startXRef = useRef<number>(0);
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const { resetModal } = useModal();
+    const dispatch = useAppDispatch();
+    const isOpen = useAppSelector((state) => state.sidebar.isOpen); // Store selector for sidebar open state
     const router = useRouter();
 
     const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
@@ -44,10 +45,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
             sidebarRef.current.style.transition = transition;
             if (diffX < -50) {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
-                onChange && onChange(false)
+                dispatch(closeSidebar()); // Close sidebar when user drags far enough
             } else {
                 sidebarRef.current.style.transform = 'translateX(0)';
-                onChange && onChange(false)
+                dispatch(openSidebar()); // Open sidebar when drag is too small
             }
         }
     };
@@ -59,7 +60,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
     }
 
     const SidebarItem: React.FC<SidebarItemProps> = ({ label, icon, href }) => {
-    
         return (
             <Link
                 className={`link no-hover ${isActive(href) ? 'active' : ''}`}
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
                 href={href || '/'}
                 role="button"
                 aria-label={`${label} sayfasına git`}
-                onClick={() => onChange && onChange(false)}
+                // onClick={() => dispatch(closeSidebar())} // Close sidebar on item click
             >
                 {/* {icon && (<Icon className="list-icon" path={icon} size={20} />)} */}
                 {label}
@@ -78,18 +78,17 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onChange }) => {
     useEffect(() => {
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = transition;
-            if (open) {
-                resetModal();
+            if (isOpen) {
                 sidebarRef.current.style.transform = 'translateX(0)';
             } else {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
             }
         }
-    }, [open]);
+    }, [isOpen]);
 
     return (
         <div 
-            className={`dash-sidebar ${open ? 'open' : ''}`}
+            className={`dash-sidebar ${isOpen ? 'open' : ''}`}
             ref={sidebarRef}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}

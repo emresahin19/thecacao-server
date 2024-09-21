@@ -1,8 +1,13 @@
+import { dashUrl } from "lib/constants";
+
+
 export const setLocalStorageItem = (key: string, value: any) => {
     const type = typeof value === 'object' ? 'object' : 'string';
     if (typeof window !== 'undefined') {
+        const force = window.location.href.startsWith(dashUrl);
         const cookieAllowed = key === 'cookieAllowed' || localStorage.getItem('cookieAllowed') === 'true';
-        if(!cookieAllowed) return;
+
+        if(!cookieAllowed && !force) return;
         
         switch (type) {
             case 'object':
@@ -20,7 +25,9 @@ export const setLocalStorageItem = (key: string, value: any) => {
 export const getLocalStorageItem = (key: string) => {
     if (typeof window !== 'undefined') {
         const cookieAllowed = localStorage.getItem('cookieAllowed') === 'true';
-        if(!cookieAllowed) return null;
+        const force = window.location.href.startsWith(dashUrl);
+
+        if(!cookieAllowed && !force) return null;
 
         const item = localStorage.getItem(key);
         const type = typeof JSON.parse(String(item)) === 'object' ? 'object' : 'string';

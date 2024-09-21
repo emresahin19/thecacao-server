@@ -4,9 +4,21 @@ import LogoutButton from "lib/components/Button/components/logout.component";
 import ThemeSwitcher from "lib/components/Button/components/theme-switcher.component";
 
 import DashSidebar from "./sidebar.component";
-import MdMenu from 'lib/assets/icon/svg/MdOutlineSearch.svg'
+import MdMenu from 'lib/assets/icon/svg/MdMenu.svg'
+import { closeSidebar, openSidebar, useAppDispatch, useAppSelector } from 'lib/store';
 
-const Header: React.FC<{isOpen: boolean}> = ({ isOpen }) => {
+const Header: React.FC = () => {
+  const isOpen = useAppSelector((state) => state.sidebar.isOpen);
+
+  const dispatch = useAppDispatch();
+
+  const handleSidebar = () => {
+    if (isOpen) {
+      dispatch(closeSidebar());
+    } else {
+      dispatch(openSidebar());
+    }
+  }
 
   return (
     <>
@@ -18,7 +30,7 @@ const Header: React.FC<{isOpen: boolean}> = ({ isOpen }) => {
               <li>
                 <IconButton 
                   width={24}
-                  onClick={()=>{}} 
+                  onClick={handleSidebar} 
                   ariaLabel="Menüyü Aç"
                 >
                   <MdMenu />
@@ -38,10 +50,7 @@ const Header: React.FC<{isOpen: boolean}> = ({ isOpen }) => {
             </ul>
           </div>
         </div>
-        <DashSidebar 
-          open={isOpen} 
-          onChange={()=>{}} 
-        />
+        <DashSidebar />
       </header>
     </>
   );

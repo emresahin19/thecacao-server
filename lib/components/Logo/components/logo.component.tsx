@@ -1,6 +1,6 @@
 import React from 'react';
 import { defaultColor } from 'lib/constants';
-import { useVariable, useModal } from 'lib/contexts';
+import { useVariable } from 'lib/contexts';
 import { LogoProps } from '../logo.props';
 
 const Logo:React.FC<LogoProps> = ({color = defaultColor, width, homePath = '/'}) => {
