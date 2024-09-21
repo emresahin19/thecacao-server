@@ -9,6 +9,7 @@ import CategoryCarousel from '../../components/Layout/components/www/category-th
 import CategorySection from '../../components/Card/components/category-card.component';
 import type { CategoryProps, MenuProps, ProductProps } from "../../interfaces";
 import Modal from 'lib/components/Modal/components/modal.component';
+import { setContacts, setMenuData } from "lib/store";
 
 const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
     const dispatch = useDispatch();
@@ -23,6 +24,11 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
         },
         [router]
     );
+
+    useEffect(() => {
+        data && dispatch(setMenuData({ data }));
+        contacts && dispatch(setContacts(contacts));
+    }, [])
 
     const modalRouteHandler = useCallback((path?: string) => {
         return path 
