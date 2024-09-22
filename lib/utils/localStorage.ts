@@ -1,6 +1,5 @@
 import { dashUrl } from "lib/constants";
 
-
 export const setLocalStorageItem = (key: string, value: any) => {
     const type = typeof value === 'object' ? 'object' : 'string';
     if (typeof window !== 'undefined') {

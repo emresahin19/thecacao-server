@@ -34,7 +34,6 @@ export class CategoryService {
     }
 
     findOne(id: number): Promise<Category> {
-        console.log({ id });
         return this.categoryRepository.findOne({ where: { id } });
     }
 

@@ -11,6 +11,8 @@ import DeleteModal from "../../Modal/components/delete-modal.component";
 import ProductEditCard from "../../Card/components/product-edit-card.component";
 import { deleteProduct } from '../../../services';
 import { useToast } from '../../../contexts';
+import { useDispatch } from 'react-redux';
+import { openModal } from 'lib/store/modal.slice';
 
 const ProductTable = () => {
     const perPage = 10;
@@ -18,6 +20,7 @@ const ProductTable = () => {
     const [filters, setFilters] = useState<{ [key: string]: any }>({});
     const { products, total, isLoading, isError, mutateProduct } = useProducts(currentPage + 1, perPage, filters);
     const { categories } = useCategoryInputData();
+    const dispatch = useDispatch();
     const { showToast, handleRequestError } = useToast();
 
     const handleFilterChange = (newFilters: { [key: string]: any }) => {
@@ -33,29 +36,17 @@ const ProductTable = () => {
     const handleRowAction = (action: string, item: ProductProps | null) => {
         const { id, name } = item || { id: 0 };
         
-        // if (action === 'view' || action === 'create') {
-        //     handleShow({
-        //         show: true,
-        //         component: (
-        //             <ProductEditCard 
-        //                 id={id}
-        //                 onSave={onProductSave} 
-        //                 onCancel={onCancel} 
-        //             />
-        //         ),
-        //     });
-        // } else if (action === 'delete') {
-        //     handleShow({
-        //         show: true,
-        //         component: (
-        //             <DeleteModal
-        //                 itemName={name}
-        //                 onConfirm={() => handleDelete(id)} 
-        //                 onCancel={onCancel}
-        //             />
-        //         ),
-        //     });
-        // }
+        if (action === 'view' || action === 'create') {
+            dispatch(openModal({
+                component: 'ProductEditCard',
+                data: item
+            }));
+        } else if (action === 'delete') {
+            dispatch(openModal({
+                component: 'DeleteModal',
+                data: id
+            }));
+        }
     };
 
     const onProductSave = async (status: boolean) => {

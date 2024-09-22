@@ -2,10 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ExtraService } from './extra.service';
 import { CreateExtraDto } from './dto/create-extra.dto';
 import { UpdateExtraDto } from './dto/update-extra.dto';
+import { ExtraCategoryService } from '../extra-category/extra-category.service';
+import { StatusCode } from '../common/constants';
 
-@Controller('extras')
+@Controller('extra')
 export class ExtraController {
-    constructor(private readonly extraService: ExtraService) {}
+    constructor(
+        private readonly extraService: ExtraService,
+    ) {}
 
     @Post()
     create(@Body() createExtraDto: CreateExtraDto) {
@@ -15,6 +19,16 @@ export class ExtraController {
     @Get()
     findAll() {
         return this.extraService.findAll();
+    }
+
+    @Get('input-data')
+    async inputData() {
+        const items = await this.extraService.inputData();
+        return {
+            status: true,
+            items: items,
+            ...StatusCode.SUCCESS
+        };
     }
 
     @Get(':id')

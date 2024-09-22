@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { placeholderProductImageBg } from '../../../constants';
 import { imageToCdnUrl } from '../../../utils';
 import { TableProps } from '../table.props';
-import Button from '../../Button/components/button.component';
+import IconButton from '../../Button/components/icon-button.component';
 import Checkbox from '../../Input/components/checkbox.component';
 import Input from '../../Input/components/input.component';
 import SelectBox from '../../Input/components/selectbox.component';
 import Pagination from '../../Table/components/pagination.component';
 import EditableInput from '../../Input/components/editable-input.component';
+import CiEdit from 'lib/assets/icon/svg/CiEdit.svg';
+import CiTrash from 'lib/assets/icon/svg/CiTrash.svg';
 
 const Table = <T extends { id: string | number, passive?: number }>({
     data = [],
@@ -81,7 +83,7 @@ const Table = <T extends { id: string | number, passive?: number }>({
             if (onFilterChange) {
                 onFilterChange(newFilters);
             }
-        }, 500);
+        }, 300);
     
         setDebounceTimeout(timeout);
     };
@@ -243,16 +245,22 @@ const Table = <T extends { id: string | number, passive?: number }>({
                             })}
                             <td>
                                 <div className="button-area">
-                                    <Button
-                                        onClick={() => onRowAction && onRowAction('view', item)}
+                                    <IconButton
+                                        className='text-success'
+                                        onClick={() => onRowAction && onRowAction('view', item)} 
+                                        ariaLabel={'Düzenle'}
+                                        width={24}
                                     >
-                                        düzenle
-                                    </Button>
-                                    <Button
+                                        <CiEdit />
+                                    </IconButton>
+                                    <IconButton
+                                        className='text-danger'
                                         onClick={() => onRowAction && onRowAction('delete', item)}
+                                        ariaLabel={'Sil'}
+                                        width={24}
                                     >
-                                        sil
-                                    </Button>
+                                        <CiTrash />
+                                    </IconButton>
                                 </div>
                             </td>
                         </tr>
@@ -282,16 +290,20 @@ const Table = <T extends { id: string | number, passive?: number }>({
                             ))}
                             <td>
                                 <div className="button-area">
-                                    <Button
-                                        onClick={() => onRowAction && onRowAction('view', null)}
+                                    <IconButton
+                                        onClick={() => onRowAction && onRowAction('view', null)} 
+                                        ariaLabel={'Düzenle'}
+                                        width={24}
                                     >
-                                        düzenle
-                                    </Button>
-                                    <Button
+                                        <CiEdit />
+                                    </IconButton>
+                                    <IconButton
                                         onClick={() => onRowAction && onRowAction('delete', null)}
+                                        ariaLabel={'Sil'}
+                                        width={24}
                                     >
-                                        sil
-                                    </Button>
+                                        <CiTrash />
+                                    </IconButton>
                                 </div>
                             </td>
                         </tr>

@@ -33,4 +33,7 @@ export class Extra {
   @ManyToOne(() => ExtraCategory, (extraCategory) => extraCategory.id, { nullable: true })
   @JoinColumn({ name: 'category_id' })
   category: ExtraCategory;
+
+  @Column({ name: 'category_id' })
+  category_id: number;
 }

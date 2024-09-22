@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Extra } from '../../extra/entities/extra.entity';
 
 @Entity('extras_categories')
 export class ExtraCategory {
@@ -25,4 +26,8 @@ export class ExtraCategory {
 
     @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
     updated_at: Date;
+
+    @OneToMany(() => Extra, (extra) => extra.category)
+    extras: Extra[];
+
 }

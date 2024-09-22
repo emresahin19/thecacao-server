@@ -1,4 +1,4 @@
-// import { ProductTable } from 'lib/components'
+import ProductTable from 'lib/components/DataTable/components/product-table.component'
 import LayoutAuthenticated from '../../layouts/authenticated'
 import React from 'react'
 import type { ReactElement } from 'react'
@@ -6,7 +6,7 @@ import type { ReactElement } from 'react'
 const ProductPage = () => {
   return (
     <>
-      {/* <ProductTable /> */}
+      <ProductTable />
     </>
   )
 }

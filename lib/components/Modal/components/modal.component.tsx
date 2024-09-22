@@ -3,6 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { closeModal } from 'lib/store/modal.slice';
 import { RootState } from 'lib/store';
 import ProductDetailCard from "lib/components/Card/components/product-detail-card.component";
+import ProductEditCard from "lib/components/Card/components/product-edit-card.component";
+import CategoryEditCard from "lib/components/Card/components/category-edit-card.component";
+import DeleteModal from "./delete-modal.component"
 import Logo from "lib/components/Logo/components/logo.component";
 import { ModalInitialProps } from "../modal.props";
 
@@ -148,6 +151,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                     </div>
                     <div className="modal-body">
                         {component === 'ProductDetailCard' && data && <ProductDetailCard {...data} />}
+                        {component === 'ProductEditCard' && data && <ProductEditCard {...data} />}
+                        {component === 'CategoryEditCard' && data && <CategoryEditCard {...data} />}
+                        {component === 'DeleteModal' && data && <DeleteModal {...data} />}
                     </div>
                 </div>
             )}

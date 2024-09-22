@@ -312,7 +312,7 @@ img {
   gap: 4px;
 }
 .dash-sidebar .dash-sidebar-list li .link {
-  color: rgba(var(--white), 0.8);
+  color: rgba(var(--white-rgb), 0.8);
   font-weight: 400;
   position: relative;
   display: flex;

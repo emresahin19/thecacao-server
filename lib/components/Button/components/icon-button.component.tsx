@@ -11,6 +11,7 @@ const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, disabled = false
             disabled={disabled} 
             role="button"
             aria-label={ariaLabel}
+            style={{ width: `${width}px`, height: `${height}px` }}
         >
             {children}
             {icon && <IconImage src={icon} width={width} height={height} />}

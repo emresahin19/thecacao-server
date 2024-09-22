@@ -161,10 +161,24 @@ $colors: (
     --gray-04: #CED4DA;
     --gray-05: #ADB5BD;
     --gray-06: #8898AA;
-    --gray-07: #525F7F;
-    --gray-08: #32325D;
-    --gray-09: #212529;
-    --gray-10: #121416;
+    --gray-07: #6C757D;
+    --gray-08: #495057;
+    --gray-09: #343A40;
+    --gray-10: #212529;
+
+    --main-01: #F8FAFC;
+    --main-02: #F1F5F9;
+    --main-03: #E2E8F0;
+    --main-04: #CBD5E1;
+    --main-05: #94A3B8;
+    --main-06: #64748B;
+    --main-07: #475569;
+    --main-08: #334155;
+    --main-09: #334155;
+    --main-10: #1A202C;
+    --main-11: #1E293B;
+    --main-12: #0F172A;
+    --main-12: #030820;
 
     --primary:    #0C4C4C;
     --secondary:  #9ac63c;
@@ -194,7 +208,7 @@ $colors: (
     --warning:    #EF8425;
     --danger:     #f5365c;
     --light:      #adb5bd;
-    --dark:       #212529;
+    --dark:       #15171a;
 
     --header-height: 60px;
     --header-padding: 16px;
@@ -236,7 +250,7 @@ $colors: (
 
     --table-color-1: var(--gray-04);
     --table-color-2: var(--gray-02);
-    --table-hover-color: var(--gray-03);
+    --table-hover-color: var(--dark);
 
     --modal-background-color: var(--gray-02);
 
@@ -266,9 +280,9 @@ body.dark-theme {
 
     --container-background-color: var(--gray-09);
 
-    --table-color-1: var(--primary-08);
-    --table-color-2: var(--primary-09);
-    --table-hover-color: var(--primary-10);
+    --table-color-1: var(--gray-09);
+    --table-color-2: var(--gray-10);
+    --table-hover-color: var(--dark);
 
     --modal-background-color: rgba(4, 30, 30, 0.7);
     --input-color: var(--text-color);
