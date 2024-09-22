@@ -58,7 +58,7 @@ export const extraImageHeight = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_HEI
 export const extraImageQuality = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_QUALITY || '80');
 
 export const placeholderProductImage = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE
-export const placeholderProductImageBg = process.env.NEXT_PUBLIC_PLACEHOLDER_IMAGE_BG;
+export const placeholderProductImageBg = process.env.NEXT_PUBLIC_PLACEHOLDER_BG_IMAGE;
 export const logoImage = process.env.NEXT_PUBLIC_LOGO_IMAGE || 'the-cacao-logo.png';
 
 export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
@@ -69,4 +69,4 @@ export const metaKeywords = `çikolata, kahve, dünya mutfağı, Gebze, The Caca
 export const metaImageWidth = 1920;
 export const metaImageHeight = 960;
 
-export const metaImage = `${cdnUrl}/images/crop,w=${metaImageWidth},h=${metaImageHeight},f=webp,q=80/${logoImage}`;
+export const metaImage = `${cdnUrl}/images/crop,w=${metaImageWidth},h=${metaImageHeight},f=webp,q=80/${placeholderProductImageBg}`;
