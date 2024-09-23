@@ -262,8 +262,14 @@
         }
     }
 }
+#category-1 .turn-to-back div::after {
+    background: rgba(var(--white-rgb), 0.5);
+}
 .card-image {
     .turn-to-back {
         --w: 16px !important;
+        div::after {
+            background: rgba(var(--primary-rgb), .5) !important;
+        }
     }
 }
