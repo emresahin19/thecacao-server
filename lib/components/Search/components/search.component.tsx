@@ -9,12 +9,13 @@ import MdOutlineSearch from 'lib/assets/icon/svg/MdOutlineSearch.svg'
 import MdOutlineSearchOff from 'lib/assets/icon/svg/MdOutlineSearchOff.svg'
 import CategorySection from "../../Card/components/category-card.component";
 import IconButton from "../../Button/components/icon-button.component";
+import { useRouter } from 'next/router';
 
 const SearchModule: React.FC = () => {
     const { searchOpen, setSearchOpen } = useVariable();
     const [searchTerm, setSearchTerm] = useState<string>('');
     const { data } = useSelector((state: RootState) => state.menu);
-
+    const router = useRouter();
     const [filteredCategory, setFilteredCategory] = useState<CategoryProps>({
         id: 0,
         index: 0,
@@ -28,6 +29,11 @@ const SearchModule: React.FC = () => {
     });
 
     const searchSectionRef = useRef<HTMLDivElement>(null);
+
+    const handleProductClick = ({categorySlug, productSlug}: { categorySlug: string; productSlug: string }) => {
+        const cat = data.find((cat) => cat?.products.find((prod) => prod.slug === productSlug))
+        cat && cat.slug && router.push(`${cat.slug}/${productSlug}`);
+    }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -131,6 +137,9 @@ const SearchModule: React.FC = () => {
                     color={filteredCategory.color}
                     textColor={filteredCategory.textColor}
                     viewType={'list'}
+                    onProductClick={({ productSlug }) =>
+                        handleProductClick({ categorySlug: filteredCategory.slug, productSlug })
+                    }
                 />
             )}
             {filteredCategory.products.length === 0 && searchTerm && searchTerm.length > 1 && (

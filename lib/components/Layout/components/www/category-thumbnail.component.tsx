@@ -4,24 +4,41 @@ import { CategoryCarouselItemProps, CategoryCarouselProps } from "lib/interfaces
 const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ data }) => {
     const [activeCategory, setActiveCategory] = useState<number | null>(null);
     const carouselRef = useRef<HTMLDivElement | null>(null);
-    const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const transitionActive = useRef<boolean>(false);
 
     const handleCategoryClick = (id: number) => {
+        if (transitionActive.current) return; // Geçiş sırasında tıklamaları engelle
+        transitionActive.current = true;
         const element = document.getElementById(`category-${id}`);
         if (element) {
-            const yOffset = -104; // The offset you want
+            const yOffset = -104; // İstediğiniz offset değeri
             const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
             window.scrollTo({ top: y, behavior: 'smooth' });
+            setActiveCategory(id);
+        } else {
+            transitionActive.current = false;
         }
     };
 
     useEffect(() => {
+        let scrollTimeout: number | undefined;
+
         const handleScroll = () => {
+            if (transitionActive.current) {
+                if (scrollTimeout !== undefined) {
+                    window.clearTimeout(scrollTimeout);
+                }
+                scrollTimeout = window.setTimeout(() => {
+                    transitionActive.current = false;
+                }, 100);
+                return;
+            }
+
             let closestCategoryId: number | null = null;
             let minDistance = Infinity;
             const viewportCenter = window.innerHeight / 2;
 
-            for(let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 const category = data[i];
                 const element = document.getElementById(`category-${category.id}`);
                 if (element) {
@@ -34,40 +51,35 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ data }) => {
                     }
                 }
             }
-            activeCategory != closestCategoryId && setActiveCategory(closestCategoryId);
+            if (activeCategory !== closestCategoryId) {
+                setActiveCategory(closestCategoryId);
+            }
         };
 
         window.addEventListener('scroll', handleScroll);
-        // Initial check in case the component is rendered mid-scroll
+        // Bileşen ilk render edildiğinde kontrol et
         handleScroll();
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
+            if (scrollTimeout !== undefined) {
+                window.clearTimeout(scrollTimeout);
+            }
         };
-    }, [data]);
+    }, [data, activeCategory]);
 
     useEffect(() => {
         if (activeCategory !== null && carouselRef.current) {
-            if (scrollTimeoutRef.current) {
-                clearTimeout(scrollTimeoutRef.current);
-            }
-            scrollTimeoutRef.current = setTimeout(() => {
-                const activeElement = carouselRef.current?.querySelector(`.cc-item[data-id='${activeCategory}']`) as HTMLElement;
-                if (activeElement && carouselRef.current) {
-                    const carouselWidth = carouselRef.current.offsetWidth;
-                    const activeElementLeft = activeElement.offsetLeft;
-                    const activeElementWidth = activeElement.offsetWidth;
+            const activeElement = carouselRef.current.querySelector(`.cc-item[data-id='${activeCategory}']`) as HTMLElement;
+            if (activeElement && carouselRef.current) {
+                const carouselWidth = carouselRef.current.offsetWidth;
+                const activeElementLeft = activeElement.offsetLeft;
+                const activeElementWidth = activeElement.offsetWidth;
 
-                    const scrollLeft = activeElementLeft - (carouselWidth / 2) + (activeElementWidth / 2);
-                    carouselRef.current?.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-                }
-            }, 100);
-        }
-        return () => {
-            if (scrollTimeoutRef.current) {
-                clearTimeout(scrollTimeoutRef.current);
+                const scrollLeft = activeElementLeft - (carouselWidth / 2) + (activeElementWidth / 2);
+                carouselRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
             }
-        };
+        }
     }, [activeCategory]);
 
     return (

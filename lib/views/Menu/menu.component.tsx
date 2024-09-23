@@ -2,7 +2,7 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
-import { openModal } from "lib/store/modal.slice";
+import { closeModal, openModal } from "lib/store/modal.slice";
 import MetaData from 'lib/components/Layout/components/www/meta-data.component';
 import MetaSubData from 'lib/components/Layout/components/www/meta-sub-data.component';
 import CategoryCarousel from '../../components/Layout/components/www/category-thumbnail.component';
@@ -57,6 +57,7 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
         } else {
             setProduct(null);
             setCategory(null);
+            dispatch(closeModal());
         }
     }, [categorySlug, productSlug, data]);
     

@@ -151,3 +151,24 @@
         @include button-def(var(--color1), var(--color2), 1px, bottom, left, 0.15s, (6px 0 6px 0));
     }
 }
+
+.back-button {
+    background-color: rgba(var(--white-rgb), .3);
+    border: none;
+    bottom: 16px;
+    color: var(--primary);
+    cursor: pointer;
+    left: 16px;
+    outline: none;
+    padding: 10px;
+    position: fixed;
+    border-radius: 50%;
+    backdrop-filter: blur(3.3px);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+    transition: var(--transition);
+    z-index: 1000;
+    &:focus {
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+        scale: 0.95;
+    }
+}
