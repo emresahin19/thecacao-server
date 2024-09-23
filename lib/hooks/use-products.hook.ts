@@ -12,6 +12,6 @@ export const useProducts = (page = 1, perPage = 10, filters = {}) => {
         lastPage: lastPage,
         isLoading: !error && !data,
         isError: error,
-        mutateProduct: () => mutate(`/api/products?page=${page}&perPage=${perPage}&${filterQuery}`), // Manual refetch function
+        mutateProduct: () => mutate(`/api/products?page=${page}&perPage=${perPage}&${filterQuery}`),
     };
 };

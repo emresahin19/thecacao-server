@@ -18,6 +18,7 @@
                 th {
                     color: var(--text-color);
                     padding: 8px;
+                    user-select: none;
                     &:first-child {
                         border-top-left-radius: 0.25rem;
                         padding-left: 1rem;
@@ -29,24 +30,88 @@
                         border-top-right-radius: 0.25rem;
                         padding-right: 1rem;
                     }
-                    .input-body {
-                        min-width: 120px;
-                        input {
-                            border: none;
-                            background-color: var(--table-color-2);
-                            color: var(--text-color);
-                            &:hover, &:focus {
-                                background-color: var(--table-hover-color);
-                                & + label {
-                                    color: var(--text-color);
+                    .th-filter {
+                        display: flex;
+                        align-items: center;
+                        position: relative;
+
+                        &:before, &:after {
+                            content: "";
+                            display: block;
+                            width: 1px;
+                            height: calc(100% - 16px);
+                            position: absolute;
+                            background-color: var(--text-color);
+                            opacity: .5;
+                        }
+                        &:before {
+                            left: -8px;
+                        }
+                        &:after {
+                            right: -8px;
+                        }
+
+                        .sort-button {
+                            display: flex;
+                            align-items: center;
+                            flex-direction: column;
+                            cursor: pointer;
+                            width: 24px;
+                            svg {
+                                width: 24px;
+                                height: 24px;
+                                fill: var(--text-color);
+                                opacity: .4;
+                            }
+                            &.desc {
+                                svg:nth-child(1) {
+                                    opacity: 1;
+                                }
+                            }
+                            &.asc {
+                                svg:nth-child(2) {
+                                    opacity: 1;
+                                }
+                            }
+                            &:hover {
+                                svg {
+                                    opacity: .8;
                                 }
                             }
                         }
-                        .select-box {
-                            background: transparent;
-                            border: none;
-                            .selected-value {
-                                max-width: 132px;
+
+                        .input-body {
+                            min-width: 120px;
+                            width: 100%;
+                            input {
+                                border: none;
+                                background-color: var(--table-color-2);
+                                color: var(--text-color);
+                                &:hover, &:focus {
+                                    background-color: var(--table-hover-color);
+                                    & + label {
+                                        color: var(--text-color);
+                                    }
+                                }
+                                &:not([value=""]) {
+                                    background-color: var(--table-hover-color);
+                                }
+                            }
+                            .select-box {
+                                background: transparent;
+                                border: none;
+                                .selected-value {
+                                    max-width: 132px;
+                                }
+                                &:hover, &:focus {
+                                    background-color: var(--table-hover-color);
+                                    & + label {
+                                        color: var(--text-color);
+                                    }
+                                }
+                                .selected-value:not(:empty) {
+                                    background-color: var(--table-hover-color);
+                                }
                             }
                         }
                     }
@@ -168,3 +233,5 @@
         padding-bottom: 8px;
     }
 }
+
+// row'lar 3 renkli olacak

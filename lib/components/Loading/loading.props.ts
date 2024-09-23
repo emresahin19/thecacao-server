@@ -6,6 +6,7 @@ export interface SpinnerProps {
     color3?: string;
     style?: object | null;
     absolute?: boolean;
+    animationProgress?: number;
 }
 
 export interface LoadingProps {

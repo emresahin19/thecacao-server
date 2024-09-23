@@ -2,17 +2,17 @@
     --font-size-md:      16px;
     --font-size-sm:      14px;
     --font-size-lg:      18px;
-    --padding-md:       16px 28px 6px 12px;
-    --padding-sm:       14px 22px 4px 8px;
-    --padding-lg:       18px 30px 8px 14px;
+    --padding-md:        18px 28px 8px 12px;
+    --padding-sm:        14px 22px 4px 8px;
+    --padding-lg:        18px 30px 8px 14px;
     --border-width-md:   1px;
     --border-width-sm:   1px;
     --border-width-lg:   2px;
     --font-weight-md:    400;
     --font-weight-sm:    400;
     --font-weight-lg:    400;
-    --border-radius:    8px;
-    --transition:  0.3s ease;
+    --border-radius:     8px;
+    --transition:        0.3s ease;
     position: relative;
     min-height: 36px;
 
@@ -45,13 +45,13 @@
         
         &[type="number"] {
             -moz-appearance: textfield;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
         }
 
-        &[type="number"]::-webkit-outer-spin-button,
-        &[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
 
         &[type=date][value=""]:not(:focus) {
             opacity: 0;
@@ -80,15 +80,15 @@
     input:-webkit-autofill + label,
     .select-box:focus + label,
     .select-box:not([data-value=""]) + label {
-        top: -20px;
-        font-size: 12px;
-        left: 10px;
+        top: -24px;
+        font-size: 11px;
+        left: 8px;
         color: var(--input-border-color-focus);
     }
 
     .clear-button {
         position: absolute;
-        right: 10px;
+        right: 12px;
         top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
@@ -96,7 +96,9 @@
         user-select: none;
         color: var(--danger);
 
-        &.number, &.date {
+        // &.number, 
+        // &.date, 
+        &.password {
             right: 36px;
         }
     }
@@ -105,13 +107,17 @@
         cursor: pointer;
         position: relative;
         min-height: 36px;
-        border-radius: 8px;
+        border-radius: var(--border-radius);
         border: var(--border-width-md) solid var(--input-border-color);
         pointer-events: auto;
         display: flex;
         font-weight: 400;
         color: var(--input-color);
         background-color: var(--input-background-color);
+        
+        &:hover + label {
+            color: var(--input-border-color-focus);
+        }
 
         .selected-value {
             padding: var(--padding-md);
@@ -120,7 +126,9 @@
             text-overflow: ellipsis;
             font-weight: 400;
             color: var(--input-color);
-            min-height: 20px;
+            min-height: 18px;
+            border-radius: var(--border-radius);
+            width: 100%;
         }
         .options {
             display: none;
@@ -144,14 +152,6 @@
             &.open {
                 display: flex;
             }
-            .parent-option {
-                background-color: rgba(0, 0, 0, 0.5);
-                font-size: var(--font-size-sm);
-                padding: 4px 12px;
-                &:hover {
-                    background-color: rgba(0, 0, 0, 0.8);
-                }
-            }
             .option {
                 padding: 8px 12px 8px;
                 display: flex;
@@ -170,15 +170,23 @@
                     color: var(--input-border-color-focus);
                 }
             }
+            .parent-option {
+                background-color: rgba(0, 0, 0, 0.5);
+                font-size: var(--font-size-sm);
+                padding: 4px 12px;
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.8);
+                }
+            }
         }
     }
 
     input:-moz-autofill {
         background-color: var(--white) !important;
         & + label {
-            top: -20px;
-            font-size: 12px;
-            left: 10px;
+            top: -24px;
+            font-size: 11px;
+            left: 8px;
             color: var(--input-border-color-focus);
         }
     }
@@ -208,6 +216,7 @@
         color: var(--input-color);
         pointer-events: none;
         user-select: none;
+        font-weight: lighter;
     }
 
     .number-controls {
@@ -221,6 +230,7 @@
         bottom: 0;
         justify-content: center;
         align-items: center;
+        display: none;
 
         .increment, .decrement {
             cursor: pointer;
@@ -248,6 +258,10 @@
         .decrement {
             border-radius: 2px 2px 6px 2px;
         }
+    }
+
+    input:focus + .number-controls {
+        display: flex;
     }
 
     &.transparent {

@@ -10,6 +10,6 @@ export class CreateProductDto {
     order?: number;
     passive?: boolean;
     deleted?: boolean;
-    category_id: number;
+    category_id?: number;
   }
   

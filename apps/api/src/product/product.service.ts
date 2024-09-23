@@ -7,6 +7,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Image } from '../image/entities/image.entity';
 import { Extra } from '../extra/entities/extra.entity';
 import { cdnUrl } from '../common/constants';
+import { ProductQueryParams } from './product.props';
 
 @Injectable()
 export class ProductService {
@@ -15,8 +16,6 @@ export class ProductService {
         private readonly productRepository: Repository<Product>,
         @InjectRepository(Image)
         private readonly imageRepository: Repository<Image>,
-        @InjectRepository(Extra)
-        private readonly extraRepository: Repository<Extra>,
     ) {}
 
     create(createProductDto: CreateProductDto): Promise<Product> {
@@ -24,8 +23,54 @@ export class ProductService {
         return this.productRepository.save(product);
     }
 
-    findAll(): Promise<Product[]> {
-        return this.productRepository.find({ relations: ['category'] });
+    async findAll(params: ProductQueryParams) {
+        const { 
+            page = 1, 
+            perPage = 10, 
+            orderBy = 'id', 
+            orderDirection = 'ASC', 
+            name, 
+            category_id,
+            price,
+            updated_at,
+        } = params;
+
+        const query = this.productRepository.createQueryBuilder('product')
+            .leftJoinAndSelect('product.category', 'category')
+            .where('product.deleted = :deleted', { deleted: false })
+            .andWhere('product.passive = :passive', { passive: false });
+
+        if (name) {
+            query.andWhere('product.name LIKE :name', { name: `%${name}%` });
+        }
+
+        if (updated_at) {
+            query.andWhere('DATE(product.updated_at) = :updated_at', { updated_at });
+        }
+
+        if (category_id) {
+            query.andWhere('product.category_id = :category_id', { category_id });
+        }
+
+        if (price) {
+            query.andWhere('product.price = :price', { price });
+        }
+
+        const [items, total] = await query
+            .orderBy(`product.${orderBy}`, orderDirection)
+            .skip((page - 1) * perPage)
+            .take(perPage)
+            .getManyAndCount();
+
+        for(const item of items){
+            if (item.image_ids && item.image_ids.length > 0) {
+                item.images = await this.getImages(item.image_ids);
+            } else {
+                item.images = [];
+            }
+        }
+
+        return { items, total, currentPage: page, lastPage: Math.ceil(total / perPage) };
     }
 
     findOne(id: number): Promise<Product> {
@@ -102,17 +147,4 @@ export class ProductService {
         return product;
     }
 
-    async getAllProducts(): Promise<Product[]> {
-        const products = await this.productRepository.find();
-
-        for (const product of products) {
-            if (product.image_ids && product.image_ids.length > 0) {
-                product.image_urls = await this.getImageUrls(product.image_ids);
-            } else {
-                product.image_urls = [];
-            }
-        }
-
-        return products;
-    }
 }

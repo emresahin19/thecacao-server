@@ -11,7 +11,6 @@
     flex-direction: column;
     border-radius: 0;
     transform: translateY(calc(100% + 70px));
-    background-color: rgba(var(--black-rgb), 0.3);
     backdrop-filter: blur(7px);
     top: 0;
 
@@ -46,13 +45,19 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
+            
             img, svg {
                 margin-left: 24px;
                 filter: invert(100%) brightness(3);
             }
+
             .close {
                 right: 12px;
                 padding-left: 18px;
+                color: var(--white);
+                &:before, &:after {
+                    background-color: var(--white);
+                }
             }
         }
 
@@ -114,5 +119,21 @@
     }
     to {
         transform: translateY(0) scale(1);
+    }
+}
+
+#dash {
+    .modal {
+        .modal-header {
+            .close {
+                font-size: 0px !important;
+                width: 24px;
+                height: 24px;
+                padding: 0;
+            }
+            svg {
+                display: none;
+            }
+        }
     }
 }

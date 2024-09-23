@@ -14,6 +14,7 @@ import { useLoading, useToast } from "../../../contexts";
 import { saveProduct } from '../../../services';
 import { AxiosError } from "axios";
 import { ProductDataProps, ProductEditProps } from "../card.props";
+import { productVariantHeight, productVariantWidth } from "lib/constants";
 
 const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
     const [initialProduct, setInitialProduct] = useState<ProductDataProps | null>(null);
@@ -117,7 +118,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
             </div>
 
             <div className="edit-input">
-                <SelectBox
+                <MultipleSelectBox
                     name="category_id"
                     label="Kategori"
                     options={categories}
@@ -165,6 +166,8 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                 <MultipleImageInput
                     initialImages={images}
                     onImagesChange={setImages}
+                    width={productVariantWidth}
+                    height={productVariantHeight}
                 />
             </div>
             

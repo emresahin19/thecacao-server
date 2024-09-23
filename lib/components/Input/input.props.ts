@@ -84,4 +84,6 @@ export interface MultipleImageInputProps {
     variant?: string;
     onChange?: (file: File | null) => void;
     onRemove?: () => void;
+    width?: number;
+    height?: number;
 };

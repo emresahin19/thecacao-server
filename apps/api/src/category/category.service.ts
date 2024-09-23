@@ -12,7 +12,7 @@ export class CategoryService {
         private readonly categoryRepository: Repository<Category>,
     ) {}
 
-    async findAll(page: number, perPage: number, orderBy: string, orderDirection: 'ASC' | 'DESC', name?: string, updatedAt?: string) {
+    async findAll(page: number, perPage: number, orderBy: string, orderDirection: 'ASC' | 'DESC', name?: string, updated_at?: string) {
         const query = this.categoryRepository.createQueryBuilder('category')
             .where('category.deleted = :deleted', { deleted: false });
 
@@ -20,8 +20,8 @@ export class CategoryService {
             query.andWhere('category.name LIKE :name', { name: `%${name}%` });
         }
 
-        if (updatedAt) {
-            query.andWhere('DATE(category.updated_at) = :updatedAt', { updatedAt });
+        if (updated_at) {
+            query.andWhere('DATE(category.updated_at) = :updated_at', { updated_at });
         }
 
         const [items, total] = await query

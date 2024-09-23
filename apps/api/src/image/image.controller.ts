@@ -84,6 +84,12 @@ export class ImageController {
                 height: extraImageHeight,
                 quality: extraImageQuality,
                 format: 'webp' as const
+            },
+            'table-avatar': {
+                width: 64,
+                height: 40,
+                quality: 80,
+                format: 'webp' as const
             }
         };
         

@@ -8,7 +8,7 @@ export interface ImageProps {
     quality?: number;
     loading?: 'eager' | 'lazy';
     format?: 'webp' | 'jpg' | 'png';
-    type?: 'product' | 'product-detail' | 'slider' | 'extra';
+    type?: 'product' | 'product-detail' | 'slider' | 'extra' | 'table-avatar';
     backgroundColor?: string;
     style?: React.CSSProperties;
 }

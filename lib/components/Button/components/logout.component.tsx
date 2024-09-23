@@ -9,6 +9,7 @@ const LogoutButton: React.FC = () => {
     return (
         <IconButton
             onClick={handleLogout}
+            width={24}
             ariaLabel="Çıkış Yap"
         >
             <CiLogin />

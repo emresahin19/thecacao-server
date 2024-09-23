@@ -10,6 +10,8 @@ import Pagination from '../../Table/components/pagination.component';
 import EditableInput from '../../Input/components/editable-input.component';
 import CiEdit from 'lib/assets/icon/svg/CiEdit.svg';
 import CiTrash from 'lib/assets/icon/svg/CiTrash.svg';
+import SortButton from './sort-button.component';
+import MultipleSelectBox from 'lib/components/Input/components/multiple-selectbox.component';
 
 const Table = <T extends { id: string | number, passive?: number }>({
     data = [],
@@ -117,6 +119,30 @@ const Table = <T extends { id: string | number, passive?: number }>({
         setSelectAll(false);
     };
 
+    const handleSort = (key: string) => {
+        const direction = filters.orderDirection === 'ASC' ? 'DESC' : 'ASC';
+    
+        const updatedFilters = {
+            ...filters,
+            orderBy: key,
+            orderDirection: direction,
+        };
+    
+        setFilters(updatedFilters);
+    
+        if (debounceTimeout) {
+            clearTimeout(debounceTimeout);
+        }
+    
+        const timeout = setTimeout(() => {
+            if (onFilterChange) {
+                onFilterChange(updatedFilters);
+            }
+        }, 300);
+    
+        setDebounceTimeout(timeout);
+    };
+    
     return (
         <>
             <table className={className}>
@@ -134,7 +160,14 @@ const Table = <T extends { id: string | number, passive?: number }>({
                         {columns.map((col) => (
                             <th key={`${String(col.key)}-filter`}>
                                 {col.filterType && (
-                                    <>
+                                    <div className="th-filter">
+                                        {col.sort && (
+                                            <span role='button' onClick={() => handleSort(col.key as string)}>
+                                                <SortButton 
+                                                    {...(filters.orderBy == col.key ? { direction: filters.orderDirection } : {direction: null})}
+                                                />
+                                            </span>
+                                        )}
                                         {col.filterType === 'text' && (
                                             <Input
                                                 type='text'
@@ -154,7 +187,7 @@ const Table = <T extends { id: string | number, passive?: number }>({
                                             />
                                         )}
                                         {col.filterType === 'select' && col.options && (
-                                            <SelectBox
+                                            <MultipleSelectBox
                                                 label={`${col.label} Seç`}
                                                 options={col.options}
                                                 name={`${col.label}`}
@@ -180,7 +213,7 @@ const Table = <T extends { id: string | number, passive?: number }>({
                                                 onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
                                             />
                                         )}
-                                    </>
+                                    </div>
                                 )}
                                 {!col.filterType && col.label}
                             </th>
@@ -279,7 +312,7 @@ const Table = <T extends { id: string | number, passive?: number }>({
                                 <td key={colIndex} data-label={col.label}>
                                     {String(col.key).includes('image') ? (
                                         <div className="avatar">
-                                            <img src={imageToCdnUrl({image: placeholderProductImageBg, type: 'product'})} />
+                                            <img src={imageToCdnUrl({image:placeholderProductImageBg, type: 'table-avatar'})} />
                                         </div>
                                     ) : (
                                         <div className="avatar">

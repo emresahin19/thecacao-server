@@ -16,29 +16,43 @@ export class CategoryController {
         @Query('orderBy') orderBy: string = 'order',
         @Query('orderDirection') orderDirection: 'ASC' | 'DESC' = 'ASC',
         @Query('name') name?: string,
-        @Query('updated_at') updatedAt?: string
+        @Query('updated_at') updated_at?: string
     ) {
-        const categories = await this.categoryService.findAll(page, perPage, orderBy, orderDirection, name, updatedAt);
-        return createResponse(true, categories.items, true); // Liste olduğu için `isArray = true`
+        const categories = await this.categoryService.findAll(page, perPage, orderBy, orderDirection, name, updated_at);
+        return categories ? {
+            items: categories,
+            ...StatusCode.SUCCESS
+        } : {
+            items: null,
+            ...StatusCode.NOT_FOUND
+        }
     }
 
     @Get('input-data')
     async inputData() {
         const categories = await this.categoryService.inputData();
-        return createResponse(true, categories, true); // Liste olduğu için `isArray = true`
+        return {
+            items: categories,
+            ...StatusCode.SUCCESS
+        }
     }
     
     @Get(':id')
     async findOne(@Param('id') id: number) {
         const category = await this.categoryService.findOne(id);
-        return category ? createResponse(true, category) : { status: false, item: null }; // Tek bir obje olduğu için `isArray = false`
+        return category ? {
+            item: category,
+            ...StatusCode.SUCCESS
+        } : {
+            item: null,
+            ...StatusCode.NOT_FOUND
+        }
     }
 
     @Post()
     async create(@Body() createCategoryDto: CreateCategoryDto) {
         const newCategory = await this.categoryService.create(createCategoryDto);
         return {
-            status: true,
             item: newCategory,
             ...StatusCode.CREATED
         };
@@ -48,7 +62,6 @@ export class CategoryController {
     async update(@Param('id') id: number, @Body() updateCategoryDto: UpdateCategoryDto) {
         const updatedCategory = await this.categoryService.update(id, updateCategoryDto);
         return {
-            status: true,
             item: updatedCategory,
             ...StatusCode.SUCCESS
         };
@@ -58,7 +71,6 @@ export class CategoryController {
     async remove(@Param('id') id: number) {
         await this.categoryService.remove(id);
         return {
-            status: true,
             ...StatusCode.NO_CONTENT
         };
     }

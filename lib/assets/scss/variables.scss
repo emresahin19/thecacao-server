@@ -166,19 +166,16 @@ $colors: (
     --gray-09: #343A40;
     --gray-10: #212529;
 
-    --main-01: #F8FAFC;
-    --main-02: #F1F5F9;
-    --main-03: #E2E8F0;
-    --main-04: #CBD5E1;
-    --main-05: #94A3B8;
-    --main-06: #64748B;
-    --main-07: #475569;
-    --main-08: #334155;
-    --main-09: #334155;
-    --main-10: #1A202C;
-    --main-11: #1E293B;
-    --main-12: #0F172A;
-    --main-12: #030820;
+    --main-01: #f4f4f5;
+    --main-02: #e4e4e7;
+    --main-03: #d4d4d8;
+    --main-04: #a1a1aa;
+    --main-05: #71717a;
+    --main-06: #52525b;
+    --main-07: #3f3f46;
+    --main-08: #27272a;
+    --main-09: #18181b;
+    --main-10: #09090b;
 
     --primary:    #0C4C4C;
     --secondary:  #9ac63c;
@@ -312,6 +309,12 @@ body {
     align-items: center;
     justify-content: center;
     inset: 0;
+}
+
+#dash #__next {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 h1,

@@ -89,11 +89,9 @@ const ProductTable = () => {
                         render: (product: ProductProps) => (
                             product.images && (
                                 <div className="avatar">
-                                    {product.images.length > 0 &&
-                                        <img src={`${product.images[0]?.url}`} />
-                                    }
-                                    {product.images.length === 0 &&
-                                        <img src={imageToCdnUrl({image:placeholderProductImageBg, type: 'product'})} />
+                                    {product.images.length > 0
+                                        ? <img src={imageToCdnUrl({image:product.images[0]?.filename, type: 'table-avatar'})} />
+                                        : <img src={imageToCdnUrl({image:placeholderProductImageBg, type: 'table-avatar'})} />
                                     }
                                 </div>
                         ))
@@ -101,12 +99,14 @@ const ProductTable = () => {
                     { 
                         key: 'name', 
                         label: 'Ürün İsmi', 
+                        sort: true,
                         editable: true, 
                         filterType: 'text' 
                     },
                     { 
                         key: 'category', 
                         label: 'Kategori', 
+                        sort: true,
                         editable: false, 
                         filterType: 'select', 
                         options: categories, 
@@ -116,17 +116,19 @@ const ProductTable = () => {
                     },
                     { 
                         key: 'price', 
+                        sort: true,
                         label: 'Fiyat', 
                         editable: true, 
                         filterType: 'number' 
                     },
                     { 
-                        key: 'updatedAt', 
+                        key: 'updated_at', 
                         label: 'Son Düzenleme', 
+                        sort: true,
                         editable: true, 
                         filterType: 'date', 
                         render: (product: ProductProps) => (
-                            <span>{dateToString(product.updatedAt, true)}</span>
+                            <span>{dateToString(product.updated_at, true)}</span>
                         )
                     }
                 ]}

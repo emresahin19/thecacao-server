@@ -3,7 +3,6 @@ import type { CarouselProps } from '../carousel.props';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import BackToStart from './back-to-start.component';
 import { carouselLengthOnScreen, cdnUrl, slideWidthDefault } from 'lib/constants';
-import { sleep } from 'lib/utils';
 
 const CarouselItem: React.FC<{
     item: React.ReactNode;
@@ -195,8 +194,8 @@ const Carousel: React.FC<CarouselProps> = ({
                     const isLastSlide = currentIndex === items.length - rowItemsCount && extraMove >= slideWidth;
 
                     if (isLastSlide) {
-                        setCurrentIndex(0);
-                        setEndMessageOpacity(0);
+                        // setCurrentIndex(0);
+                        // setEndMessageOpacity(0);
                     } else {
                         const index = currentIndex + moveFactor;
                         nextSlide(index + 1);
@@ -277,34 +276,31 @@ const Carousel: React.FC<CarouselProps> = ({
                 >
                     {infinite
                         ? cloneItems.map((item, index) => (
-                              <CarouselItem
-                                  item={item}
-                                  index={index}
-                                  isActive={currentIndex === index}
-                                  className={`carousel-item carousel-${
-                                      viewType === 'list' ? 1 : rowItemsCount
-                                  }-item`}
-                                  key={index}
-                              />
-                          ))
+                            <CarouselItem
+                                item={item}
+                                index={index}
+                                isActive={currentIndex === index}
+                                className={`carousel-item carousel-${
+                                    viewType === 'list' ? 1 : rowItemsCount
+                                }-item`}
+                                key={index}
+                            />
+                        ))
                         : items.map((item, index) => (
-                              <CarouselItem
-                                  item={item}
-                                  index={index}
-                                  isActive={currentIndex === index}
-                                  className={`carousel-item carousel-${
-                                      viewType === 'list' ? 1 : rowItemsCount
-                                  }-item`}
-                                  key={index}
-                              />
-                          ))}
+                            <CarouselItem
+                                item={item}
+                                index={index}
+                                isActive={currentIndex === index}
+                                className={`carousel-item carousel-${
+                                    viewType === 'list' ? 1 : rowItemsCount
+                                }-item`}
+                                key={index}
+                            />
+                        ))}
                     {!infinite && currentIndex === items.length - rowItemsCount && (
                         <div
                             className="carousel-end"
-                            style={{
-                                maxWidth:
-                                    slideWidth === slideWidthDefault ? '20%' : `${slideWidth}px`,
-                            }}
+                            {...slideWidth === slideWidthDefault && {style: {maxWidth:`${slideWidth}px`}}}
                         >
                             <BackToStart rotate={endMessageOpacity} color={backToStartColor} />
                         </div>

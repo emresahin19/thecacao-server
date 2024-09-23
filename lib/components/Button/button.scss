@@ -138,20 +138,16 @@
 }
 
 .button {
-    $color1: var(--color1);
-    $color2: var(--color2);
-    min-width: 130px;
-    width: fit-content;
     &-default {
-        @include button-def($color1, $color2, 2px, bottom, right, 0.25s, (0 6px 0 6px));
+        @include button-def(var(--color1), var(--color2), 1px, bottom, right, 0.15s, (0 6px 0 6px));
     }
     &-reverse {
-        @include button-def($color1, $color2, 2px, bottom, left, 0.25s, (6px 0 6px 0));
+        @include button-def(var(--color1), var(--color2), 1px, bottom, left, 0.15s, (6px 0 6px 0));
     }
     &-thin {
-        @include button-def($color1, $color2, 1px, bottom, right, 0.25s, (0 6px 0 6px));
+        @include button-def(var(--color1), var(--color2), 1px, bottom, right, 0.15s, (0 6px 0 6px));
     }
     &-reverse-thin {
-        @include button-def($color1, $color2, 1px, bottom, left, 0.25s, (6px 0 6px 0));
+        @include button-def(var(--color1), var(--color2), 1px, bottom, left, 0.15s, (6px 0 6px 0));
     }
 }

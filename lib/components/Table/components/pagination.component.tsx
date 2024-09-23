@@ -19,7 +19,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPage
                 {pagesList.map((page) => (
                     <Button
                         key={page}
-                        property={`${page % 2 === 1 ? 'reverse-' : ''}thin`}
+                        property={`${page % 2 === 1 ? 'reverse' : 'default'}`}
                         className={`${page === currentPage ? 'active' : ''}`}
                         onClick={() => onPageChange(page)}
                     >

@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ExtraService } from './extra.service';
 import { CreateExtraDto } from './dto/create-extra.dto';
 import { UpdateExtraDto } from './dto/update-extra.dto';
-import { ExtraCategoryService } from '../extra-category/extra-category.service';
 import { StatusCode } from '../common/constants';
 
 @Controller('extra')
@@ -25,7 +24,6 @@ export class ExtraController {
     async inputData() {
         const items = await this.extraService.inputData();
         return {
-            status: true,
             items: items,
             ...StatusCode.SUCCESS
         };

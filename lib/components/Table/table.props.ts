@@ -10,6 +10,7 @@ export interface PaginationProps {
 export interface ColumnProps<T> {
     key: keyof T;
     label: string;
+    sort?: boolean;
     render?: (item: T) => React.ReactNode;
     type?: InputType;
     filterType?: InputType;

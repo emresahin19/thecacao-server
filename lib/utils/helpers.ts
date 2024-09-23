@@ -111,7 +111,7 @@ const serializeFilters = (filters: { [key: string]: any }) => {
 };
 
 const imageToCdnUrl = ({ image, width, height, type, format = 'webp', quality = 80 }: ImageProps) => {
-    if (!image) return `${cdnUrl}/images/the-cacao-logo.webp`;
+    if (!image) return `${cdnUrl}/images/the-cacao-logo.png`;
 
     const { w, h } = imageSizeCalc({ width, height, type });
 
@@ -130,7 +130,7 @@ const imageToCdnSet = ({ image, width, height, type, format, quality }: ImagePro
     const { w, h } = imageSizeCalc({ width, height, type });
 
     if (!w || !h) return {
-        src: `${cdnUrl}/images/the-cacao-logo.webp`,
+        src: `${cdnUrl}/images/the-cacao-logo.png`,
     };
 
     const x1 = {
@@ -183,6 +183,10 @@ const imageSizeCalc = ({ width, height, type }: ImageProps) => {
         'extra': {
             w: extraImageWidth,
             h: extraImageHeight,
+        },
+        'table-avatar': {
+            w: 40,
+            h: 40,
         }
     };
 

@@ -86,7 +86,7 @@ class MyDocument extends Document {
           <meta httpEquiv="Content-Language" content="tr" />
         </Head>
 
-        <body>
+        <body id="dash">
           <Main />
           <NextScript />
         </body>

@@ -3,44 +3,68 @@ import React, { useState, useRef, useEffect } from "react";
 import { MultipleSelectBoxProps, OptionsProps } from "../input.props";
 
 const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
-    options,
+    options = [],
     label,
     className = "",
     name,
     value,
     onChange,
     error = false,
-    size = 'md',
+    size = "md",
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const isArray = Array.isArray(value);
 
-    const handleOptionClick = (e: React.MouseEvent<HTMLDivElement>, option: OptionsProps) => {
+    const isMultiple = Array.isArray(value);
+
+    const flattenOptions = (opts: OptionsProps[]): OptionsProps[] =>
+        opts.flatMap((opt) =>
+            opt.options ? flattenOptions(opt.options) : opt
+        );
+
+    const getSelectedLabels = () => {
+        const allOptions = options ? flattenOptions(options) : [];
+        if (isMultiple) {
+            return allOptions
+                .filter((opt) => value.includes(opt.value))
+                .map((opt) => opt.label)
+                .join(", ");
+        } else {
+            const selectedOption = allOptions.find((opt) => opt.value == value);
+            return selectedOption ? selectedOption.label : "";
+        }
+    };
+
+    const handleOptionToggle = (
+        e: React.MouseEvent<HTMLDivElement>,
+        selectedOption: OptionsProps
+    ) => {
         e.stopPropagation();
         e.preventDefault();
-        if(!options) return;
 
-        let newValue = isArray ? [...value] : [value];
+        let newValue;
+        if (isMultiple) {
+            if (selectedOption.options) {
+                const groupValues = flattenOptions([selectedOption]).map((opt) => opt.value);
+                const allSelected = groupValues.every((val) => value.includes(val));
 
-        if (isArray) {
-            const groupOptionValues = option.options && option.options.map(opt => opt.value) || [];
-            const allSelected = groupOptionValues.every(val => newValue.includes(val));
-
-            if (allSelected) {
-                newValue = newValue.filter(val => !groupOptionValues.includes(val));
+                newValue = allSelected
+                    ? value.filter((val) => !groupValues.includes(val))
+                    : Array.from(new Set([...value, ...groupValues]));
             } else {
-                newValue = Array.from(new Set([...newValue, ...groupOptionValues]));
+                // Toggle single option
+                newValue = value.includes(selectedOption.value)
+                    ? value.filter((val) => val !== selectedOption.value)
+                    : [...value, selectedOption.value];
             }
         } else {
-            if (option && option.value && newValue.includes(option.value)) {
-                newValue = newValue.filter(val => val !== option.value);
-            } else {
-                newValue = [...newValue, option.value];
-            }
+            newValue = selectedOption.value;
+            setIsOpen(false);
         }
 
-        onChange({ target: { value: newValue, name } } as unknown as React.ChangeEvent<HTMLSelectElement>);
+        onChange({
+            target: { value: newValue, name },
+        } as React.ChangeEvent<HTMLSelectElement>);
     };
 
     const handleOutsideClick = (event: MouseEvent) => {
@@ -52,7 +76,8 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
     const clearValue = (e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation();
         e.preventDefault();
-        onChange({ target: { value: [], name } } as unknown as React.ChangeEvent<HTMLSelectElement>);
+        const newValue = isMultiple ? [] : "";
+        onChange({target: { value: newValue, name }} as React.ChangeEvent<HTMLSelectElement>);
     };
 
     useEffect(() => {
@@ -62,51 +87,55 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
         };
     }, []);
 
-    return (
-        <div className={`input-body ${className} ${error ? "error" : ""} ${size}`} ref={dropdownRef}>
-            <div className="select-box" onClick={() => setIsOpen(!isOpen)} data-value={isArray && value.join(', ') || value}>
-                <div className="selected-value">
-                    {options && (isArray 
-                        ? value.map(val => options.flatMap(opt => 'options' in opt ? opt.options : [opt]).find(option => option && option.value === val)?.label).join(', ') 
-                        : value
-                    )}
+  const renderOptions = (opts: OptionsProps[]) =>
+    opts.map((option) => {
+        const isGroup = !!option.options;
+        const isSelected = isMultiple
+            ? isGroup
+            ? option.options!.every((opt) => value.includes(opt.value))
+            : value.includes(option.value)
+            : value === option.value;
+
+        return (
+            <div key={option.value || option.label}>
+                <div
+                    className={`option ${isSelected ? "active" : ""} ${isGroup ? "parent-option" : ""}`}
+                    onClick={(e) => handleOptionToggle(e, option)}
+                >
+                    {option.label}
                 </div>
-
-                {isOpen && (
-                    <div className="options open">
-                        {options && options.map(option => {
-                            const isActive = 'options' in option && option.options && isArray && option.options.every(opt => value.includes(opt.value));
-
-                            return (
-                                <div key={option.value}>
-                                    <div
-                                        className={`parent-option ${isActive ? 'active' : ''}`}
-                                        onClick={(e) => handleOptionClick(e, option)}
-                                    >
-                                        {option.label}
-                                    </div>
-
-                                    {isArray && 'options' in option && option.options && option.options.map(subOption => {
-                                        return (
-                                            <div
-                                                key={subOption.value}
-                                                className={`option ${value.includes(subOption.value) ? 'active' : ''}`}
-                                                onClick={(e) => handleOptionClick(e, subOption)}
-                                            >
-                                                {subOption.label}
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            )
-                        })}
+                {isGroup && (
+                    <div className="sub-options">
+                        {renderOptions(option.options!)}
                     </div>
                 )}
-                {isArray && value.length > 0 && (
-                    <span className="clear-button" onClick={clearValue}>✕</span>
+            </div>
+        );
+    });
+
+    return (
+        <div
+            className={`input-body ${className} ${error ? "error" : ""} ${size}`}
+            ref={dropdownRef}
+        >
+            <div
+                className="select-box"
+                onClick={() => setIsOpen(!isOpen)}
+                data-value={getSelectedLabels()}
+            >
+                <div className="selected-value">{getSelectedLabels()}</div>
+
+                {isOpen && options && <div className="options open">{renderOptions(options)}</div>}
+
+                {((isMultiple && value.length > 0) || (!isMultiple && value)) && (
+                    <span className="clear-button" onClick={clearValue}>
+                        ✕
+                    </span>
                 )}
             </div>
-            <label className={`${isArray && value.length > 0 ? "active" : ""}`}>{label}</label>
+            <label className={`${isMultiple && value.length > 0 ? "active" : ""}`}>
+                {label}
+            </label>
         </div>
     );
 };

@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ImageInput from './image-input.component';
 import { ImageObject, MultipleImageInputProps } from '../input.props';
+import { imageToCdnUrl } from 'lib/utils';
+import { productVariantHeight, productVariantWidth } from 'lib/constants';
 
-const MultipleImageInput: React.FC<MultipleImageInputProps> = ({ initialImages, onImagesChange, onChange, onRemove }) => {
+const MultipleImageInput: React.FC<MultipleImageInputProps> = ({ 
+    initialImages, 
+    onImagesChange, 
+    onChange, 
+    onRemove, 
+    width = productVariantWidth, 
+    height = productVariantHeight 
+}) => {
     const [images, setImages] = useState<ImageObject[]>(initialImages);
     const [emptyImage, setEmptyImage] = useState<string | null>(null);
     const dragItem = useRef<number | null>(null);
@@ -65,24 +74,27 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({ initialImages, 
 
     return (
         <div className="multiple-image-input">
-            {images.map((image, index) => (
-                <div
-                    key={index}
-                    className="sortable-item"
-                    draggable
-                    onDragStart={() => handleDragStart(index)}
-                    onDragEnter={() => handleDragEnter(index)}
-                    onDragEnd={handleDragEnd}
-                >
-                    <ImageInput
+            {images.map((image, index) => {
+                const img = imageToCdnUrl({ image: image.filename, width, height })
+                return (
+                    <div
                         key={index}
-                        name={`image-${index}`}
-                        value={image.url}
-                        onChange={(file) => handleImageChange(index, file)}
-                        onRemove={() => handleRemoveImage(index)}
-                    />
-                </div>
-            ))}
+                        className="sortable-item"
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragEnter={() => handleDragEnter(index)}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <ImageInput
+                            key={index}
+                            name={`image-${index}`}
+                            value={img}
+                            onChange={(file) => handleImageChange(index, file)}
+                            onRemove={() => handleRemoveImage(index)}
+                        />
+                    </div>
+                )
+            })}
             <div className="sortable-item">
                 <ImageInput
                     name={`image-${images.length}`}

@@ -1,8 +1,2 @@
 :root {
-    --header-padding: 16px;
-    --header-background-color: var(--header-background-color);
-    --body-background-color: var(--body-background-color);
-    --container-padding: 16px;
-    --transition: 0.2s cubic-bezier(.79,.14,.15,.86) all;
-    --font-family: 'SF Pro Display Regular', sans-serif;
 }

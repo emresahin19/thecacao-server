@@ -1,25 +1,19 @@
 import type { CarouselBackToStartProps } from "../carousel.props";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const BackToStart: React.FC<CarouselBackToStartProps> = ({ rotate, color = '#ffffff' }) => {
-    const spinnerRef = useRef<HTMLDivElement>(null);
-    const rotation = rotate * 360;
-
+const BackToStart: React.FC<CarouselBackToStartProps> = ({ rotate = 0, color = '#ffffff' }) => {
+    const [visibleIndex, setVisibleIndex] = useState(0);
+    
     useEffect(() => {
-        const rotation = rotate * 360;
-        spinnerRef.current!.style.transform = `rotate(${rotation}deg)`;
+        const index = Math.floor(rotate * 12);
+        setVisibleIndex(index);
     }, [rotate]);
 
     return (
-        <div className="lds-roller" 
-            ref={spinnerRef}
-            style={{
-                color,
-                rotate: `${rotation}deg`
-            }}
-        >
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
+        <div className="turn-to-back" style={{opacity: rotate}}>
+            {[...Array(12)].map((_, index) => (
+                visibleIndex > index && (<div  key={index}></div>)
+            ))}
         </div>
     );
 };

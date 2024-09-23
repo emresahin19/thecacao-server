@@ -26,7 +26,7 @@ export class AuthService {
         if (!user || user.password !== loginDto.password) {
             throw new HttpException(
                 StatusCode.UNAUTHORIZED.message,
-                StatusCode.UNAUTHORIZED.status,
+                StatusCode.UNAUTHORIZED.statusCode,
             );
         }
     

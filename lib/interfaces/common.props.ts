@@ -63,8 +63,8 @@ export type ColorOptions =
     textColor?: string;
     isActive?: boolean;
     viewType?: 'grid' | 'list' | 'carousel';
-    createdAt?: string;
-    updatedAt?: string;
+    created_at?: string;
+    updated_at?: string;
     onProductClick?: ({productSlug} : {productSlug: string}) => void;
     isVisible?: boolean;
   }
@@ -89,8 +89,8 @@ export type ColorOptions =
     order: number;
     textColor?: string;
     listView?: boolean;
-    createdAt?: string;
-    updatedAt?: string;
+    created_at?: string;
+    updated_at?: string;
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   }
 
@@ -101,8 +101,8 @@ export interface ExtraProps {
     order: number;
     passive: number;
     category_name: string;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface ContactProps {

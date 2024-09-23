@@ -115,12 +115,12 @@ const CategoryTable = () => {
                         type: 'color',
                     },
                     { 
-                        key: 'updatedAt', 
+                        key: 'updated_at', 
                         label: 'Son Düzenleme', 
                         editable: true, 
                         filterType: 'date', 
                         render: (category: CategoryProps) => (
-                            <span>{category && category.updatedAt && new Date(category.updatedAt).toLocaleDateString()}</span>
+                            <span>{category && category.updated_at && new Date(category.updated_at).toLocaleDateString()}</span>
                         )
                     }
                 ]}

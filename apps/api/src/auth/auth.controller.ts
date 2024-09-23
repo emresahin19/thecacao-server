@@ -17,12 +17,12 @@ export class AuthController {
     async login(@Body() loginDto: CreateLoginDto, @Res() res: Response) {
         try {
             const result = await this.authService.login(loginDto);
-            return res.status(StatusCode.SUCCESS.status).json({
+            return res.status(StatusCode.SUCCESS.statusCode).json({
                 message: StatusCode.SUCCESS.message,
                 ...result,
             });
         } catch (error) {
-            return res.status(StatusCode.UNAUTHORIZED.status).json({
+            return res.status(StatusCode.UNAUTHORIZED.statusCode).json({
                 message: StatusCode.UNAUTHORIZED.message,
             });
         }
@@ -33,7 +33,7 @@ export class AuthController {
     @Get('user')
     getAuthenticatedUser(@Req() req: Request, @Res() res: Response) {
         const user = req.user;
-        return res.status(StatusCode.SUCCESS.status).json({
+        return res.status(StatusCode.SUCCESS.statusCode).json({
             message: StatusCode.SUCCESS.message,
             user,
         });
