@@ -194,8 +194,8 @@ const Carousel: React.FC<CarouselProps> = ({
                     const isLastSlide = currentIndex === items.length - rowItemsCount && extraMove >= slideWidth;
 
                     if (isLastSlide) {
-                        // setCurrentIndex(0);
-                        // setEndMessageOpacity(0);
+                        setCurrentIndex(0);
+                        setEndMessageOpacity(0);
                     } else {
                         const index = currentIndex + moveFactor;
                         nextSlide(index + 1);
