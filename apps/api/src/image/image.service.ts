@@ -6,7 +6,7 @@ import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 import sharp from 'sharp';
 import { join } from 'path';
-import { existsSync, mkdirSync, statSync } from 'fs';
+import { existsSync, mkdirSync, statSync, writeFileSync } from 'fs';
 
 @Injectable()
 export class ImageService {
@@ -97,5 +97,49 @@ export class ImageService {
         // Save the processed image
         await image.toFile(outputPath);
         return outputPath;
+    }
+
+    async saveFiles(files: Array<Express.Multer.File>): Promise<number[]> {
+        const image_ids: number[] = [];
+        
+        const savedFiles = files.map(async (file) => {
+            const filePath = join(this.inputDir, file.originalname);
+            writeFileSync(filePath, file.buffer);
+            const newImage = new Image();
+            newImage.filename = file.originalname;
+            newImage.path = filePath;
+            await this.imageRepository.save(newImage);
+            newImage.id && image_ids.push(newImage.id);
+        });
+
+        await Promise.all(savedFiles);
+
+        return image_ids;
+    }
+
+    async saveImage(file: Express.Multer.File): Promise<Image> {
+        const filePath = join(this.inputDir, file.originalname);
+        writeFileSync(filePath, file.buffer);
+        const newImage = new Image();
+        newImage.filename = file.originalname;
+        newImage.path = filePath;
+        await this.imageRepository.save(newImage);
+        return this.findOne(newImage.id);
+    }
+
+    async updateImage(id: number, file: Express.Multer.File): Promise<Image> {
+        const image = await this.findOne(id);
+        if (!image) {
+            throw new Error('Image not found');
+        }
+
+        const filePath = join(this.inputDir, file.originalname);
+        writeFileSync(filePath, file.buffer);
+
+        await this.imageRepository.update(id, { 
+            filename: file.originalname,
+            path: filePath,
+        });
+        return this.findOne(id);
     }
 }

@@ -3,26 +3,26 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity('images')
 export class Image {
     @PrimaryGeneratedColumn()
-    id: number;
+    id?: number;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    cf_id: string;
+    cf_id?: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    filename: string;
+    filename?: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    path: string;
+    path?: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    url: string;
+    url?: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    variant: string;
+    variant?: string;
 
     @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-    created_at: Date;
+    created_at?: Date;
 
     @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-    updated_at: Date;
+    updated_at?: Date;
 }

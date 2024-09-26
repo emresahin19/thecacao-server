@@ -26,10 +26,13 @@ export interface InputProps {
 export interface EditableInputProps {
     name: string;
     value: string;
+    key?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onSave: () => void;
+    onSave: ({value}: {value: string}) => void;
     onCancel: () => void;
+    options?: OptionsProps[];
     type?: InputType;
+    render?: React.ReactNode;
 }
 
 export interface ImageInputProps {
@@ -58,7 +61,8 @@ export interface MultipleSelectBoxProps {
     value: OptionsProps['value'] | OptionsProps['value'][];
     className?: string;
     name: string;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     error?: boolean;
     size?: 'sm' | 'md' | 'lg';
 }
@@ -72,10 +76,10 @@ export interface TogglerProps {
 
 
 export interface ImageObject {
-    id: string | null;
-    file: File | null;
+    id?: string | null;
+    file?: File | null;
     filename?: string;
-    url: string;
+    url?: string;
 };
 
 export interface MultipleImageInputProps {

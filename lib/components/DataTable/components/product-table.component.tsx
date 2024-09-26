@@ -7,18 +7,29 @@ import { dateToString, imageToCdnUrl } from '../../../utils';
 import { placeholderProductImageBg } from '../../../constants';
 import Table from "../../Table/components/table.component";
 import Button from "../../Button/components/button.component";
-import DeleteModal from "../../Modal/components/delete-modal.component";
-import ProductEditCard from "../../Card/components/product-edit-card.component";
 import { deleteProduct } from '../../../services';
 import { useToast } from '../../../contexts';
 import { useDispatch } from 'react-redux';
 import { openModal } from 'lib/store/modal.slice';
 
+const emptyProduct: ProductProps = {
+    id: 0,
+    name: '',
+    price: 0,
+    category_id: 0,
+    images: [],
+    description: '',
+    recipe: '',
+    passive: 0,
+    slug: '',
+    order: 0
+};
+
 const ProductTable = () => {
     const perPage = 10;
     const [currentPage, setCurrentPage] = useState(0);
     const [filters, setFilters] = useState<{ [key: string]: any }>({});
-    const { products, total, isLoading, isError, mutateProduct } = useProducts(currentPage + 1, perPage, filters);
+    const { products, total, isLoading, isError, mutateProducts } = useProducts(currentPage + 1, perPage, filters);
     const { categories } = useCategoryInputData();
     const dispatch = useDispatch();
     const { showToast, handleRequestError } = useToast();
@@ -39,7 +50,7 @@ const ProductTable = () => {
         if (action === 'view' || action === 'create') {
             dispatch(openModal({
                 component: 'ProductEditCard',
-                data: item
+                data: id ? item : emptyProduct,
             }));
         } else if (action === 'delete') {
             dispatch(openModal({
@@ -52,7 +63,7 @@ const ProductTable = () => {
     const onProductSave = async (status: boolean) => {
         if(status){
             // handleShow({ show: false });
-            mutateProduct();
+            mutateProducts();
         }
     };
 
@@ -64,7 +75,7 @@ const ProductTable = () => {
         } catch (error) {
             handleRequestError(error);
         } finally {
-            mutateProduct();
+            mutateProducts();
             // handleShow({ show: false });
         }
     };
@@ -104,10 +115,10 @@ const ProductTable = () => {
                         filterType: 'text' 
                     },
                     { 
-                        key: 'category', 
+                        key: 'category_id', 
                         label: 'Kategori', 
                         sort: true,
-                        editable: false, 
+                        editable: true, 
                         filterType: 'select', 
                         options: categories, 
                         render: (product: ProductProps) => (

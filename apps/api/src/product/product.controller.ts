@@ -1,22 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { createResponse } from '../common/lib/response-handler'; 
 import { StatusCode } from '../common/constants';
 import { ProductQueryParams } from './product.props';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { ImageService } from '../image/image.service';
 
 @Controller('products')
 export class ProductController {
-    constructor(private readonly productService: ProductService) {}
+
+    constructor(
+        private readonly productService: ProductService,
+        private readonly imageService: ImageService,
+    ) {}
 
     @Post()
-    async create(@Body() createProductDto: CreateProductDto) {
-        const newProduct = await this.productService.create(createProductDto);
+    @UseInterceptors(AnyFilesInterceptor())
+    async create(
+        @Body() createProductDto: CreateProductDto,
+        @UploadedFiles() files: Array<Express.Multer.File>
+    ) {
+        const newProduct = await this.productService.create(createProductDto, files);
         return {
             item: newProduct,
             ...StatusCode.CREATED
         };
+    }
+
+    @Put(':id')
+    @UseInterceptors(AnyFilesInterceptor())
+    async update(
+        @Param('id') id: string,
+        @Body() updateProductDto: UpdateProductDto,
+        @UploadedFiles() files: Array<Express.Multer.File>
+    ) {
+        const item = await this.productService.update(+id, updateProductDto, files);
+        return item ? {
+            ...StatusCode.SUCCESS
+        } : {
+            ...StatusCode.NOT_FOUND
+        }
     }
 
     @Get()
@@ -41,15 +66,6 @@ export class ProductController {
             item: null,
             ...StatusCode.NOT_FOUND
         }
-    }
-
-    @Patch(':id')
-    async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-        const updatedProduct = await this.productService.update(+id, updateProductDto);
-        return {
-            item: updatedProduct,
-            ...StatusCode.SUCCESS
-        };
     }
 
     @Delete(':id')

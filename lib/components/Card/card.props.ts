@@ -9,7 +9,7 @@ export interface ProductDetailProps {
 
 export type ProductEditProps = {
     id: number | string;
-    onSave?: (response: any) => void;
+    onSave?: (response: any, callback?: () => void) => void;
     onCancel?: () => void;
 };
 

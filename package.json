@@ -12,6 +12,11 @@
     "nx": "^19.7.3"
   },
   "dependencies": {
-    "react-redux": "^9.1.2"
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "formidable": "^3.5.1",
+    "fs": "^0.0.1-security",
+    "multer": "^1.4.5-lts.1",
+    "next-connect": "^1.0.0"
   }
 }

@@ -75,7 +75,7 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
     return (
         <div className="multiple-image-input">
             {images.map((image, index) => {
-                const img = imageToCdnUrl({ image: image.filename, width, height })
+                const img = image.filename ? imageToCdnUrl({ image: image.filename, width, height }) : image.url;
                 return (
                     <div
                         key={index}

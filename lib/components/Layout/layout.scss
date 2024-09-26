@@ -573,7 +573,7 @@ body {
 }
 
 .dash-header {
-    position: absolute;
+    position: fixed;
     top: var(--header-padding);
     background-color: transparent;
     justify-content: flex-end;
@@ -590,7 +590,7 @@ body {
         transition: var(--layout-transition);
 
         .icon-button {
-            color: var(--text-color) !important;
+            color: var(--white) !important;
         }
     }
 
@@ -602,7 +602,7 @@ body {
     }
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 768px) {
     .dash-header {
         &.open {
             .h-container {

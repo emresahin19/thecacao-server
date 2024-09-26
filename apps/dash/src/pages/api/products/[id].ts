@@ -1,29 +1,29 @@
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import Cookies from 'cookies';
 import { apiUrl } from 'lib/constants';
-import { createHeaders, handleErrorResponse } from 'lib/utils';
-
-export const config = {
-    api: {
-        bodyParser: false, // BodyParser'ı kapatıyoruz, çünkü form-data kullanabiliriz
-    },
-};
+import { handleErrorResponse } from 'lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const cookies = new Cookies(req, res);
-    const jwtToken = cookies.get('jwt'); // JWT token'ı cookie'den alıyoruz
+    const token = cookies.get('jwt');
 
-    if (!jwtToken) {
+    if (!token) {
         return res.status(401).json({ error: 'Authentication token not found' });
     }
 
     const { id } = req.query;
-
     try {
         let response;
         const headers = {
-            Authorization: `Bearer ${jwtToken}`, // JWT token'ı Bearer token olarak ekliyoruz
+            ...req.headers,
+            Authorization: `Bearer ${token}`, 
         };
 
         switch (req.method) {
@@ -32,8 +32,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
                 
             case 'POST':
-                response = await axios.post(`${apiUrl}/products`, req.body, {
-                    headers: { ...headers, ...req.headers },
+                response = await axios({
+                    method: 'post',
+                    url: `${apiUrl}/products`,
+                    data: req, // Forward the original request data
+                    headers: {...headers, ...req.headers},
                     maxContentLength: Infinity,
                     maxBodyLength: Infinity,
                     timeout: 45000,
@@ -41,8 +44,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
 
             case 'PUT':
-                response = await axios.put(`${apiUrl}/products/${id}`, req.body, {
-                    headers: { ...headers, ...req.headers },
+                // using method override to send a PUT request
+                response = await axios({
+                    method: 'put',
+                    url: `${apiUrl}/products/${id}`,
+                    data: req,
+                    headers: {...headers, ...req.headers},
                     maxContentLength: Infinity,
                     maxBodyLength: Infinity,
                     timeout: 45000,

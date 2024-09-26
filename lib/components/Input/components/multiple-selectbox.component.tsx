@@ -9,6 +9,7 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
     name,
     value,
     onChange,
+    onBlur,
     error = false,
     size = "md",
 }) => {
@@ -36,7 +37,7 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
     };
 
     const handleOptionToggle = (
-        e: React.MouseEvent<HTMLDivElement>,
+        e: React.MouseEvent<HTMLInputElement>,
         selectedOption: OptionsProps
     ) => {
         e.stopPropagation();
@@ -64,20 +65,21 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
 
         onChange({
             target: { value: newValue, name },
-        } as React.ChangeEvent<HTMLSelectElement>);
+        } as React.ChangeEvent<HTMLInputElement>);
     };
 
     const handleOutsideClick = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
             setIsOpen(false);
+            onBlur && onBlur({ target: { name, value } } as React.FocusEvent<HTMLInputElement>);
         }
     };
 
-    const clearValue = (e: React.MouseEvent<HTMLElement>) => {
+    const clearValue = (e: React.MouseEvent<HTMLInputElement>) => {
         e.stopPropagation();
         e.preventDefault();
         const newValue = isMultiple ? [] : "";
-        onChange({target: { value: newValue, name }} as React.ChangeEvent<HTMLSelectElement>);
+        onChange({target: { value: newValue, name }} as React.ChangeEvent<HTMLInputElement>);
     };
 
     useEffect(() => {
@@ -92,15 +94,15 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
         const isGroup = !!option.options;
         const isSelected = isMultiple
             ? isGroup
-            ? option.options!.every((opt) => value.includes(opt.value))
-            : value.includes(option.value)
-            : value === option.value;
+                ? option.options!.every((opt) => value.includes(opt.value))
+                : value.includes(option.value)
+            : value == option.value;
 
         return (
             <div key={option.value || option.label}>
                 <div
                     className={`option ${isSelected ? "active" : ""} ${isGroup ? "parent-option" : ""}`}
-                    onClick={(e) => handleOptionToggle(e, option)}
+                    onClick={(e: React.MouseEvent<HTMLInputElement>) => handleOptionToggle(e, option)}
                 >
                     {option.label}
                 </div>
@@ -115,7 +117,7 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
 
     return (
         <div
-            className={`input-body ${className} ${error ? "error" : ""} ${size}`}
+            className={`input-body ${className} ${error ? "error" : ""} ${size} ${isOpen ? 'open' : ''}`}
             ref={dropdownRef}
         >
             <div
@@ -125,13 +127,13 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
             >
                 <div className="selected-value">{getSelectedLabels()}</div>
 
-                {isOpen && options && <div className="options open">{renderOptions(options)}</div>}
+                {isOpen && options && <div className="options">{renderOptions(options)}</div>}
 
                 {((isMultiple && value.length > 0) || (!isMultiple && value)) && (
                     <span className="clear-button" onClick={clearValue}>
                         ✕
                     </span>
-                )}
+                ) || null}
             </div>
             <label className={`${isMultiple && value.length > 0 ? "active" : ""}`}>
                 {label}

@@ -1,9 +1,9 @@
 .edit-section {
     --input-color: var(--primary-08);
-    --input-border-color: var(--primary-08);
+    --input-border-color: var(--gray-04);
     --input-border-color-focus: var(--primary-06);
-    --input-background-color: transparent;
-    --input-background-color-focus: var(--primary-09);
+    --input-background-color: var(--gray-01);
+    --input-background-color-focus: var(--white);
 
     .dark-theme & {
         --input-color: var(--gray-02);
@@ -28,7 +28,7 @@
         }
         .select-box {
             .options {
-                background-color: var(--container-background-color);
+                background-color: var(--input-background-color-focus);
             }
         }
     }

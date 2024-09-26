@@ -6,9 +6,8 @@ import Spinner from "../../Loading/components/spinner.component";
 import DashDivider from "../../Layout/components/dash/divider.component";
 import MultipleImageInput from "../../Input/components/multiple-image-input.component";
 import MultipleSelectBox from "../../Input/components/multiple-selectbox.component";
-import SelectBox from "../../Input/components/selectbox.component";
 
-import { useCategoryInputData, useExtraInputData, useProduct } from "../../../hooks";
+import { useCategoryInputData, useExtraInputData, useProduct, useProducts } from "../../../hooks";
 import { ImageObject } from "../../../interfaces";
 import { useLoading, useToast } from "../../../contexts";
 import { saveProduct } from '../../../services';
@@ -31,6 +30,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
     const { extraData } = useExtraInputData();
     const { loaded, setLoaded } = useLoading();
     const { product, isError, isLoading, mutateProduct } = useProduct(id);
+    const { mutateProducts } = useProducts();
     const { showToast, handleRequestError } = useToast();
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
             const { status, message, item } = response;
 
             showToast({message, type: status ? 'success' : 'danger'});
-            onSave && onSave(status);
+            onSave && onSave(status, mutateProducts);
         } catch (error: AxiosError | any) {
             handleRequestError(error);
         } finally {

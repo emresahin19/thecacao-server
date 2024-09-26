@@ -155,16 +155,16 @@ $colors: (
     --secondary-09: #1E1E04;
     --secondary-10: #0F0F02;
     
-    --gray-01: #F6F9FC;
-    --gray-02: #E9ECEF;
-    --gray-03: #DEE2E6;
-    --gray-04: #CED4DA;
-    --gray-05: #ADB5BD;
-    --gray-06: #8898AA;
-    --gray-07: #6C757D;
-    --gray-08: #495057;
-    --gray-09: #343A40;
-    --gray-10: #212529;
+    --gray-01: #f4f4f5;
+    --gray-02: #e4e4e7;
+    --gray-03: #d4d4d8;
+    --gray-04: #a1a1aa;
+    --gray-05: #71717a;
+    --gray-06: #52525b;
+    --gray-07: #3f3f46;
+    --gray-08: #27272a;
+    --gray-09: #18181b;
+    --gray-10: #09090b;
 
     --main-01: #f4f4f5;
     --main-02: #e4e4e7;
@@ -245,16 +245,19 @@ $colors: (
 
     --container-background-color: var(--gray-01);
 
-    --table-color-1: var(--gray-04);
+    --table-color-1: var(--gray-03);
     --table-color-2: var(--gray-02);
-    --table-hover-color: var(--dark);
+    --table-color-3: var(--gray-01);
+    --table-hover-color: var(--gray-01);
 
-    --modal-background-color: var(--gray-02);
+    --modal-background-color: var(--gray-01);
 
-    --input-border-color: var(--gray-02);
+    --input-border-color: var(--gray-03);
     --input-border-color-focus: var(--primary-06);
     --input-background-color: var(--container-background-color);
-    --input-background-color-focus: var(--primary-09);
+    --input-background-color-focus: var(--gray-02);
+    --input-option-background-color: var(--gray-02);
+    --input-option-background-color-active: var(--primary-06);
     --input-color: var(--text-color);
 }
 
@@ -277,14 +280,17 @@ body.dark-theme {
 
     --container-background-color: var(--gray-09);
 
-    --table-color-1: var(--gray-09);
-    --table-color-2: var(--gray-10);
-    --table-hover-color: var(--dark);
+    --table-color-1: var(--gray-08);
+    --table-color-2: var(--gray-09);
+    --table-color-3: var(--gray-07);
+    --table-hover-color: var(--gray-10);
 
     --modal-background-color: rgba(4, 30, 30, 0.7);
+    --input-background-color: var(--gray-08);
+    --input-background-color-focus: var(--gray-09);
+    --input-option-background-color: var(--gray-07);
+    --input-option-background-color-active: var(--gray-03);
     --input-color: var(--text-color);
-    --input-background-color: var(--primary-07);
-    --input-background-color-focus: var(--primary-09);
 }
 
 body {

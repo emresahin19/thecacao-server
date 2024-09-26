@@ -8,6 +8,7 @@ import { Image } from '../image/entities/image.entity';
 import { Extra } from '../extra/entities/extra.entity';
 import { cdnUrl } from '../common/constants';
 import { ProductQueryParams } from './product.props';
+import { ImageService } from '../image/image.service';
 
 @Injectable()
 export class ProductService {
@@ -16,12 +17,8 @@ export class ProductService {
         private readonly productRepository: Repository<Product>,
         @InjectRepository(Image)
         private readonly imageRepository: Repository<Image>,
+        private readonly imageService: ImageService,
     ) {}
-
-    create(createProductDto: CreateProductDto): Promise<Product> {
-        const product = this.productRepository.create(createProductDto);
-        return this.productRepository.save(product);
-    }
 
     async findAll(params: ProductQueryParams) {
         const { 
@@ -77,9 +74,45 @@ export class ProductService {
         return this.productRepository.findOne({ where: { id }, relations: ['category'] });
     }
 
-    async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
+    async create(createProductDto: CreateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
+        const image_ids = await this.imageService.saveFiles(files)
+        createProductDto.image_ids = image_ids;
+        delete createProductDto.files;
+        delete createProductDto.fileMap;
+        const product = this.productRepository.create(createProductDto);
+        return this.productRepository.save(product);
+    }
+
+    async update(id: number, updateProductDto: UpdateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
+        const image_ids: number[] = [];
+        const fileMap = JSON.parse(updateProductDto.fileMap);
+
+        if (fileMap) {
+            const imageUpdates = await fileMap.map(async (fileObject, index) => {
+                const fieldName = fileObject.fieldName;
+                const imgId = fileObject.id;
+                const file = files && files.find(f => f.fieldname === fieldName) || null;
+                
+                const { id } = file 
+                    ? imgId 
+                        ? await this.imageService.updateImage(imgId, file)
+                        : await this.imageService.saveImage(file)
+                    : { id: imgId };
+
+                    id && image_ids.push(id);
+            });
+    
+            await Promise.all(imageUpdates);
+        } else {
+            console.log('No files or images provided');
+        }
+
+        updateProductDto.image_ids = image_ids;
+        delete updateProductDto.files
+        delete updateProductDto.fileMap
+    
         await this.productRepository.update(id, updateProductDto);
-        return this.findOne(id);
+        return this.productRepository.findOne({ where: { id } });    
     }
 
     async remove(id: number): Promise<void> {
@@ -91,10 +124,13 @@ export class ProductService {
             return [];
         }
 
-        return this.imageRepository
+        const images =  this.imageRepository
             .createQueryBuilder('image')
             .whereInIds(image_ids)
             .getMany();
+            
+        const sorted = await images.then((images) => image_ids.map((id) => images.find((image) => image.id === id)));
+        return sorted
     }
 
     async getImageUrls(image_ids: number[]): Promise<string[]> {

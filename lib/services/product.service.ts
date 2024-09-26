@@ -47,23 +47,24 @@ export const prepareProductFormData = (product: ProductDataProps) => {
     formData.append('recipe', String(product.recipe || ''));
     formData.append('description', String(product.description || ''));
     formData.append('passive', String(product.passive || 0));
+    
+    const fileMap: {
+        id?: number | string | null;
+        fieldName: string;
+        isFileExists: boolean;
+    }[] = [];
 
-    if(product.images) {
-        formData.append('image_ids', product.images.map(image => image.id).join(','));
-        product.images.forEach((image, index) => {
-            image.file && formData.append(`images[${index}][file]`, image.file);
-            image.url && formData.append(`images[${index}][url]`, image.url);
-            image.id && formData.append(`images[${index}][id]`, String(image.id));
+    product.images && product.images.forEach((image, index) => {
+        image.id && formData.append(`files[${index}][id]`, String(image.id));
+        image.file && formData.append(`files[${index}][file]`, image.file);
+        fileMap.push({
+            id: image.id,
+            fieldName: `files[${index}][file]`,
+            isFileExists: Boolean(image.file),
         });
-    }
+    });
 
-    if(product.extra && product.extra.length > 0) {
-        product.extra.forEach((extra, index) => {
-            formData.append(`extra[${index}]`, String(extra));
-        })
-    } else {
-        formData.append('extra', '');
-    }
+    formData.append('fileMap', JSON.stringify(fileMap));
 
     return formData;
 };

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, ParseIntPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ImageService } from './image.service';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
@@ -17,6 +17,9 @@ import {
     extraImageHeight,
     extraImageQuality,
 } from '../common/constants/constants';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { join } from 'path';
+import { diskStorage } from 'multer';
 
 export interface ImageVariant {
     width: number;
@@ -24,6 +27,15 @@ export interface ImageVariant {
     format: 'png' | 'webp';
     quality: number;
 }
+
+// File upload destination and filename configuration
+const storage = diskStorage({
+    destination: join(__dirname, '..', '..', '..', '..', 'media', 'storage', 'image'),  // File upload destination
+    filename: (req, file, cb) => {
+        const filename = `${file.originalname}`;
+        cb(null, filename);
+    },
+});
 
 @Controller('images')
 export class ImageController {
@@ -106,11 +118,6 @@ export class ImageController {
         res.sendFile(compressedImagePath);
     }
 
-    @Post()
-    create(@Body() createImageDto: CreateImageDto) {
-        return this.imageService.create(createImageDto);
-    }
-
     @Get()
     findAll() {
         return this.imageService.findAll();
@@ -120,6 +127,20 @@ export class ImageController {
     findOne(@Param('id') id: string) {
         console.log('params', id);
         return this.imageService.findOne(+id);
+    }
+
+    @Post()
+    @UseInterceptors(FileInterceptor('file', { storage }))
+    async uploadImage(
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        try {
+            console.log('file', file);
+            return { path: file?.filename }; 
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            throw { path: '' }; 
+        }
     }
 
     @Patch(':id')

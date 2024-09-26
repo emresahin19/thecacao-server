@@ -136,6 +136,17 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
             }
         }
     }, [handleClose]);
+    
+    const onSave = (response: any, callback: () => void) => {
+        if (response) {
+            handleClose();
+            callback();
+        }
+    };
+    
+    const onCancel = () => {
+        handleClose();
+    };
 
     return (
         <div className={`modal-container ${show && 'show' || ''}`}>
@@ -160,7 +171,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                     </div>
                     <div className="modal-body">
                         {component === 'ProductDetailCard' && data && <ProductDetailCard {...data} />}
-                        {component === 'ProductEditCard' && data && <ProductEditCard {...data} />}
+                        {component === 'ProductEditCard' && data && <ProductEditCard {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'CategoryEditCard' && data && <CategoryEditCard {...data} />}
                         {component === 'DeleteModal' && data && <DeleteModal {...data} />}
                     </div>
