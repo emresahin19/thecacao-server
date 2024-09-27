@@ -3,7 +3,7 @@ import MdArrowDropUp from 'lib/assets/icon/svg/MdArrowDropUp.svg';
 import MdArrowDropDown from 'lib/assets/icon/svg/MdArrowDropDown.svg';
 
 interface SortButtonProps {
-    direction?: 'ASC' | 'DESC' | null | undefined;
+    direction?: 'ASC' | 'DESC';
 }
 
 const SortButton = ({ direction }: SortButtonProps) => {

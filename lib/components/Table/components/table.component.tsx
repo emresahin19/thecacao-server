@@ -29,42 +29,61 @@ const Table = <T extends { id: string | number; passive?: number }>({
     const router = useRouter();
     const { query, isReady } = router;
     const dispatch = useDispatch();
-    const { showToast, handleRequestError } = useToast();
     const { show } = useAppSelector((state) => state.modal);
 
-    const [currentPage, setCurrentPage] = useState(0);
-    const [perPage, setPerPage] = useState(10);
-    const [filters, setFilters] = useState<{ [key: string]: any }>({});
+    const [tableState, setTableState] = useState<{
+        currentPage: number;
+        perPage: number;
+        orderBy: string;
+        orderDirection: string;
+        filters: { [key: string]: any };
+    }>({
+        currentPage: 0,
+        perPage: 10,
+        orderBy: '',
+        orderDirection: '',
+        filters: {}
+    });
+
     const [filterParams, setFilterParams] = useState<string>('');
     const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
     const [editValues, setEditValues] = useState<{ [key: string]: any }>({});
     const [selectAll, setSelectAll] = useState(false);
     const prevShowRef = useRef<boolean>(show || false);
-    const filterKeys = useMemo(() => columns.filter((col) => col.filterType).map((col) => col.key as string), [columns]);
+
+    const filterKeys = useMemo(
+        () => columns.filter((col) => col.filterType).map((col) => col.key as string),
+        [columns]
+    );
 
     const { data = [], total = 0, isLoading = false, isError, mutateData } = dataHook(filterParams);
 
-    useEffect(() => {
-        if (isError) {
-            handleRequestError(isError);
-        }
-    }, [isError]);
-    
-    const updateQuery = useCallback((newParams: { [key: string]: any }) => {
-        const currentParams = { ...query };
+    const updateQuery = useCallback(
+        (newParams: { [key: string]: any }) => {
+            const currentParams = { ...query };
 
-        Object.keys(newParams).forEach((key) => {
-            if (newParams[key] === null || newParams[key] === undefined || newParams[key] === '') {
-                delete currentParams[key];
-            } else {
-                currentParams[key] = newParams[key];
+            Object.keys(newParams).forEach((key) => {
+                if (
+                    newParams[key] === null ||
+                    newParams[key] === undefined ||
+                    newParams[key] === ''
+                ) {
+                    delete currentParams[key];
+                } else {
+                    currentParams[key] = newParams[key];
+                }
+            });
+
+            if (!lodash.isEqual(currentParams, query)) {
+                router.replace(
+                    { pathname: router.pathname, query: currentParams },
+                    undefined,
+                    { shallow: true }
+                );
             }
-        });
-
-        if (!lodash.isEqual(currentParams, query)) {
-            router.replace({ pathname: router.pathname, query: currentParams }, undefined, { shallow: true });
-        }
-    }, [query, router]);
+        },
+        [query, router]
+    );
 
     useEffect(() => {
         if (prevShowRef.current && !show) {
@@ -77,11 +96,19 @@ const Table = <T extends { id: string | number; passive?: number }>({
     useEffect(() => {
         if (!isReady) return;
     
-        const { page, perPage, action, id, ...rest } = query;
-        
-        const queryFilters:{[key: string]: any} = {};
-
-        filterKeys.forEach(key => {
+        const {
+            page,
+            perPage,
+            orderBy,
+            orderDirection,
+            action,
+            id,
+            ...rest
+        } = query;
+    
+        const queryFilters: { [key: string]: any } = {};
+    
+        filterKeys.forEach((key) => {
             if (query[key] !== undefined) {
                 queryFilters[key] = query[key];
             }
@@ -89,81 +116,117 @@ const Table = <T extends { id: string | number; passive?: number }>({
     
         const newCurrentPage = page ? Number(page) - 1 : 0;
         const newPerPage = perPage ? Number(perPage) : 10;
+        const newOrderBy = orderBy ? String(orderBy) : '';
+        const newOrderDirection = orderDirection ? String(orderDirection) : '';
     
-        if (currentPage !== newCurrentPage) {
-            setCurrentPage(newCurrentPage);
-        }
-        if (Number(perPage) !== newPerPage) {
-            setPerPage(newPerPage);
-        }
+        const newState = {
+            currentPage: newCurrentPage,
+            perPage: newPerPage,
+            orderBy: newOrderBy,
+            orderDirection: newOrderDirection,
+            filters: queryFilters
+        };
     
-        if (!lodash.isEqual(filters, queryFilters)) {
-            setFilters(queryFilters);
+        if (!lodash.isEqual(newState, tableState)) {
+            setTableState((prevState) => ({
+                ...prevState,
+                currentPage: newCurrentPage,
+                perPage: newPerPage,
+                orderBy: newOrderBy,
+                orderDirection: newOrderDirection,
+                filters: queryFilters
+            }));
         }
     }, [query, isReady]);
-    
+
     useEffect(() => {
         if (!isReady) return;
 
-        const newQuery: {[key: string]: any} = { ...query, page: currentPage + 1, perPage };
+        const { currentPage, perPage, orderBy, orderDirection, filters } = tableState;
+        const newQuery: { [key: string]: any } = {
+            ...query,
+            page: currentPage + 1,
+            perPage,
+            orderBy,
+            orderDirection
+        };
 
-        filterKeys.forEach(key => {
+        filterKeys.forEach((key) => {
             if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
                 newQuery[key] = filters[key];
             } else {
                 delete newQuery[key];
             }
         });
-    
+
         Object.keys(newQuery).forEach((key) => {
-            if (newQuery[key] === null || newQuery[key] === undefined || newQuery[key] === '') {
+            if (
+                newQuery[key] === null ||
+                newQuery[key] === undefined ||
+                newQuery[key] === ''
+            ) {
                 delete newQuery[key];
             }
         });
-    
+
         if (!lodash.isEqual(newQuery, query)) {
-            router.replace({ pathname: router.pathname, query: newQuery }, undefined, { shallow: true });
+            router.replace(
+                { pathname: router.pathname, query: newQuery },
+                undefined,
+                { shallow: true }
+            );
         }
-    
-        const filterAsString = `?${new URLSearchParams(newQuery).toString()}`;
+        const filterParamsObj = { ...newQuery };
+        delete filterParamsObj.action;
+        delete filterParamsObj.id;
+        const filterAsString = `?${new URLSearchParams(filterParamsObj).toString()}`;
     
         setFilterParams(filterAsString);
-    }, [filters, currentPage, perPage, isReady]);
-    
+    }, [tableState, isReady]);
+
     useEffect(() => {
         if (!editPage) return;
-        
+
         const { action, id } = query;
 
         if (action === 'update' && id) {
-            dispatch(openModal({
-                component: editPage,
-                data: { id },
-            }));
+            dispatch(
+                openModal({
+                    component: editPage,
+                    data: { id }
+                })
+            );
         } else if (action === 'create') {
-            dispatch(openModal({
-                component: editPage,
-                data: null,
-            }));
+            dispatch(
+                openModal({
+                    component: editPage,
+                    data: null
+                })
+            );
         } else {
             dispatch(closeModal());
         }
     }, [query, dispatch, editPage]);
 
-    const handleRowAction = useCallback((action: string, item: T | null) => {
-        const { id } = item || { id: 0 };
+    const handleRowAction = useCallback(
+        (action: string, item: T | null) => {
+            const { id } = item || { id: 0 };
 
-        if (action === 'view') {
-            updateQuery({ action: 'update', id: id });
-        } else if (action === 'create') {
-            updateQuery({ action: 'create' });
-        } else if (action === 'delete') {
-            dispatch(openModal({
-                component: 'DeleteModal',
-                data: { id }
-            }));
-        }
-    }, [updateQuery, dispatch]);
+            if (action === 'view') {
+                updateQuery({ action: 'update', id: id });
+            } else if (action === 'create') {
+                updateQuery({ action: 'create' });
+            } else if (action === 'delete') {
+                dispatch(
+                    openModal({
+                        component: 'DeleteModal',
+                        data: { id }
+                    })
+                );
+            }
+        },
+        [updateQuery, dispatch]
+    );
 
     const handleSelectItem = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>, item: T | null) => {
@@ -199,35 +262,28 @@ const Table = <T extends { id: string | number; passive?: number }>({
 
     const handleFilterChange = useCallback(
         (key: string, value: any) => {
-            const newFilters = {
-                ...filters,
-            };
-
-            if (value) {
-                newFilters[key] = value;
-            } else {
-                delete newFilters[key];
-            }
-
-            setFilters(newFilters);
-            setCurrentPage(0);
+            setTableState((prevState) => ({
+                ...prevState,
+                filters: {
+                    ...prevState.filters,
+                    [key]: value || undefined
+                },
+                currentPage: 0
+            }));
         },
-        [filters]
+        []
     );
 
     const handleSort = useCallback(
         (key: string) => {
-            const direction = filters.orderBy === key && filters.orderDirection === 'ASC' ? 'DESC' : 'ASC';
-
-            const updatedFilters = {
-                ...filters,
+            setTableState((prevState) => ({
+                ...prevState,
                 orderBy: key,
-                orderDirection: direction,
-            };
-            setFilters(updatedFilters);
-            setCurrentPage(0);
+                orderDirection: prevState.orderBy === key && prevState.orderDirection === 'ASC' ? 'DESC' : 'ASC',
+                currentPage: 0
+            }));
         },
-        [filters]
+        []
     );
 
     const onEditInputChange = useCallback(
@@ -237,8 +293,8 @@ const Table = <T extends { id: string | number; passive?: number }>({
                 ...prevEditValues,
                 [itemId]: {
                     ...prevEditValues[itemId],
-                    [key]: value,
-                },
+                    [key]: value
+                }
             }));
         },
         []
@@ -259,29 +315,40 @@ const Table = <T extends { id: string | number; passive?: number }>({
         });
     }, []);
 
-    const handlePageChange = useCallback(
-        (page: number) => {
-            setCurrentPage(page);
-            setSelectedItems({});
-            setSelectAll(false);
-        },
-        []
-    );
+    const handlePageChange = useCallback((page: number) => {
+        setTableState((prevState) => ({
+            ...prevState,
+            currentPage: page
+        }));
+        setSelectedItems({});
+        setSelectAll(false);
+    }, []);
 
-    const numPages = useMemo(() => Math.ceil(total / perPage), [total, perPage]);
+    const numPages = useMemo(() => Math.ceil(total / tableState.perPage), [total, tableState.perPage]);
+
+    const { currentPage, perPage, orderBy, orderDirection, filters } = tableState;
 
     const renderedData = useMemo(() => {
         if (isLoading) {
             return Array.from({ length: perPage }, (_, i) => (
                 <tr key={i}>
                     <td>
-                        <Checkbox id='selectAll' name='checkboxes' onChange={(e) => handleSelectItem(e, null)}></Checkbox>
+                        <Checkbox
+                            id='selectAll'
+                            name='checkboxes'
+                            onChange={(e) => handleSelectItem(e, null)}
+                        ></Checkbox>
                     </td>
                     {columns.map((col, colIndex) => (
                         <td key={colIndex} data-label={col.label}>
                             {String(col.key).includes('image') ? (
                                 <div className='avatar'>
-                                    <img src={imageToCdnUrl({ image: placeholderProductImageBg, type: 'table-avatar' })} />
+                                    <img
+                                        src={imageToCdnUrl({
+                                            image: placeholderProductImageBg,
+                                            type: 'table-avatar'
+                                        })}
+                                    />
                                 </div>
                             ) : (
                                 <div className='avatar'>
@@ -292,16 +359,24 @@ const Table = <T extends { id: string | number; passive?: number }>({
                     ))}
                     <td>
                         <div className='button-area'>
-                            <IconButton onClick={() => handleRowAction('view', null)} ariaLabel={'Düzenle'} width={24}>
+                            <IconButton
+                                onClick={() => handleRowAction('view', null)}
+                                ariaLabel={'Düzenle'}
+                                width={24}
+                            >
                                 <CiEdit />
                             </IconButton>
-                            <IconButton onClick={() => handleRowAction('delete', null)} ariaLabel={'Sil'} width={24}>
+                            <IconButton
+                                onClick={() => handleRowAction('delete', null)}
+                                ariaLabel={'Sil'}
+                                width={24}
+                            >
                                 <CiTrash />
                             </IconButton>
                         </div>
                     </td>
                 </tr>
-            ))
+            ));
         }
 
         return data.map((item, index) => (
@@ -321,13 +396,23 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                 <EditableInput
                                     name={`${String(col.key)}_${index}`}
                                     type={col.filterType}
-                                    value={editValues[item.id]?.[col.key] || (item as any)[col.key]}
-                                    onChange={(e) => onEditInputChange(e, String(item.id), String(col.key))}
+                                    value={
+                                        editValues[item.id]?.[col.key] || (item as any)[col.key]
+                                    }
+                                    onChange={(e) =>
+                                        onEditInputChange(e, String(item.id), String(col.key))
+                                    }
                                     onSave={() => handleSave(String(item.id))}
                                     onCancel={() => handleCancel(String(item.id))}
                                     options={col.options}
                                     render={
-                                        col.render && col.render({ ...item, [col.key]: editValues[item.id]?.[col.key] || (item as any)[col.key] })
+                                        col.render &&
+                                        col.render({
+                                            ...item,
+                                            [col.key]:
+                                                editValues[item.id]?.[col.key] ||
+                                                (item as any)[col.key]
+                                        })
                                     }
                                 />
                             </td>
@@ -341,7 +426,9 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                     name={`${col.label}`}
                                     label={`${col.label}`}
                                     value={(item as any)[col.key]}
-                                    onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                    onChange={(e) =>
+                                        handleFilterChange(String(col.key), e.target.value)
+                                    }
                                 />
                             </td>
                         );
@@ -349,13 +436,18 @@ const Table = <T extends { id: string | number; passive?: number }>({
                     if (col.type === 'color') {
                         return (
                             <td key={String(col.key)} data-label={col.label}>
-                                <div className='color-box' style={{ backgroundColor: (item as any)[col.key] }} />
+                                <div
+                                    className='color-box'
+                                    style={{ backgroundColor: (item as any)[col.key] }}
+                                />
                             </td>
                         );
                     }
                     return (
                         <td key={String(col.key)} data-label={col.label}>
-                            <div className='ellipsis td-item'>{col.render ? col.render(item) : (item as any)[col.key]}</div>
+                            <div className='ellipsis td-item'>
+                                {col.render ? col.render(item) : (item as any)[col.key]}
+                            </div>
                         </td>
                     );
                 })}
@@ -392,15 +484,12 @@ const Table = <T extends { id: string | number; passive?: number }>({
         onEditInputChange,
         handleSave,
         handleCancel,
-        handleRowAction,
+        handleRowAction
     ]);
 
     return (
         <>
-            <Button
-                onClick={() => handleRowAction('create', null)}
-                label='Yeni Ekle'
-            />
+            <Button onClick={() => handleRowAction('create', null)} label='Yeni Ekle' />
             <table className={className}>
                 <thead>
                     <tr>
@@ -417,9 +506,12 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                 {col.filterType ? (
                                     <div className='th-filter'>
                                         {col.sort && (
-                                            <span role='button' onClick={() => handleSort(col.key as string)}>
+                                            <span
+                                                role='button'
+                                                onClick={() => handleSort(col.key as string)}
+                                            >
                                                 <SortButton
-                                                    {...(filters.orderBy === col.key ? { direction: filters.orderDirection } : { direction: null })}
+                                                    direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
                                                 />
                                             </span>
                                         )}
@@ -429,7 +521,12 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                                 name={`${col.label}`}
                                                 label={`${col.label}`}
                                                 value={filters[col.key as string] || ''}
-                                                onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                                onChange={(e) =>
+                                                    handleFilterChange(
+                                                        String(col.key),
+                                                        e.target.value
+                                                    )
+                                                }
                                             />
                                         )}
                                         {col.filterType === 'number' && (
@@ -438,7 +535,12 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                                 name={`${col.label}`}
                                                 label={`${col.label}`}
                                                 value={filters[col.key as string] || ''}
-                                                onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                                onChange={(e) =>
+                                                    handleFilterChange(
+                                                        String(col.key),
+                                                        e.target.value
+                                                    )
+                                                }
                                             />
                                         )}
                                         {col.filterType === 'select' && col.options && (
@@ -447,7 +549,12 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                                 options={col.options}
                                                 name={`${col.label}`}
                                                 value={filters[col.key as string] || ''}
-                                                onChange={(e: any) => handleFilterChange(String(col.key), e.target.value)}
+                                                onChange={(e: any) =>
+                                                    handleFilterChange(
+                                                        String(col.key),
+                                                        e.target.value
+                                                    )
+                                                }
                                             />
                                         )}
                                         {col.filterType === 'date' && (
@@ -456,7 +563,12 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                                 name={`${col.label}`}
                                                 label={`${col.label}`}
                                                 value={filters[col.key as string] || ''}
-                                                onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                                onChange={(e) =>
+                                                    handleFilterChange(
+                                                        String(col.key),
+                                                        e.target.value
+                                                    )
+                                                }
                                             />
                                         )}
                                         {col.filterType === 'datetime' && (
@@ -465,12 +577,29 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                                 name={`${col.label}`}
                                                 label={`${col.label}`}
                                                 value={filters[col.key as string] || ''}
-                                                onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                                onChange={(e) =>
+                                                    handleFilterChange(
+                                                        String(col.key),
+                                                        e.target.value
+                                                    )
+                                                }
                                             />
                                         )}
                                     </div>
                                 ) : (
-                                    col.label
+                                    <>
+                                        {col.label}
+                                        {col.sort && (
+                                            <span
+                                                role='button'
+                                                onClick={() => handleSort(col.key as string)}
+                                            >
+                                                <SortButton
+                                                    direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
+                                                />
+                                            </span>
+                                        )}
+                                    </>
                                 )}
                             </th>
                         ))}
