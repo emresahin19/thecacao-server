@@ -10,7 +10,9 @@ const BackButton: React.FC = () => {
 
     useEffect(() => {
         const handleRouteChangeStart = (url: string) => {
-            previousPathRef.current = router.asPath;
+            if(previousPathRef.current != router.asPath){
+                previousPathRef.current = router.asPath;
+            }
         };
 
         router.events.on('routeChangeStart', handleRouteChangeStart);
@@ -29,14 +31,16 @@ const BackButton: React.FC = () => {
     };
 
     return (
-        <IconButton 
-            width={32}
-            className='back-button'
-            onClick={handleBack} 
-            ariaLabel="Geri Dön"
-        >
-            <MdArrowBacklos />
-        </IconButton>
+        previousPathRef.current && previousPathRef.current != router.asPath && (
+            <IconButton 
+                width={32}
+                className='back-button'
+                onClick={handleBack} 
+                ariaLabel="Geri Dön"
+            >
+                <MdArrowBacklos />
+            </IconButton>
+        ) || null
     );
 };
 
