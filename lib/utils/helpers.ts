@@ -193,7 +193,7 @@ const imageSizeCalc = ({ width, height, type }: ImageProps) => {
             h: extraImageHeight,
         },
         'table-avatar': {
-            w: 40,
+            w: 80,
             h: 40,
         }
     };
