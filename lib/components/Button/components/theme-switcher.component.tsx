@@ -22,7 +22,11 @@ const ThemeSwitcher: React.FC = () => {
     };
 
     useEffect(() => {
-        setTheme();
+        if(typeof window !== 'undefined') {
+            const isDarkMode = getLocalStorageItem('darkMode') === 'true';
+            setIsDarkModeEnabled(isDarkMode);
+            dispatch(setDarkMode(isDarkMode));
+        }
     }, []);
 
     return (

@@ -33,4 +33,11 @@ export class RedisService {
         }
         await this.client.set(key, JSON.stringify(value), 'EX', ttl); // TTL: 1 saat (3600 saniye)
     }
+
+    async del(key: string): Promise<void> {
+        if (process.env.NODE_ENV !== 'production') {
+            return;
+        }
+        await this.client.del(key);
+    }
 }

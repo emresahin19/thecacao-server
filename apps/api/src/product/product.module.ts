@@ -7,9 +7,18 @@ import { Category } from '../category/entities/category.entity';
 import { Image } from '../image/entities/image.entity';
 import { Extra } from '../extra/entities/extra.entity';
 import { ImageService } from '../image/image.service';
+import { RedisModule } from '../common/redis/redis.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Product, Category, Image, Extra])],
+    imports: [
+        TypeOrmModule.forFeature([
+            Product, 
+            Category, 
+            Image, 
+            Extra
+        ]),
+        RedisModule,
+    ],
     controllers: [ProductController],
     providers: [ProductService, ImageService],
     exports: [ProductService, TypeOrmModule],

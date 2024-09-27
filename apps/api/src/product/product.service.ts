@@ -10,6 +10,7 @@ import { cdnUrl } from '../common/constants';
 import { ProductQueryParams } from './product.props';
 import { ImageService } from '../image/image.service';
 import slugify from 'slugify';
+import { RedisService } from '../common/redis/redis.service';
 
 @Injectable()
 export class ProductService {
@@ -19,6 +20,7 @@ export class ProductService {
         @InjectRepository(Image)
         private readonly imageRepository: Repository<Image>,
         private readonly imageService: ImageService,
+        private readonly redisService: RedisService
     ) {}
 
     async findAll(params: ProductQueryParams) {
@@ -86,6 +88,7 @@ export class ProductService {
         delete createProductDto.fileMap;
 
         const product = this.productRepository.create(createProductDto);
+        this.redisService.del('menu_data');
         return this.productRepository.save(product);
     }
 
@@ -112,7 +115,6 @@ export class ProductService {
             await Promise.all(imageUpdates);
         }
 
-
         updateProductDto.slug = slug;
         updateProductDto.image_ids = image_ids;
 
@@ -120,6 +122,7 @@ export class ProductService {
         delete updateProductDto.fileMap
     
         await this.productRepository.update(id, updateProductDto);
+        this.redisService.del('menu_data');
         return this.productRepository.findOne({ where: { id } });    
     }
 

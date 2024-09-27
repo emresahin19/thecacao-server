@@ -22,21 +22,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         let response;
         const headers = {
-            ...req.headers,
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
+            'content-type': req.headers['content-type'],
         };
 
         switch (req.method) {
             case 'GET':
                 response = await axios.get(`${apiUrl}/products/${id}`, { headers });
                 break;
-                
+
             case 'POST':
                 response = await axios({
                     method: 'post',
                     url: `${apiUrl}/products`,
                     data: req, // Forward the original request data
-                    headers: {...headers, ...req.headers},
+                    headers: headers,
                     maxContentLength: Infinity,
                     maxBodyLength: Infinity,
                     timeout: 45000,
@@ -49,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     method: 'put',
                     url: `${apiUrl}/products/${id}`,
                     data: req,
-                    headers: {...headers, ...req.headers},
+                    headers: headers,
                     maxContentLength: Infinity,
                     maxBodyLength: Infinity,
                     timeout: 45000,
@@ -67,6 +67,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         return res.status(200).json(response.data);
     } catch (err: any) {
-        return handleErrorResponse(err, res);
+        // return handleErrorResponse(err, res);
     }
 }

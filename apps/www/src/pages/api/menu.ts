@@ -11,9 +11,10 @@ let initialData: MenuInitialProps = {
 };
 
 let cacheTime = Date.now();
-const CACHE_DURATION = 15 * 60 * 1000;
+const CACHE_DURATION = 60 * 1000;
 
 export const fetchMenuData = async () => {
+    console.log('Fetching menu data...');
     try {
         if (!initialData.items || !initialData.contacts || Date.now() - cacheTime > CACHE_DURATION) {
             const { data } = await axios.get(`${apiUrl}/menu`);
