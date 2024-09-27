@@ -13,7 +13,6 @@ export type * from '../components/Table/table.props';
 export type * from '../views/Menu/menu.props';
 export type * from '../components/Loading/loading.props';
 export type * from '../components/Card/card.props';
-export type * from '../contexts/Modal/modal.props';
 export type * from '../contexts/Auth/auth.props';
 export type * from '../contexts/Toast/toast.props';
 export type * from '../contexts/Variable/variable.props';
