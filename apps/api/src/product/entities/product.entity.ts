@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
 import { Image } from '../../image/entities/image.entity';
 import { Extra } from '../../extra/entities/extra.entity';
@@ -31,14 +31,12 @@ export class Product {
     description: string;
 
     @Column({ type: 'simple-json', nullable: true })
-    image_ids: number[];  // Assuming image_ids is a JSON array of image IDs
+    image_ids: number[];
+    images?: Image[];
 
     @Column({ type: 'simple-json', nullable: true })
-    extra: number[]; // Assuming extra is a JSON array of extra IDs
-    
-    images?: Image[];
-    image_urls?: Image['url'][];
-
+    extra: number[]; 
+        
     @OneToMany(() => Extra, (extra) => extra.id)
     extraItems: Extra[];
 
@@ -51,9 +49,9 @@ export class Product {
     @Column({ type: 'tinyint', default: 0 })
     deleted: boolean;
 
-    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
     updated_at: Date;
 }

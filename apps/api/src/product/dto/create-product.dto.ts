@@ -15,6 +15,9 @@ export class CreateProductDto {
     @IsString()
     name: string;
 
+    @IsString()
+    slug: string;
+
     @IsOptional()
     @IsNumber()
     @Type(() => Number) 

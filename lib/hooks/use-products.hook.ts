@@ -1,17 +1,16 @@
 import useSWR, { mutate } from 'swr';
 import { fetcher, serializeFilters } from 'lib/utils';
 
-export const useProducts = (page = 1, perPage = 10, filters = {}) => {
-    const filterQuery = serializeFilters(filters);
-    const { data, error }: {data: any, error: any} = useSWR(`/api/products?page=${page}&perPage=${perPage}&${filterQuery}`, fetcher);
+export const useProducts = (params: string) => {
+    const { data, error }: {data: any, error: any} = useSWR(`/api/products${params}`, fetcher);
     const { items, total, currentPage, lastPage } = data?.data ?? {};
     return {
-        products: items,
-        total: total,
-        currentPage: currentPage,
-        lastPage: lastPage,
+        data: items,
+        total,
+        currentPage,
+        lastPage,
         isLoading: !error && !data,
         isError: error,
-        mutateProducts: () => mutate(`/api/products?page=${page}&perPage=${perPage}&${filterQuery}`),
+        mutateData: () => mutate(`/api/products${params}`),
     };
 };

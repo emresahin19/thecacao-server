@@ -39,7 +39,7 @@ export const deleteProduct = async (id: string | number) => {
 
 export const prepareProductFormData = (product: ProductDataProps) => {
     const formData = new FormData();
-
+    
     product.id && formData.append('id', String(product.id));
     formData.append('category_id', String(product.category_id));
     formData.append('name', product.name);
@@ -47,6 +47,7 @@ export const prepareProductFormData = (product: ProductDataProps) => {
     formData.append('recipe', String(product.recipe || ''));
     formData.append('description', String(product.description || ''));
     formData.append('passive', String(product.passive || 0));
+    formData.append('extra', JSON.stringify(product.extra || []));
     
     const fileMap: {
         id?: number | string | null;

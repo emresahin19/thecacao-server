@@ -191,9 +191,16 @@
     }
 
     &.open {
-        .options {
+        .select-box {
+            border-color: var(--input-border-color-focus);
             background-color: var(--input-background-color-focus);
-            display: flex;
+            & + label {
+                color: var(--input-border-color-focus);
+            }
+            .options {
+                background-color: var(--input-background-color-focus);
+                display: flex;
+            }
         }
     }
 

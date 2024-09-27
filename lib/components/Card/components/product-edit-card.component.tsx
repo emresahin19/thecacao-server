@@ -14,6 +14,19 @@ import { saveProduct } from '../../../services';
 import { AxiosError } from "axios";
 import { ProductDataProps, ProductEditProps } from "../card.props";
 import { productVariantHeight, productVariantWidth } from "lib/constants";
+import { useRouter } from "next/router";
+
+const emptyProduct: ProductDataProps = {
+    id: 0,
+    category_id: 0,
+    name: '',
+    price: 0,
+    recipe: '',
+    description: '',
+    images: [],
+    extra: [],
+    passive: 0,
+};
 
 const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
     const [initialProduct, setInitialProduct] = useState<ProductDataProps | null>(null);
@@ -29,8 +42,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
     const { categories } = useCategoryInputData();
     const { extraData } = useExtraInputData();
     const { loaded, setLoaded } = useLoading();
-    const { product, isError, isLoading, mutateProduct } = useProduct(id);
-    const { mutateProducts } = useProducts();
+    const { product, isError, isLoading, mutateProduct } = id ? useProduct(id) : { product: emptyProduct, isError: false, isLoading: false, mutateProduct: () => {} };
     const { showToast, handleRequestError } = useToast();
 
     useEffect(() => {
@@ -38,7 +50,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
             showToast({message: 'Ürün bilgileri alınamadı.', type: 'danger'});
         }
     }, [isError]);
-    
+
     useEffect(() => {
         if (product && !initialProduct) {
             setInitialProduct(product);
@@ -71,7 +83,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
             const { status, message, item } = response;
 
             showToast({message, type: status ? 'success' : 'danger'});
-            onSave && onSave(status, mutateProducts);
+            onSave && onSave(item);
         } catch (error: AxiosError | any) {
             handleRequestError(error);
         } finally {
@@ -103,8 +115,18 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
     
     return (
         <div className="edit-section">
-            <h3>{id === 0 ? 'Yeni Ürün Ekle' : `${name} Düzenle`}</h3>
+            <div className="modal-custom-header">
+                <h3>{id === 0 ? 'Yeni Ürün Ekle' : `${name} Düzenle`}</h3>
 
+                <button
+                    className="close"
+                    onClick={handleReset}
+                    role="button"
+                    aria-label="Pencereyi Kapat"
+                >
+                    Kapat
+                </button>
+            </div>
             <DashDivider />
 
             <div className="edit-input">

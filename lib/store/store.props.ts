@@ -23,7 +23,7 @@ export interface MenuState {
 }
 
 export interface ModalState {
-    show: boolean;
+    show?: boolean;
     component?: string | null;
     backRoute?: string | null;
     data?: any;

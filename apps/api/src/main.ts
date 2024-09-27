@@ -19,7 +19,6 @@ async function bootstrap() {
 
     await app.listen(APP_PORT);
 
-    // API üzerinden her 60 saniyede bir menü verisini fetch eden kod
     setInterval(async () => {
         try {
             const response = await fetch(`${APP_URL}/menu`);

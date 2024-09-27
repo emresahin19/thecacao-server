@@ -110,6 +110,14 @@ const serializeFilters = (filters: { [key: string]: any }) => {
         .join('&');
 };
 
+const deserializeFilters = (query: { [key: string]: any }): { [key: string]: any } => {
+    const filters: { [key: string]: any } = {};
+    Object.keys(query).forEach(key => {
+        filters[key] = decodeURIComponent(query[key] as string);
+    });
+    return filters;
+};
+
 const imageToCdnUrl = ({ image, width, height, type, format = 'webp', quality = 80 }: ImageProps) => {
     if (!image) return `${cdnUrl}/images/the-cacao-logo.png`;
 
@@ -254,4 +262,5 @@ export {
     imageSizeCalc,
     customLoader,
     generateSrcSet,
+    deserializeFilters,
 }

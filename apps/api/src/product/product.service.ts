@@ -9,6 +9,7 @@ import { Extra } from '../extra/entities/extra.entity';
 import { cdnUrl } from '../common/constants';
 import { ProductQueryParams } from './product.props';
 import { ImageService } from '../image/image.service';
+import slugify from 'slugify';
 
 @Injectable()
 export class ProductService {
@@ -76,9 +77,14 @@ export class ProductService {
 
     async create(createProductDto: CreateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
         const image_ids = await this.imageService.saveFiles(files)
+        const slug = slugify(createProductDto.name, { lower: true, strict: true });
+
         createProductDto.image_ids = image_ids;
+        createProductDto.slug = slug;
+
         delete createProductDto.files;
         delete createProductDto.fileMap;
+
         const product = this.productRepository.create(createProductDto);
         return this.productRepository.save(product);
     }
@@ -86,6 +92,7 @@ export class ProductService {
     async update(id: number, updateProductDto: UpdateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
         const image_ids: number[] = [];
         const fileMap = JSON.parse(updateProductDto.fileMap);
+        const slug = slugify(updateProductDto.name, { lower: true, strict: true });
 
         if (fileMap) {
             const imageUpdates = await fileMap.map(async (fileObject, index) => {
@@ -103,11 +110,12 @@ export class ProductService {
             });
     
             await Promise.all(imageUpdates);
-        } else {
-            console.log('No files or images provided');
         }
 
+
+        updateProductDto.slug = slug;
         updateProductDto.image_ids = image_ids;
+
         delete updateProductDto.files
         delete updateProductDto.fileMap
     
@@ -166,18 +174,6 @@ export class ProductService {
             product.images = await this.getImages(product.image_ids);
         } else {
             product.images = [];
-        }
-
-        return product;
-    }
-
-    async getProductWithImageUrls(productId: number): Promise<Product> {
-        const product = await this.productRepository.findOne({ where: { id: productId } });
-
-        if (product.image_ids && product.image_ids.length > 0) {
-            product.image_urls = await this.getImageUrls(product.image_ids);
-        } else {
-            product.image_urls = [];
         }
 
         return product;

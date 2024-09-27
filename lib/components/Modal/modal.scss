@@ -125,14 +125,26 @@
 #dash {
     .modal {
         .modal-header {
+            display: none;
+        }
+        
+        .modal-custom-header {
+            padding-top: 30px;
+            padding-bottom: 8px;
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            
             .close {
-                font-size: 0px !important;
-                width: 24px;
-                height: 24px;
-                padding: 0;
-            }
-            svg {
-                display: none;
+                right: 0;
+                padding-left: 18px;
+                color: var(--text-color);
+                &:before, &:after {
+                    background-color: var(--text-color);
+                }
             }
         }
     }

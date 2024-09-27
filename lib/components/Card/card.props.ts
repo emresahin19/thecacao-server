@@ -9,8 +9,9 @@ export interface ProductDetailProps {
 
 export type ProductEditProps = {
     id: number | string;
-    onSave?: (response: any, callback?: () => void) => void;
+    onSave?: (response?: any) => void;
     onCancel?: () => void;
+    closed?: boolean;
 };
 
 export interface CategoryDetailProps {

@@ -8,7 +8,7 @@ export interface PaginationProps {
 }
 
 export interface ColumnProps<T> {
-    key: keyof T;
+    key: keyof T | string;
     label: string;
     sort?: boolean;
     render?: (item: T) => React.ReactNode;
@@ -19,15 +19,9 @@ export interface ColumnProps<T> {
 }
   
 export interface TableProps<T> {
-    data: T[];
     columns: Array<ColumnProps<T>>;
-    onRowAction?: (action: string, item: T | null) => void;
-    onPageChange?: (page: number) => void;
-    currentPage: number;
-    perPage: number;
-    totalItems: number;
-    loading?: boolean;
+    dataHook: (filterParams: string) => { data: T[]; total: number; isLoading: boolean; isError: any; mutateData: () => void };
     className?: string;
-    onFilterChange?: (filters: { [key: string]: any }) => void;
+    editPage?: string;
 }
   

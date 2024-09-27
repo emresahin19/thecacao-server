@@ -14,17 +14,17 @@ const modalSlice = createSlice({
     name: 'modal',
     initialState,
     reducers: {
-        openModal: (state, action: PayloadAction<{ component: string | null; data: any | null }>) => {
+        openModal: (state, action: PayloadAction<ModalState>) => {
             state.show = true;
             state.component = action.payload.component;
             state.data = action.payload.data;
-            // state.backRoute = action.payload.backRoute;
+            state.backRoute = action.payload.backRoute;
         },
         closeModal: (state) => {
             state.show = false;
             state.component = null;
             state.data = null;
-            // state.backRoute = null;
+            state.backRoute = null;
         },
     },
 });

@@ -13,6 +13,7 @@ import {
     imageToCdnUrl,
     customLoader,
     generateSrcSet,
+    deserializeFilters,
 } from './helpers';
 
 export { 
@@ -30,4 +31,5 @@ export {
     imageToCdnUrl,
     customLoader,
     generateSrcSet,
+    deserializeFilters,
 };

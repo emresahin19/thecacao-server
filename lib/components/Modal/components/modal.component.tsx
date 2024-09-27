@@ -22,16 +22,8 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     const maxMoveYRef = useRef<number>(0); // Store maxMoveY once
 
     const [isInitialDataUsed, setIsInitialDataUsed] = useState<boolean>(!!initialData);
-    const [windowHeight, setWindowHeight] = useState<number>(0);
-    // If initialData exists, use it only once, then fall back to Redux store
     const modalState = useSelector((state: RootState) => state.modal);
     const { show, component, data } = isInitialDataUsed && initialData ? initialData : modalState;
-    
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setWindowHeight(window.innerHeight);
-        }
-    }, []);
     
     // Modal open logic
     const handleOpen = useCallback(() => {
@@ -137,11 +129,8 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, [handleClose]);
     
-    const onSave = (response: any, callback: () => void) => {
-        if (response) {
-            handleClose();
-            callback();
-        }
+    const onSave = () => {
+        handleClose();
     };
     
     const onCancel = () => {
@@ -171,8 +160,8 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                     </div>
                     <div className="modal-body">
                         {component === 'ProductDetailCard' && data && <ProductDetailCard {...data} />}
-                        {component === 'ProductEditCard' && data && <ProductEditCard {...data} onSave={onSave} onCancel={onCancel} />}
-                        {component === 'CategoryEditCard' && data && <CategoryEditCard {...data} />}
+                        {component === 'ProductEditCard' && <ProductEditCard {...data} onSave={onSave} onCancel={onCancel} />}
+                        {component === 'CategoryEditCard' && data && <CategoryEditCard {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'DeleteModal' && data && <DeleteModal {...data} />}
                     </div>
                 </div>

@@ -68,7 +68,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
         }
 
         const items = products.map((product, i) => {
-            const { id, name, slug, description, price, category_id, recipe, extra, images, image_urls, passive, diy, order }: ProductProps = product;
+            const { id, name, slug, description, price, category_id, recipe, extra, images, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
             const fullpath = `${category_slug}/${slug}`;
             
