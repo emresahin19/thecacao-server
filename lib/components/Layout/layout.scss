@@ -25,7 +25,7 @@ body {
     width: var(--sidebar-width);
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    overflow: auto;
     transition: var(--layout-transition);
 
     &.open {
