@@ -5,7 +5,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    if (req.body.secret !== process.env.MY_SECRET_TOKEN) {
+    if (req.body.secret !== process.env.NEXT_PUBLIC_REVALIDATE_SECRET) {
         return res.status(401).json({ message: 'Invalid secret token' });
     }
 

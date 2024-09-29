@@ -6,7 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Image } from '../image/entities/image.entity';
 import { Extra } from '../extra/entities/extra.entity';
-import { cdnUrl, menuCacheKey } from '../common/constants';
+import { cdnUrl, menuCacheKey, revalidateSecretToken, WWW_URL } from '../common/constants';
 import { ProductQueryParams } from './product.props';
 import { ImageService } from '../image/image.service';
 import slugify from 'slugify';
@@ -83,7 +83,7 @@ export class ProductService {
 
     async create(createProductDto: CreateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
         const image_ids = await this.imageService.saveFiles(files)
-        const product = await this.saveProduct(createProductDto, this.redisService, image_ids);
+        const product = await this.saveProduct(createProductDto, image_ids);
         return product;
     }
 
@@ -109,12 +109,11 @@ export class ProductService {
             await Promise.all(imageUpdates);
         }
         updateProductDto.id = id;
-        const product = await this.saveProduct(updateProductDto, this.redisService, image_ids);
+        const product = await this.saveProduct(updateProductDto, image_ids);
         return product; 
     }
     async saveProduct(
         productDto: CreateProductDto | UpdateProductDto, 
-        redisService: RedisService, 
         image_ids?: Array<number>
       ): Promise<Product> {
         const isCreate = !productDto.id;
@@ -134,26 +133,29 @@ export class ProductService {
             await this.productRepository.update(productDto.id, productDto);
             product = await this.productRepository.findOne({ where: { id: productDto.id } });
         }
-        await redisService.del(menuCacheKey);
 
-        const category = await this.categoryRepository.findOne({ where: { id: productDto.category_id } });
-        const revalidatePath = `/menu/${category.slug}/${product.slug}`;
-        
-        try {
-            await axios.post(`${process.env.NEXT_PUBLIC_WWW_URL}/api/revalidate`, {
-                secret: process.env.MY_SECRET_TOKEN,
-            });
-            console.log(`Revalidate request for path ${revalidatePath} was successful.`);
-        } catch (error) {
-            console.log(error)
-            console.error(`Revalidate request failed for path ${revalidatePath}: `, error.message);
-        }
-    
+        // const category = await this.categoryRepository.findOne({ where: { id: productDto.category_id } });
+        // const revalidatePath = `/menu/${category.slug}/${product.slug}`;
+        this.clearCache();
         return product;
+    }
+
+    async clearCache(){
+        await this.redisService.del(menuCacheKey);
+        try {
+            await axios.post(`${WWW_URL}/api/revalidate`, {
+                secret: revalidateSecretToken,
+                // ...revalidatePath && { revalidatePath }
+            });
+            console.log(`Revalidate request sent`);
+        } catch (error) {
+            console.error(`Revalidate request failed `, error.message);
+        }
     }
 
     async remove(id: number): Promise<void> {
         await this.productRepository.delete(id);
+        this.clearCache();
     }
 
     async getImages(image_ids: number[]): Promise<Image[]> {

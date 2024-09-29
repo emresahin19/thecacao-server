@@ -24,7 +24,8 @@ const Table = <T extends { id: string | number; passive?: number }>({
     columns,
     dataHook,
     className = '',
-    editPage
+    editPage,
+    apiRoute
 }: TableProps<T>) => {
     const router = useRouter();
     const { query, isReady } = router;
@@ -50,6 +51,7 @@ const Table = <T extends { id: string | number; passive?: number }>({
     const [editValues, setEditValues] = useState<{ [key: string]: any }>({});
     const [selectAll, setSelectAll] = useState(false);
     const prevShowRef = useRef<boolean>(show || false);
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const filterKeys = useMemo(
         () => columns.filter((col) => col.filterType).map((col) => col.key as string),
@@ -142,46 +144,58 @@ const Table = <T extends { id: string | number; passive?: number }>({
     useEffect(() => {
         if (!isReady) return;
 
-        const { currentPage, perPage, orderBy, orderDirection, filters } = tableState;
-        const newQuery: { [key: string]: any } = {
-            ...query,
-            page: currentPage + 1,
-            perPage,
-            orderBy,
-            orderDirection
-        };
-
-        filterKeys.forEach((key) => {
-            if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
-                newQuery[key] = filters[key];
-            } else {
-                delete newQuery[key];
-            }
-        });
-
-        Object.keys(newQuery).forEach((key) => {
-            if (
-                newQuery[key] === null ||
-                newQuery[key] === undefined ||
-                newQuery[key] === ''
-            ) {
-                delete newQuery[key];
-            }
-        });
-
-        if (!lodash.isEqual(newQuery, query)) {
-            router.replace(
-                { pathname: router.pathname, query: newQuery },
-                undefined,
-                { shallow: true }
-            );
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
         }
-        const filterParamsObj = { ...newQuery };
-        delete filterParamsObj.action;
-        delete filterParamsObj.id;
-        const filterAsString = `?${new URLSearchParams(filterParamsObj).toString()}`;
+
+        debounceTimeoutRef.current = setTimeout(() => {
+            const { currentPage, perPage, orderBy, orderDirection, filters } = tableState;
+            const newQuery: { [key: string]: any } = {
+                ...query,
+                page: currentPage + 1,
+                perPage,
+                orderBy,
+                orderDirection
+            };
     
-        setFilterParams(filterAsString);
+            filterKeys.forEach((key) => {
+                if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
+                    newQuery[key] = filters[key];
+                } else {
+                    delete newQuery[key];
+                }
+            });
+    
+            Object.keys(newQuery).forEach((key) => {
+                if (
+                    newQuery[key] === null ||
+                    newQuery[key] === undefined ||
+                    newQuery[key] === ''
+                ) {
+                    delete newQuery[key];
+                }
+            });
+    
+            if (!lodash.isEqual(newQuery, query)) {
+                router.replace(
+                    { pathname: router.pathname, query: newQuery },
+                    undefined,
+                    { shallow: true }
+                );
+            }
+            const filterParamsObj = { ...newQuery };
+            delete filterParamsObj.action;
+            delete filterParamsObj.id;
+            const filterAsString = `?${new URLSearchParams(filterParamsObj).toString()}`;
+        
+            setFilterParams(filterAsString);
+        }, 300);
+
+        return () => {
+            if (debounceTimeoutRef.current) {
+                clearTimeout(debounceTimeoutRef.current);
+            }
+        };
     }, [tableState, isReady]);
 
     useEffect(() => {
@@ -203,6 +217,16 @@ const Table = <T extends { id: string | number; passive?: number }>({
                     data: null
                 })
             );
+        } else if (action === 'delete' && id) {
+            dispatch(
+                openModal({
+                    component: 'DeleteModal',
+                    data: { 
+                        route: `/api/${apiRoute}/${id}`,
+                        action: 'delete'
+                    }
+                })
+            );
         } else {
             dispatch(closeModal());
         }
@@ -217,12 +241,7 @@ const Table = <T extends { id: string | number; passive?: number }>({
             } else if (action === 'create') {
                 updateQuery({ action: 'create' });
             } else if (action === 'delete') {
-                dispatch(
-                    openModal({
-                        component: 'DeleteModal',
-                        data: { id }
-                    })
-                );
+                updateQuery({ action: 'delete', id: id });
             }
         },
         [updateQuery, dispatch]

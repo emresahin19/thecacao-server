@@ -16,7 +16,9 @@ export interface ModalProps {
 }
 
 export interface DeleteModalProps {
-    onConfirm: () => void;
+    onSave: () => void;
     onCancel: () => void;
     itemName?: string | null;
+    route?: string;
+    action?: string;
 };

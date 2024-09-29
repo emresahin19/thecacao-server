@@ -8,7 +8,8 @@ export const APP_PORT = process.env.API_PORT || 4040;
 export const APP_URL = process.env.API_URL || 'http://localhost:4040';
 export const APP_DOMAIN = process.env.API_DOMAIN || 'localhost:4040';
 
-export const DASH_URL = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:3000';
+export const WWW_URL = process.env.NEXT_PUBLIC_WWW_URL || 'http://localhost:4020';
+export const DASH_URL = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:4030';
 
 export const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:4040';
 export const productVariantWidth = parseInt(process.env.NEXT_PUBLIC_PRODUCT_VARIANT_WIDTH || '360');
@@ -32,3 +33,5 @@ export const menuCacheKey = process.env.NEXT_PUBLIC_MENU_CACHE_KEY || 'menu';
 export const redisHost = process.env.NEXT_PUBLIC_REDIS_HOST || '';
 export const redisPort = process.env.NEXT_PUBLIC_REDIS_PORT || '';
 export const redisPass = process.env.NEXT_PUBLIC_REDIS_PASSWORD || '';
+
+export const revalidateSecretToken = process.env.NEXT_PUBLIC_REVALIDATE_SECRET || '';

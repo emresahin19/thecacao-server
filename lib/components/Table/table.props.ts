@@ -23,5 +23,6 @@ export interface TableProps<T> {
     dataHook: (filterParams: string) => { data: T[]; total: number; isLoading: boolean; isError: any; mutateData: () => void };
     className?: string;
     editPage?: string;
+    apiRoute?: string;
 }
   

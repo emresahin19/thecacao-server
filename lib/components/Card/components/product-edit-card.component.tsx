@@ -31,6 +31,7 @@ const emptyProduct: ProductDataProps = {
 const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
     const [initialProduct, setInitialProduct] = useState<ProductDataProps | null>(null);
     const [category_id, setCategoryId] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(false);
     const [name, setName] = useState<string>('');
     const [price, setPrice] = useState<number>(0);
     const [recipe, setRecipe] = useState<string>('');
@@ -41,7 +42,6 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
 
     const { categories } = useCategoryInputData();
     const { extraData } = useExtraInputData();
-    const { loaded, setLoaded } = useLoading();
     const { product, isError, isLoading, mutateProduct } = id ? useProduct(id) : { product: emptyProduct, isError: false, isLoading: false, mutateProduct: () => {} };
     const { showToast, handleRequestError } = useToast();
 
@@ -66,7 +66,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
     }, [product, initialProduct]);
 
     const handleSave = async () => {
-        setLoaded(true);
+        setLoading(true);
         try {
             const _product: ProductDataProps = {
                 id,
@@ -87,7 +87,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
         } catch (error: AxiosError | any) {
             handleRequestError(error);
         } finally {
-            setLoaded(false);
+            setLoading(false);
             mutateProduct();
         }
     };
@@ -213,7 +213,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                 <Button 
                     property="reverse" 
                     onClick={handleSave}
-                    loading={!loaded}
+                    loading={loading}
                     color2="success"
                 >
                     Kaydet

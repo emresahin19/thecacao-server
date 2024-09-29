@@ -16,6 +16,7 @@ const ProductTable = () => {
                 className="product-table"
                 dataHook={useProducts}
                 editPage="ProductEditCard"
+                apiRoute="products"
                 columns={[
                     {
                         key: 'images',
