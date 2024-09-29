@@ -2,18 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInter
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { createResponse } from '../common/lib/response-handler'; 
 import { StatusCode } from '../common/constants';
 import { ProductQueryParams } from './product.props';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
-import { ImageService } from '../image/image.service';
 
 @Controller('products')
 export class ProductController {
 
     constructor(
         private readonly productService: ProductService,
-        private readonly imageService: ImageService,
     ) {}
 
     @Post()

@@ -26,3 +26,5 @@ export const sliderVariantQuality = parseInt(process.env.NEXT_PUBLIC_SLIDER_VARI
 export const extraImageWidth = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_WIDTH || '60');
 export const extraImageHeight = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_HEIGHT || '60');
 export const extraImageQuality = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_QUALITY || '80');
+
+export const menuCacheKey = process.env.NEXT_PUBLIC_MENU_CACHE_KEY || 'menu';

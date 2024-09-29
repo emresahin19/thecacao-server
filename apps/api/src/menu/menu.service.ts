@@ -6,6 +6,7 @@ import { Extra } from '../extra/entities/extra.entity';
 import { Setting } from '../setting/entities/setting.entity';
 import { ProductService } from '../product/product.service';
 import { RedisService } from '../common/redis/redis.service';
+import { menuCacheKey } from '../common/constants';
 
 @Injectable()
 export class MenuService {
@@ -21,8 +22,7 @@ export class MenuService {
     ) {}
 
     async getMenuData() {
-        const cacheKey = 'menu_data';
-        const cachedData = await this.redisService.get(cacheKey);
+        const cachedData = await this.redisService.get(menuCacheKey);
 
         if (cachedData) {
             console.log('serve from cache');
@@ -82,7 +82,7 @@ export class MenuService {
             contacts: contacts || [],
         };
 
-        await this.redisService.set(cacheKey, responseData, 3600);
+        await this.redisService.set(menuCacheKey, responseData, 3600);
 
         return responseData;
     }

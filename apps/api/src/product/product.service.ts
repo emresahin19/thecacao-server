@@ -6,11 +6,13 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Image } from '../image/entities/image.entity';
 import { Extra } from '../extra/entities/extra.entity';
-import { cdnUrl } from '../common/constants';
+import { cdnUrl, menuCacheKey } from '../common/constants';
 import { ProductQueryParams } from './product.props';
 import { ImageService } from '../image/image.service';
 import slugify from 'slugify';
 import { RedisService } from '../common/redis/redis.service';
+import axios from 'axios';
+import { Category } from '../category/entities/category.entity';
 
 @Injectable()
 export class ProductService {
@@ -19,6 +21,8 @@ export class ProductService {
         private readonly productRepository: Repository<Product>,
         @InjectRepository(Image)
         private readonly imageRepository: Repository<Image>,
+        @InjectRepository(Category)
+        private readonly categoryRepository: Repository<Category>,
         private readonly imageService: ImageService,
         private readonly redisService: RedisService
     ) {}
@@ -79,24 +83,14 @@ export class ProductService {
 
     async create(createProductDto: CreateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
         const image_ids = await this.imageService.saveFiles(files)
-        const slug = slugify(createProductDto.name, { lower: true, strict: true });
-
-        createProductDto.image_ids = image_ids;
-        createProductDto.slug = slug;
-
-        delete createProductDto.files;
-        delete createProductDto.fileMap;
-
-        const product = this.productRepository.create(createProductDto);
-        this.redisService.del('menu_data');
-        return this.productRepository.save(product);
+        const product = await this.saveProduct(createProductDto, this.redisService, image_ids);
+        return product;
     }
 
     async update(id: number, updateProductDto: UpdateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
         const image_ids: number[] = [];
         const fileMap = JSON.parse(updateProductDto.fileMap);
-        const slug = slugify(updateProductDto.name, { lower: true, strict: true });
-
+        
         if (fileMap) {
             const imageUpdates = await fileMap.map(async (fileObject, index) => {
                 const fieldName = fileObject.fieldName;
@@ -114,16 +108,48 @@ export class ProductService {
     
             await Promise.all(imageUpdates);
         }
-
-        updateProductDto.slug = slug;
-        updateProductDto.image_ids = image_ids;
-
-        delete updateProductDto.files
-        delete updateProductDto.fileMap
+        updateProductDto.id = id;
+        const product = await this.saveProduct(updateProductDto, this.redisService, image_ids);
+        return product; 
+    }
+    async saveProduct(
+        productDto: CreateProductDto | UpdateProductDto, 
+        redisService: RedisService, 
+        image_ids?: Array<number>
+      ): Promise<Product> {
+        const isCreate = !productDto.id;
+        const slug = slugify(productDto.name, { lower: true, strict: true });
     
-        await this.productRepository.update(id, updateProductDto);
-        this.redisService.del('menu_data');
-        return this.productRepository.findOne({ where: { id } });    
+        productDto.image_ids = image_ids;
+        productDto.slug = slug;
+    
+        delete productDto.files;
+        delete productDto.fileMap;
+        
+        let product: Product;
+        if (isCreate) {
+            product = this.productRepository.create(productDto);
+            await this.productRepository.save(product);
+        } else {
+            await this.productRepository.update(productDto.id, productDto);
+            product = await this.productRepository.findOne({ where: { id: productDto.id } });
+        }
+        await redisService.del(menuCacheKey);
+
+        const category = await this.categoryRepository.findOne({ where: { id: productDto.category_id } });
+        const revalidatePath = `/menu/${category.slug}/${product.slug}`;
+        
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_WWW_URL}/api/revalidate`, {
+                secret: process.env.MY_SECRET_TOKEN,
+            });
+            console.log(`Revalidate request for path ${revalidatePath} was successful.`);
+        } catch (error) {
+            console.log(error)
+            console.error(`Revalidate request failed for path ${revalidatePath}: `, error.message);
+        }
+    
+        return product;
     }
 
     async remove(id: number): Promise<void> {
