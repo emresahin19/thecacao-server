@@ -52,7 +52,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 data: items,
                 contacts,
             },
-            revalidate: 60,
+            // revalidate: 60,
         };
     }
 
@@ -73,7 +73,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 data: product,
             }, 
         },
-        revalidate: 60,
+        // revalidate: 60,
     };
 }
 

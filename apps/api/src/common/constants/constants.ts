@@ -28,3 +28,7 @@ export const extraImageHeight = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_HEI
 export const extraImageQuality = parseInt(process.env.NEXT_PUBLIC_EXTRA_IMAGE_QUALITY || '80');
 
 export const menuCacheKey = process.env.NEXT_PUBLIC_MENU_CACHE_KEY || 'menu';
+
+export const redisHost = process.env.NEXT_PUBLIC_REDIS_HOST || '';
+export const redisPort = process.env.NEXT_PUBLIC_REDIS_PORT || '';
+export const redisPass = process.env.NEXT_PUBLIC_REDIS_PASSWORD || '';

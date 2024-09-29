@@ -23,7 +23,7 @@ export class MenuService {
 
     async getMenuData() {
         const cachedData = await this.redisService.get(menuCacheKey);
-
+        
         if (cachedData) {
             console.log('serve from cache');
             return cachedData;

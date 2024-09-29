@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { createClient } from 'redis';
+import { redisHost, redisPass, redisPort } from '../constants';
 
 @Injectable()
 export class RedisService {
     private client;
-    private isDevMode = !(process.env.NEXT_PUBLIC_APP_MODE === 'development');
 
     constructor() {
         this.client = createClient({
-            url: `redis://${process.env.NEXT_PUBLIC_REDIS_HOST}:${process.env.NEXT_PUBLIC_REDIS_PORT}`,
-            password: process.env.NEXT_PUBLIC_REDIS_PASSWORD,
+            url: `redis://${redisHost}:${redisPort}`,
+            password: redisPass,
         });
 
         this.client.on('error', (err: any) => console.error('Redis Client Error', err));
@@ -25,7 +25,7 @@ export class RedisService {
     }
 
     async set(key: string, value: any, ttl: number = 3600): Promise<void> {
-        await this.client.set(key, JSON.stringify(value), 'EX', ttl); // TTL: 1 saat (3600 saniye)
+        await this.client?.set(key, JSON.stringify(value), { EX: ttl });
     }
 
     async del(key: string): Promise<void> {
