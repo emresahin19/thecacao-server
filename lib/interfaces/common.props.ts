@@ -48,7 +48,6 @@ export type ColorOptions =
   export interface MenuInitialProps {
     items: CategoryProps[] | null;
     contacts: ContactProps | null;
-    extraData: ExtraDataProps[] | null;
 }
 
   export interface CategoryProps {

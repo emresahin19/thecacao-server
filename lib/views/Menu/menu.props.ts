@@ -6,6 +6,5 @@ export interface MenuProps {
     product?: ProductProps;
     contacts?: ContactProps;
     initialModalData?: ModalProps;
-    extraData?: ExtraDataProps[];
 }
   

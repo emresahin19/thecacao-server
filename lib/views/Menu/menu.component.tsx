@@ -7,11 +7,11 @@ import MetaData from 'lib/components/Layout/components/www/meta-data.component';
 import MetaSubData from 'lib/components/Layout/components/www/meta-sub-data.component';
 import CategoryCarousel from '../../components/Layout/components/www/category-thumbnail.component';
 import CategorySection from '../../components/Card/components/category-card.component';
-import type { CategoryProps, ExtraDataProps, ExtraProps, MenuProps, ProductProps } from "../../interfaces";
+import type { CategoryProps, MenuProps, ProductProps } from "../../interfaces";
 import Modal from 'lib/components/Modal/components/modal.component';
-import { setContacts, setMenuData, setExtraData } from "lib/store";
+import { setContacts, setMenuData } from "lib/store";
 
-const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData, extraData }) => {
+const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [category, setCategory] = useState<CategoryProps | null>(null);
@@ -28,7 +28,6 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData, extraData
     useEffect(() => {
         data && dispatch(setMenuData({ data }));
         contacts && dispatch(setContacts(contacts));
-        extraData && dispatch(setExtraData(extraData));
     }, [])
 
     const modalRouteHandler = useCallback((path?: string) => {

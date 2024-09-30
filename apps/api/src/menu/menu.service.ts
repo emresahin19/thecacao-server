@@ -86,7 +86,6 @@ export class MenuService {
         const responseData = {
             status: true,
             items: formattedCategories || [],
-            extraData: extras || [],
             contacts: contacts || [],
         };
 

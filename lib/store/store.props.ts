@@ -1,5 +1,5 @@
 
-import { CategoryProps, ContactProps, ExtraDataProps, ExtraProps, ProductProps } from 'lib/interfaces';
+import { CategoryProps, ContactProps, ProductProps } from 'lib/interfaces';
 import { Draft } from 'immer';
 import store from './reducer';
 
@@ -20,7 +20,6 @@ export interface MenuState {
     contacts?: ContactProps;
     selectedCategory?: Draft<CategoryProps> | null;
     selectedProduct?: Draft<ProductProps> | null;
-    extraData?: Draft<ExtraDataProps>[];
 }
 
 export interface ModalState {
