@@ -47,7 +47,7 @@
                         display: flex;
                         align-items: center;
                         position: relative;
-
+                        min-width: 100px;
                         &:before, &:after {
                             content: "";
                             display: block;
