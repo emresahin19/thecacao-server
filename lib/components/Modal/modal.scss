@@ -36,7 +36,6 @@
         border-style: solid;
         animation: modal 0.3s ease;
         height: fit-content;
-        max-height: 100vh;
 
         .modal-header {
             padding-top: 30px;
@@ -103,7 +102,6 @@
 @media (max-width: 768px) {
     .modal-container {
         .modal {
-            max-height: fit-content;
             width: 100%;
             min-height: 100vh;
             overflow: auto;
@@ -111,6 +109,7 @@
             border-color: #fff;
             border-width: 2px 0 1px 0;
             border-style: solid;
+            max-height: fit-content;
         }
     }
 }
