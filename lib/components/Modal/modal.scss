@@ -36,6 +36,7 @@
         border-style: solid;
         animation: modal 0.3s ease;
         height: fit-content;
+        max-height: 100vh;
 
         .modal-header {
             padding-top: 30px;
@@ -109,6 +110,7 @@
             border-color: #fff;
             border-width: 2px 0 1px 0;
             border-style: solid;
+            max-height: fit-content;
         }
     }
 }

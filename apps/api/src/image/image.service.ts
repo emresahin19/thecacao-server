@@ -9,6 +9,7 @@ import { join } from 'path';
 import { existsSync, mkdirSync, statSync, writeFileSync } from 'fs';
 import { ImageTypes, ImageVariant } from './image.props';
 import { cdnUrl } from '../common/constants';
+import { MemoryStoredFile } from 'nestjs-form-data';
 
 @Injectable()
 export class ImageService {
@@ -110,17 +111,12 @@ export class ImageService {
         return outputPath;
     }
 
-    async saveFiles(files: Array<Express.Multer.File>): Promise<number[]> {
+    async saveFiles(files: Array<MemoryStoredFile>): Promise<number[]> {
         const image_ids: number[] = [];
         
         const savedFiles = files.map(async (file) => {
-            const filePath = join(this.inputDir, file.originalname);
-            writeFileSync(filePath, file.buffer);
-            const newImage = new Image();
-            newImage.filename = file.originalname;
-            newImage.path = filePath;
-            await this.imageRepository.save(newImage);
-            newImage.id && image_ids.push(newImage.id);
+            const { id } = await this.saveImage(null, file);
+            id && image_ids.push(Number(id));
         });
 
         await Promise.all(savedFiles);
@@ -128,29 +124,28 @@ export class ImageService {
         return image_ids;
     }
 
-    async saveImage(file: Express.Multer.File): Promise<Image> {
-        const filePath = join(this.inputDir, file.originalname);
+    async saveImage(id: number = null, file: MemoryStoredFile): Promise<Image> {
+        const filePath = join(this.inputDir, file.originalName);
         writeFileSync(filePath, file.buffer);
-        const newImage = new Image();
-        newImage.filename = file.originalname;
-        newImage.path = filePath;
-        await this.imageRepository.save(newImage);
-        return this.findOne(newImage.id);
-    }
 
-    async updateImage(id: number, file: Express.Multer.File): Promise<Image> {
-        const image = await this.findOne(id);
-        if (!image) {
-            throw new Error('Image not found');
+        if(id){
+            const image = await this.findOne(id);
+            if (!image) {
+                throw new Error('Image not found');
+            }
+            await this.imageRepository.update(id, { 
+                filename: file.originalName,
+                path: filePath,
+            });
+            return this.findOne(id);
         }
 
-        const filePath = join(this.inputDir, file.originalname);
-        writeFileSync(filePath, file.buffer);
-
-        await this.imageRepository.update(id, { 
-            filename: file.originalname,
-            path: filePath,
-        });
-        return this.findOne(id);
+        const newImage = new Image();
+        newImage.filename = file.originalName;
+        newImage.path = filePath;
+    
+        await this.imageRepository.save(newImage);
+        
+        return this.findOne(newImage.id);
     }
 }

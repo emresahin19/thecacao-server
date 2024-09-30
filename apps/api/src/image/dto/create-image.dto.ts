@@ -5,6 +5,7 @@ export class CreateImageDto {
     @IsOptional()
     @IsInt()
     @Type(() => Number)
+    @Transform(({ value }) => parseInt(value, 10))  
     id?: number;
 
     @IsOptional()

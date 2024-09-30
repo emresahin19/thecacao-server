@@ -8,6 +8,7 @@ import { Image } from '../image/entities/image.entity';
 import { Extra } from '../extra/entities/extra.entity';
 import { ImageService } from '../image/image.service';
 import { RedisModule } from '../common/redis/redis.module';
+import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { RedisModule } from '../common/redis/redis.module';
             Extra
         ]),
         RedisModule,
+        NestjsFormDataModule
     ],
     controllers: [ProductController],
     providers: [ProductService, ImageService],

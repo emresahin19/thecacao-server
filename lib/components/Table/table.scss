@@ -107,33 +107,32 @@
     
         tbody {
             tr {
+                .editable-input {
+                    input, .select-box {
+                        background: var(--table-color-2);
+                        &:focus, &:hover {
+                            background: var(--table-color-1);
+                        }
+                    }
+                }
                 &:nth-child(even) {
                     background-color: var(--table-color-1);
                     .editable-input {
-                        input {
+                        input, .select-box {
                             background: var(--table-color-1);
-                            &:focus {
+                            &:focus, &:hover {
                                 background: var(--table-color-2);
                             }
                         }
                     }
                 }
-                // &:nth-child(3n + 2) {
-                //     background-color: var(--table-color-3);
-                //     .editable-input {
-                //         input {
-                //             background: var(--table-color-3);
-                //             &:focus {
-                //                 background: var(--table-color-2);
-                //             }
-                //         }
-                //     }
-                // }
                 &:hover {
-                    // background-color: var(--table-hover-color);
                     box-shadow: 0 0 0 1px var(--text-color);
                 }
                 .editable-input {
+                    .input-value {
+                        width: calc(100% - 48px);
+                    }
                     input {
                         width: calc(100% - 48px);
                         color: var(--text-color);

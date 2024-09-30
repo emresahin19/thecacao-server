@@ -1,75 +1,147 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFiles, Res } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { StatusCode } from '../common/constants';
 import { ProductQueryParams } from './product.props';
-import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { FormDataRequest } from 'nestjs-form-data';
+import { Response } from 'express';
 
 @Controller('products')
 export class ProductController {
-
     constructor(
         private readonly productService: ProductService,
     ) {}
 
     @Post()
-    @UseInterceptors(AnyFilesInterceptor())
+    @FormDataRequest() 
     async create(
         @Body() createProductDto: CreateProductDto,
-        @UploadedFiles() files: Array<Express.Multer.File>
+        @Res() res: Response
     ) {
-        const newProduct = await this.productService.create(createProductDto, files);
-        return {
-            item: newProduct,
-            ...StatusCode.CREATED
-        };
+        try {
+            const item = await this.productService.create(createProductDto)
+            
+            return item 
+                ? res.status(StatusCode.CREATED.statusCode).json({
+                    status: true,
+                    message: StatusCode.CREATED.message,
+                }) 
+                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                    status: false,
+                    message: StatusCode.BAD_REQUEST.message,
+                });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
+                message: StatusCode.BAD_REQUEST.message,
+            });
+        }
     }
 
     @Put(':id')
-    @UseInterceptors(AnyFilesInterceptor())
+    @FormDataRequest() 
     async update(
         @Param('id') id: string,
         @Body() updateProductDto: UpdateProductDto,
-        @UploadedFiles() files: Array<Express.Multer.File>
+        @Res() res: Response
     ) {
-        const item = await this.productService.update(+id, updateProductDto, files);
-        return item ? {
-            ...StatusCode.SUCCESS
-        } : {
-            ...StatusCode.NOT_FOUND
+       
+        try {
+            const item = await this.productService.update(+id, updateProductDto);
+            
+            return item 
+                ? res.status(StatusCode.SUCCESS.statusCode).json({
+                    status: true,
+                    message: StatusCode.SUCCESS.message,
+                }) 
+                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                    status: false,
+                    message: StatusCode.BAD_REQUEST.message,
+                });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
+                message: StatusCode.BAD_REQUEST.message,
+            });
         }
     }
 
     @Get()
-    async index(@Query() params: ProductQueryParams) {
-        const products = await this.productService.findAll(params);
-        return products ? {
-            ...products,
-            ...StatusCode.SUCCESS
-        } : {
-            items: null,
-            ...StatusCode.NOT_FOUND
+    async index(
+        @Query() params: ProductQueryParams,
+        @Res() res: Response
+    ) {
+        try {
+            const items = await this.productService.findAll(params);
+            
+            return items 
+                ? res.status(StatusCode.SUCCESS.statusCode).json({
+                    status: true,
+                    ...items,
+                    message: StatusCode.SUCCESS.message,
+                }) 
+                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                    status: false,
+                    items: [],
+                    message: StatusCode.BAD_REQUEST.message,
+                });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
+                message: StatusCode.BAD_REQUEST.message,
+            });
         }
     }
 
     @Get(':id')
-    async getProduct(@Param('id') id: number) {
-        const product = await this.productService.getProductWithImages(id);
-        return product ? {
-            item: product,
-            ...StatusCode.SUCCESS
-        } : {
-            item: null,
-            ...StatusCode.NOT_FOUND
+    async getProduct(
+        @Param('id') id: number,
+        @Res() res: Response
+    ) {
+        try {
+            const item = await this.productService.getProductWithImages(id);
+            
+            return item 
+                ? res.status(StatusCode.SUCCESS.statusCode).json({
+                    status: true,
+                    item,
+                    message: StatusCode.SUCCESS.message,
+                }) 
+                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                    status: false,
+                    item: null,
+                    message: StatusCode.BAD_REQUEST.message,
+                });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
+                message: StatusCode.BAD_REQUEST.message,
+            });
         }
     }
 
     @Delete(':id')
-    async remove(@Param('id') id: string) {
-        await this.productService.remove(+id);
-        return {
-            ...StatusCode.NO_CONTENT
-        };
+    async remove(
+        @Param('id') id: string,
+        @Res() res: Response
+    ) {
+        try {
+            await this.productService.remove(+id);
+            res.status(StatusCode.NO_CONTENT.statusCode).json({
+                status: true,
+                message: StatusCode.NO_CONTENT.message,
+            })
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
+                message: StatusCode.BAD_REQUEST.message,
+            });
+        }
     }
 }

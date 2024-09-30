@@ -5,7 +5,6 @@ import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Image } from '../image/entities/image.entity';
-import { Extra } from '../extra/entities/extra.entity';
 import { cdnUrl, menuCacheKey, revalidateSecretToken, WWW_URL } from '../common/constants';
 import { ProductQueryParams } from './product.props';
 import { ImageService } from '../image/image.service';
@@ -31,8 +30,8 @@ export class ProductService {
         const { 
             page = 1, 
             perPage = 10, 
-            orderBy = 'id', 
-            orderDirection = 'ASC', 
+            orderBy = 'updated_at', 
+            orderDirection = 'DESC', 
             name, 
             category_id,
             price,
@@ -81,51 +80,53 @@ export class ProductService {
         return this.productRepository.findOne({ where: { id }, relations: ['category'] });
     }
 
-    async create(createProductDto: CreateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
-        const image_ids = await this.imageService.saveFiles(files)
-        const product = await this.saveProduct(createProductDto, image_ids);
+    async create(createProductDto: CreateProductDto): Promise<Product> {
+        const image_ids = createProductDto.files && createProductDto.files.length > 0
+            ? await this.imageService.saveFiles(createProductDto.files.map(fileObject => fileObject.file))
+            : [];
+
+        delete createProductDto.files;
+        createProductDto.image_ids = image_ids;
+        const product = await this.saveProduct(createProductDto);
         return product;
     }
 
-    async update(id: number, updateProductDto: UpdateProductDto, files?: Array<Express.Multer.File>): Promise<Product> {
+    async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
         const image_ids: number[] = [];
-        const fileMap = JSON.parse(updateProductDto.fileMap);
-        
-        if (fileMap) {
-            const imageUpdates = await fileMap.map(async (fileObject, index) => {
-                const fieldName = fileObject.fieldName;
-                const imgId = fileObject.id;
-                const file = files && files.find(f => f.fieldname === fieldName) || null;
-                
-                const { id } = file 
-                    ? imgId 
-                        ? await this.imageService.updateImage(imgId, file)
-                        : await this.imageService.saveImage(file)
-                    : { id: imgId };
 
-                    id && image_ids.push(id);
+        if(updateProductDto.files && updateProductDto.files.length > 0){
+            const imageUpdates = updateProductDto.files.map(async (fileObject) => {
+                const imgId = fileObject.id || null;
+                const file = fileObject.file;
+
+                const { id } = file
+                    ? await this.imageService.saveImage(imgId, file)
+                    : { id: imgId };
+    
+                id && image_ids.push(Number(id));
             });
     
             await Promise.all(imageUpdates);
         }
+        delete updateProductDto.files;
+        
         updateProductDto.id = id;
-        const product = await this.saveProduct(updateProductDto, image_ids);
+        updateProductDto.image_ids = image_ids;
+        const product = await this.saveProduct(updateProductDto);
         return product; 
     }
-    async saveProduct(
-        productDto: CreateProductDto | UpdateProductDto, 
-        image_ids?: Array<number>
-      ): Promise<Product> {
+
+    async saveProduct(productDto: CreateProductDto | UpdateProductDto): Promise<Product> {
         const isCreate = !productDto.id;
-        const slug = slugify(productDto.name, { lower: true, strict: true });
-    
-        productDto.image_ids = image_ids;
-        productDto.slug = slug;
-        productDto.extra = productDto.extra && JSON.parse(String(productDto.extra)) || [];
-    
-        delete productDto.files;
-        delete productDto.fileMap;
-        
+
+        productDto.slug = slugify(productDto.name, { lower: true });
+
+        if(!productDto.created_at)
+            productDto.created_at = new Date();
+
+        if(!productDto.updated_at)
+            productDto.updated_at = new Date();
+
         let product: Product;
         if (isCreate) {
             product = this.productRepository.create(productDto);

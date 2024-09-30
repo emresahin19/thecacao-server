@@ -9,7 +9,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const [toasts, setToasts] = useState<ToastProps[]>([]);
 
     const showToast = ({message, type = "success", duration = 3000}: ShowToastProps) => {
-        const id = Date.now();
+        const id = Date.now() + Math.random();
         setToasts((prev) => [...prev, { id, message, type }]);
         setTimeout(() => {
             setToasts((prev) => prev.filter((toast) => toast.id !== id));
@@ -22,7 +22,8 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const handleRequestError = (err: AxiosError | any) => {
         const { error } = err.response?.data || err.response || err || { error: "Bir hata oluştu!" };
-        showToast({ message: error, type: "danger" });
+        const errors = Array.isArray(error) ? error : [error];
+        errors.forEach((err: string) => showToast({ message: err, type: "danger", duration: errors.length*3000 }));
     };
     
     return (

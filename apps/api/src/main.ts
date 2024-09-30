@@ -1,22 +1,31 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-
+import { ValidationPipe } from '@nestjs/common';
 import { 
     APP_PORT,
     APP_URL,
     DASH_URL,
+    WWW_URL,
 } from './common/constants';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    // CORS ayarları
     app.enableCors({
-        origin: [DASH_URL], // Frontend (Next.js) URL'si (uygun olan URL'yi ekleyin)
+        origin: [DASH_URL],
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-        credentials: true, // Cookie ve kimlik doğrulama bilgilerini aktarmak için gereklidir
+        credentials: true
     });
-
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: true,
+            transform: true,
+            transformOptions: {
+                enableImplicitConversion: true, 
+            },
+        }),
+    );
     await app.listen(APP_PORT);
 
     setInterval(async () => {

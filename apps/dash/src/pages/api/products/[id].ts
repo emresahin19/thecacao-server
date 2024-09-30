@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 response = await axios({
                     method: 'post',
                     url: `${apiUrl}/products`,
-                    data: req, // Forward the original request data
+                    data: req,
                     headers: headers,
                     maxContentLength: Infinity,
                     maxBodyLength: Infinity,
@@ -44,7 +44,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
 
             case 'PUT':
-                // using method override to send a PUT request
                 response = await axios({
                     method: 'put',
                     url: `${apiUrl}/products/${id}`,
@@ -62,11 +61,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             default:
                 res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
-                return res.status(405).end(`Method ${req.method} Not Allowed`);
+                return res.status(405).end({
+                    status: false,
+                    error: `Method ${req.method} Not Allowed`,
+                });
         }
-
         return res.status(200).json(response.data);
     } catch (err: any) {
-        // return handleErrorResponse(err, res);
+        return handleErrorResponse(err, res);
     }
 }

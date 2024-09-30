@@ -14,11 +14,11 @@ export const fetchProduct = async (id: string | number) => {
 export const saveProduct = async (product: ProductDataProps) => {
     const id = product.id || 0;
     const formData = prepareProductFormData(product);
-
+    
     try {
         const response = id
             ? await axiosInstance.put(`/api/products/${id}`, formData)
-            : await axiosInstance.post(`/api/products/0`, formData);
+            : await axiosInstance.post(`/api/products/create`, formData);
 
         return response.data;
     } catch (error) {
@@ -41,31 +41,19 @@ export const prepareProductFormData = (product: ProductDataProps) => {
     const formData = new FormData();
     
     product.id && formData.append('id', String(product.id));
-    formData.append('category_id', String(product.category_id));
-    formData.append('name', product.name);
-    formData.append('price', String(product.price || 0));
-    formData.append('recipe', String(product.recipe || ''));
-    formData.append('description', String(product.description || ''));
-    formData.append('passive', String(product.passive || 0));
-    formData.append('extra', JSON.stringify(product.extra || []));
+    product.category_id && formData.append('category_id', String(product.category_id));
+    product.name && formData.append('name', String(product.name));
+    product.price && formData.append('price', String(product.price));
+    product.recipe && formData.append('recipe', String(product.recipe));
+    product.description && formData.append('description', String(product.description));
+    product.passive && formData.append('passive', String(product.passive));
+    product.extra && product.extra.length > 0 && formData.append('extra', JSON.stringify(product.extra));
     
-    const fileMap: {
-        id?: number | string | null;
-        fieldName: string;
-        isFileExists: boolean;
-    }[] = [];
-
     product.images && product.images.forEach((image, index) => {
         image.id && formData.append(`files[${index}][id]`, String(image.id));
         image.file && formData.append(`files[${index}][file]`, image.file);
-        fileMap.push({
-            id: image.id,
-            fieldName: `files[${index}][file]`,
-            isFileExists: Boolean(image.file),
-        });
+        image.file && formData.append(`files[${index}][index]`, String(index));
+       
     });
-
-    formData.append('fileMap', JSON.stringify(fileMap));
-
     return formData;
 };

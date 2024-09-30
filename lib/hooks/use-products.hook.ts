@@ -1,5 +1,5 @@
 import useSWR, { mutate } from 'swr';
-import { fetcher, serializeFilters } from 'lib/utils';
+import { fetcher } from 'lib/utils';
 
 export const useProducts = (params: string) => {
     const { data, error }: {data: any, error: any} = useSWR(`/api/products${params}`, fetcher);
