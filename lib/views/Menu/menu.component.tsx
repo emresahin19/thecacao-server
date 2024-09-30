@@ -7,11 +7,11 @@ import MetaData from 'lib/components/Layout/components/www/meta-data.component';
 import MetaSubData from 'lib/components/Layout/components/www/meta-sub-data.component';
 import CategoryCarousel from '../../components/Layout/components/www/category-thumbnail.component';
 import CategorySection from '../../components/Card/components/category-card.component';
-import type { CategoryProps, MenuProps, ProductProps } from "../../interfaces";
+import type { CategoryProps, ExtraDataProps, ExtraProps, MenuProps, ProductProps } from "../../interfaces";
 import Modal from 'lib/components/Modal/components/modal.component';
-import { setContacts, setMenuData } from "lib/store";
+import { setContacts, setMenuData, setExtraData } from "lib/store";
 
-const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
+const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData, extraData }) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [category, setCategory] = useState<CategoryProps | null>(null);
@@ -28,6 +28,7 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
     useEffect(() => {
         data && dispatch(setMenuData({ data }));
         contacts && dispatch(setContacts(contacts));
+        extraData && dispatch(setExtraData(extraData));
     }, [])
 
     const modalRouteHandler = useCallback((path?: string) => {
@@ -43,6 +44,11 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
             
             if (foundCategory && productSlug) {
                 const foundProduct = foundCategory.products.find((prod) => prod.slug === productSlug) || null;
+                if(!foundProduct) {
+                    setProduct(null);
+                    modalRouteHandler();
+                    return;
+                }
                 setProduct(foundProduct);
                 dispatch(
                     openModal({

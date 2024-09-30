@@ -15,9 +15,9 @@ export const fetchMenuData = async () => {
         }
 
         const { data } = await axios.get(`${apiUrl}/menu`);
-        const { items, contacts }: MenuInitialProps = data;
+        const { items, contacts, extraData }: MenuInitialProps = data;
 
-        return { items, contacts };
+        return { items, contacts, extraData };
     } catch (error) {
         console.error('Error fetching menu:', error);
         throw error;
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'GET') {
         try {
             const { data } = await axios.get(`${apiUrl}/menu`);
-            const { items, contacts }: MenuInitialProps = data;
+            const { items, contacts, extraData }: MenuInitialProps = data;
     
             return res.status(200).json({ items, contacts });
         } catch (err: any) {

@@ -20,13 +20,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { diskStorage } from 'multer';
-
-export interface ImageVariant {
-    width: number;
-    height: number;
-    format: 'png' | 'webp';
-    quality: number;
-}
+import { ImageTypes, ImageVariant } from './image.props';
 
 // File upload destination and filename configuration
 const storage = diskStorage({
@@ -67,12 +61,14 @@ export class ImageController {
 
     @Get(':type/*')
     async getImageByType(
-        @Param('type') type: 'product' | 'product-detail' | 'slider' | 'extra',
+        @Param('type') type: ImageTypes,
         @Param() params: any,
         @Res() res: Response,
     ) {
         const imagePath = params['0']; 
-        const sizes = {
+        const sizes: {
+            [key in ImageTypes]: ImageVariant;
+        } = {
             'product': { 
                 width: productVariantWidth,
                 height: productVariantHeight,
@@ -109,7 +105,7 @@ export class ImageController {
             return res.status(404).send('Invalid image type');
         }
 
-        const { width, height, format = 'webp', quality }: ImageVariant = sizes[type];
+        const { width, height, format = 'webp', quality }: ImageVariant = sizes[type as ImageTypes];
 
         // Compress the image based on the type and get the file path
         const compressedImagePath = await this.imageService.compressImage({imagePath, width, height, format, quality, type});
@@ -125,7 +121,6 @@ export class ImageController {
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        console.log('params', id);
         return this.imageService.findOne(+id);
     }
 
@@ -135,7 +130,6 @@ export class ImageController {
         @UploadedFile() file: Express.Multer.File,
     ) {
         try {
-            console.log('file', file);
             return { path: file?.filename }; 
         } catch (error) {
             console.error('Error uploading image:', error);

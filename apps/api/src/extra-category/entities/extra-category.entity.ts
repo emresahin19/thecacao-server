@@ -15,6 +15,8 @@ export class ExtraCategory {
     @Column({ type: 'varchar', length: 255, nullable: true })
     image: string;
 
+    image_url?: string;
+
     @Column({ type: 'tinyint', default: 0 })
     passive: boolean;
 

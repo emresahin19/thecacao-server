@@ -1,4 +1,4 @@
-import { CategoryProps, ContactProps, ModalProps, ProductProps } from "lib/interfaces";
+import { CategoryProps, ContactProps, ExtraDataProps, ModalProps, ProductProps } from "lib/interfaces";
 
 export interface MenuProps {
     data?: CategoryProps[];
@@ -6,5 +6,6 @@ export interface MenuProps {
     product?: ProductProps;
     contacts?: ContactProps;
     initialModalData?: ModalProps;
+    extraData?: ExtraDataProps[];
 }
   

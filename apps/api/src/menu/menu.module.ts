@@ -7,15 +7,17 @@ import { MenuService } from './menu.service';
 import { MenuController } from './menu.controller';
 import { ProductModule } from '../product/product.module';
 import { RedisModule } from '../common/redis/redis.module';
+import { ExtraCategory } from '../extra-category/entities/extra-category.entity';
+import { ImageService } from '../image/image.service';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Category, Extra, Setting]), 
+        TypeOrmModule.forFeature([Category, Extra, Setting, ExtraCategory]), 
         ProductModule,
         RedisModule, 
     ],
     controllers: [MenuController],
-    providers: [MenuService],
+    providers: [MenuService, ImageService],
 })
 
 export class MenuModule {}

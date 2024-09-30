@@ -35,7 +35,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const { items, contacts }: MenuInitialProps = await fetchMenuData();
+    const { items, contacts, extraData }: MenuInitialProps = await fetchMenuData();
 
     if(!items) {
         return {
@@ -51,6 +51,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             props: {
                 data: items,
                 contacts,
+                extraData,
             },
             // revalidate: 60,
         };
@@ -67,6 +68,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         props: {
             data: items,
             contacts,
+            extraData,
             initialModalData: {
                 show: true,
                 component: 'ProductDetailCard',

@@ -86,6 +86,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     // Handle touch move event
     const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
         const currentY = e.touches[0].clientY;
+        // const diffY = currentY - startYRef.current;
         const diffY = Math.max(currentY - startYRef.current, maxMoveYRef.current);
 
         if (diffY < maxMoveYRef.current) return;

@@ -121,6 +121,7 @@ export class ProductService {
     
         productDto.image_ids = image_ids;
         productDto.slug = slug;
+        productDto.extra = productDto.extra && JSON.parse(String(productDto.extra)) || [];
     
         delete productDto.files;
         delete productDto.fileMap;

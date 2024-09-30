@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMan
 import { Category } from '../../category/entities/category.entity';
 import { Image } from '../../image/entities/image.entity';
 import { Extra } from '../../extra/entities/extra.entity';
+import { ExtraCategory } from '../../extra-category/entities/extra-category.entity';
 
 @Entity('products')
 export class Product {
@@ -38,7 +39,7 @@ export class Product {
     extra: number[]; 
         
     @OneToMany(() => Extra, (extra) => extra.id)
-    extraItems: Extra[];
+    extras: ExtraCategory[];
 
     @Column({ type: 'tinyint', default: 0 })
     order: number;

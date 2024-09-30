@@ -215,7 +215,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 0 16px;
+    // padding: 0 16px;
     
     & > * {
         user-select: none;
@@ -294,11 +294,10 @@
     .extra {
         font-size: 16px;
         font-weight: 400;
-        color: #0C4C4C;
-        background: #083a3a;
+        background: var(--primary-08);
         margin-top: 8px;
-        padding: 8px;
-        border-radius: 10px;
+        border-radius: 12px;
+        width: 100%;
         p {
             font-size: 14px;
             text-align: start;
@@ -308,7 +307,9 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            margin: 16px 0 8px;
+            padding: 16px 0 8px;
+            background-color: rgba(var(--primary-rgb), .5);
+            border-radius: 12px;
             .extra-item {
                 display: flex;
                 flex-direction: column;
@@ -340,11 +341,9 @@
         }
         .extra-header {
             display: flex;
-            background: var(--primary);
             border-radius: 8px;
             align-items: flex-start;
-            background: rgb(5, 47, 47);
-            padding: 8px 8px 8px 16px;
+            padding: 16px 8px 0px 16px;
             flex-direction: column;
             .extra-t {
                 color: #fff;
@@ -354,7 +353,7 @@
             }
             p {
                 font-size: 12px;
-                color: var(--gray-05);
+                color: var(--gray-03);
             }
             .extra-title {
                 font-size: 16px;

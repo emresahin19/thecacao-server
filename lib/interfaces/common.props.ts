@@ -48,6 +48,7 @@ export type ColorOptions =
   export interface MenuInitialProps {
     items: CategoryProps[] | null;
     contacts: ContactProps | null;
+    extraData: ExtraDataProps[] | null;
 }
 
   export interface CategoryProps {
@@ -80,12 +81,10 @@ export type ColorOptions =
     price: number;
     category_id?: number;
     recipe?: string;
-    extra?: Array<ExtraProps>;
+    extra?: Array<number>;
+    extras: Array<ExtraDataProps>;
     images?: Array<ImageObject>;
-    cfImages?: Array<any>;
-    image_urls?: Array<string>;
     passive?: number;
-    diy?: Array<any> | null;
     order: number;
     textColor?: string;
     listView?: boolean;
@@ -94,15 +93,19 @@ export type ColorOptions =
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   }
 
+export interface ExtraDataProps {
+    id: number;
+    name: string;
+    description	: number;
+    image?: string;
+    extras: ExtraProps[];
+}
+
 export interface ExtraProps {
+    id: number;
     name: string;
     price: number;
-    image: string;
-    order: number;
-    passive: number;
-    category_name: string;
-    created_at: string;
-    updated_at: string;
+    image_url: string;
 }
 
 export interface ContactProps {

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CategoryProps, ContactProps, ProductProps } from 'lib/interfaces';
+import { CategoryProps, ContactProps, ExtraDataProps, ProductProps } from 'lib/interfaces';
 import { MenuState } from './store.props';
 
 const initialState: MenuState = {
@@ -11,6 +11,7 @@ const initialState: MenuState = {
     instagram: '',
     linkedin: ''
   },
+  extraData: [],
   selectedCategory: null,
   selectedProduct: null,
 };
@@ -25,6 +26,9 @@ const menuSlice = createSlice({
     setContacts(state, action: PayloadAction<ContactProps>) {
       state.contacts =  action.payload;
     },
+    setExtraData(state, action: PayloadAction<ExtraDataProps[]>) {
+      state.extraData = action.payload;
+    },
     selectCategory(state, action: PayloadAction<CategoryProps | null>) {
       state.selectedCategory = action.payload;
     },
@@ -38,5 +42,5 @@ const menuSlice = createSlice({
   },
 });
 
-export const { setMenuData, selectCategory, setContacts, selectProduct, clearSelected } = menuSlice.actions;
+export const { setMenuData, selectCategory, setContacts, selectProduct, clearSelected, setExtraData } = menuSlice.actions;
 export default menuSlice.reducer;

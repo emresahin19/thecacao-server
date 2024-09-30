@@ -7,6 +7,8 @@ import { UpdateImageDto } from './dto/update-image.dto';
 import sharp from 'sharp';
 import { join } from 'path';
 import { existsSync, mkdirSync, statSync, writeFileSync } from 'fs';
+import { ImageTypes, ImageVariant } from './image.props';
+import { cdnUrl } from '../common/constants';
 
 @Injectable()
 export class ImageService {
@@ -45,20 +47,29 @@ export class ImageService {
         await this.imageRepository.delete(id);
     }
 
+    async getImageUrlByType(id: number, type: ImageTypes): Promise<string> {
+        const image = await this.findOne(id);
+        if (!image) {
+            throw new Error('Image not found');
+        }
+
+        return `${cdnUrl}/images/${type}/${image.filename}`;
+    }
+
     async compressImage({
         imagePath,
         width,
         height,
         format = 'webp',
         quality = 80,
-        type = 'custom',  
+        type = 'product',  
     }: {
         imagePath: string;
         width?: number;
         height?: number;
         format?: 'png' | 'webp';
         quality?: number;
-        type?: 'custom' | 'product' | 'product-detail' | 'slider' | 'extra'
+        type?: ImageTypes
     }): Promise<string> {
         const inputFilePath = join(this.inputDir, imagePath);
         // Create dynamic output directory based on type

@@ -1,4 +1,4 @@
-import { ProductProps } from 'lib/interfaces';
+import { ExtraDataProps, ProductProps } from 'lib/interfaces';
 import React, { memo } from 'react';
 import Carousel from "lib/components/Carousel/components/carousel.component";
 import ProductImage from '../../Image/components/product-image.component';
@@ -6,7 +6,7 @@ import PlaceholderImage from '../../Image/components/placeholder-image.component
 
 import { productDetailVariantWidth, productDetailVariantHeight, productDetailVariantQuality } from 'lib/constants';
 
-const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, images }) => {
+const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra, extras, images }) => {
     const imageItems = images && images.map((image) => 
         <ProductImage 
             key={image.id}
@@ -20,29 +20,27 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
         />
     );
     
-    const ExtraItems: React.FC = () => {
-        if(!extra) return null;
-
-        const categoryName = extra[0].category_name;
+    const ExtraItems: React.FC<ExtraDataProps> = ({name, description, image, extras}: ExtraDataProps) => {
+        if(!extra || extra.length === 0) return null;
         return (
             
             <div className='extra'>
                 <div className="extra-header">
-                    <span className="extra-t">Ekstra {categoryName} Seç <span>{categoryName === 'Belçika Çikolatası' ? '(50cl)' : ''}</span></span>
+                    <span className="extra-t">Ekstra {name} Seç <span>{name === 'Belçika Çikolatası' ? '(50cl)' : ''}</span></span>
                     <p>
-                        Dilerseniz, {name} ile ekstra {categoryName} tercih edebilirsiniz.
+                        {description}
                     </p>
                 </div>
                 <div className="extra-items">
-                    {extra.map((item, index) => (
-                            <div key={index} className="extra-item">
-                                {item && item.image && <img src={`${item.image}`} alt="" />}
-                                <div className="extra-item-content">
-                                    <span className="extra-item-title">{item.name}</span>
-                                    <span className="extra-item-price">{item.price}₺</span>
-                                </div>
+                    {extras.map((item, index) => (
+                        <div key={index} className="extra-item">
+                            {item && item.image_url && <img src={`${item.image_url}`} alt="" />}
+                            <div className="extra-item-content">
+                                <span className="extra-item-title">{item.name}</span>
+                                <span className="extra-item-price">{item.price}₺</span>
                             </div>
-                        ))}
+                        </div>
+                    ))}
                 </div>
             </div>
         );
@@ -82,9 +80,9 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
                         {description}
                     </p>
                 }
-                {extra && extra.length > 0 && extra[0].name && 
-                    <ExtraItems />
-                }
+                {extras && extras.length > 0 && extras.map((extra) => (
+                    <ExtraItems key={extra.id} {...extra} />
+                ))}
             </div>
         </div>
     );

@@ -7,6 +7,8 @@ import { Setting } from '../setting/entities/setting.entity';
 import { ProductService } from '../product/product.service';
 import { RedisService } from '../common/redis/redis.service';
 import { menuCacheKey } from '../common/constants';
+import { ExtraCategory } from '../extra-category/entities/extra-category.entity';
+import { ImageService } from '../image/image.service';
 
 @Injectable()
 export class MenuService {
@@ -17,24 +19,38 @@ export class MenuService {
         private readonly extraRepository: Repository<Extra>,
         @InjectRepository(Setting)
         private readonly settingRepository: Repository<Setting>,
+        @InjectRepository(ExtraCategory)
+        private readonly extraCategoryRepository: Repository<ExtraCategory>,
         private readonly productService: ProductService,
-        private readonly redisService: RedisService
+        private readonly redisService: RedisService,
+        private readonly imageService: ImageService,
     ) {}
 
     async getMenuData() {
         const cachedData = await this.redisService.get(menuCacheKey);
-        
-        if (cachedData) {
+        const isDev =  process.env.NEXT_PUBLIC_APP_MODE === 'development';
+        if (cachedData && !isDev) {
             console.log('serve from cache');
             return cachedData;
         }
         console.log('serve from db');
 
+        const extras = await this.extraCategoryRepository.find({
+            where: { deleted: false, passive: false },
+            relations: ['extras'],
+        })
+
+        extras.forEach((extra) => {
+            extra.extras.forEach(async (item) => {
+                item.image_url = item.image ? await this.imageService.getImageUrlByType(item.image, 'extra') : null;
+            });
+        });
+    
         const categories = await this.categoryRepository
             .createQueryBuilder('category')
             .select([
                 'category.id', 'category.name', 'category.slug', 'category.order', 'category.color', 'category.textColor',
-                'product.id', 'product.name', 'product.slug', 'product.price', 'product.description', 'product.order', 'product.category', 'product.category_id', 'product.image_ids'
+                'product.id', 'product.name', 'product.slug', 'product.price', 'product.description', 'product.order', 'product.category', 'product.category_id', 'product.image_ids', 'product.extra'
             ])
             .leftJoin('category.products', 'product')
             .where('category.passive = :passive', { passive: 0 })
@@ -48,6 +64,7 @@ export class MenuService {
                 category.products = await Promise.all(
                     category.products.map(async (product) => {
                         product.images = await this.productService.getImages(product.image_ids); 
+                        product.extras = extras.filter((cat) => cat.extras.find((extra) => product.extra && product.extra.length > 0 && product.extra.includes(extra.id)));
                         delete product.image_ids; 
                         return product;
                     })
@@ -56,15 +73,6 @@ export class MenuService {
             })
         );
 
-        const extras = await this.extraRepository
-            .createQueryBuilder('extras')
-            .select(['extras.id', 'extras.name', 'extras.description', 'extras.price', 'extras.image', 'category.name'])
-            .leftJoinAndSelect('extras.category', 'category')
-            .where('extras.passive = :passive', { passive: 0 })
-            .andWhere('extras.deleted = :deleted', { deleted: 0 })
-            .orderBy('extras.id', 'ASC')
-            .getRawMany();
-    
         const { email, phone, facebook, instagram, linkedin } = await this.getContactData();
         
         const contacts = {
@@ -78,7 +86,7 @@ export class MenuService {
         const responseData = {
             status: true,
             items: formattedCategories || [],
-            extras: extras || [],
+            extraData: extras || [],
             contacts: contacts || [],
         };
 

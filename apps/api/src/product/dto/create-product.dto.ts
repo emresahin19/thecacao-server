@@ -33,7 +33,7 @@ export class CreateProductDto {
 
     @IsOptional()
     @IsArray()
-    @Transform(({ value }) => value.split(',').map(Number))
+    @Transform(({ value }) => JSON.parse(value).map(Number))
     image_ids?: number[];
 
     @IsOptional()
@@ -46,12 +46,12 @@ export class CreateProductDto {
 
     @IsOptional()
     @IsArray()
-    @Transform(({ value }) => value.split(',').map(Number))
+    @Transform(({ value }) => JSON.parse(value).map(Number))
     extra?: number[];
 
     @IsOptional()
     @IsArray()
-    @Transform(({ value }) => value.split(',')) 
+    @Transform(({ value }) => JSON.parse(value).map(Number)) 
     diy?: string[];
 
     @IsOptional()

@@ -3,7 +3,7 @@ export class CreateExtraDto {
     description?: string;
     category_id?: number;
     price?: number;
-    image?: string;
+    image?: number;
     passive?: boolean;
     deleted?: boolean;
 }
