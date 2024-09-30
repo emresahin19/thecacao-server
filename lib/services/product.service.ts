@@ -20,7 +20,7 @@ export const saveProduct = async (product: ProductDataProps) => {
             ? await axiosInstance.put(`/api/products/${id}`, formData)
             : await axiosInstance.post(`/api/products/create`, formData);
 
-        return response.data;
+        return response;
     } catch (error) {
         console.error('Error updating product:', error);
         throw error;
@@ -30,7 +30,7 @@ export const saveProduct = async (product: ProductDataProps) => {
 export const deleteProduct = async (id: string | number) => {
     try {
         const response = await axiosInstance.delete(`/api/products/${id}`);
-        return response.data;
+        return response;
     } catch (error) {
         console.error('Error deleting product:', error);
         throw error;

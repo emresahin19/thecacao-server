@@ -79,8 +79,8 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                 extra,
                 passive,
             };
-            const response = await saveProduct(_product);
-            const { status, message, item } = response;
+            const { data } = await saveProduct(_product);
+            const { status, message, item } = data;
 
             showToast({message, type: status ? 'success' : 'danger'});
             onSave && onSave(item);

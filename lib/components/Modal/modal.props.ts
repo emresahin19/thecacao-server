@@ -16,6 +16,7 @@ export interface ModalProps {
 }
 
 export interface DeleteModalProps {
+    id: string;
     onSave: () => void;
     onCancel: () => void;
     itemName?: string | null;

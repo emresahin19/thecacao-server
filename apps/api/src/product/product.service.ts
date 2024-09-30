@@ -156,6 +156,7 @@ export class ProductService {
     }
 
     async remove(id: number): Promise<void> {
+        console.log('Deleting product', id);
         await this.productRepository.delete(id);
         this.clearCache();
     }

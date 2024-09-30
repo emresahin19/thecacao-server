@@ -4,21 +4,22 @@ import Button from "../../Button/components/button.component";
 import DashDivider from "../../Layout/components/dash/divider.component";
 import { axiosInstance } from 'lib/utils';
 import { useToast } from 'lib/contexts';
+import { deleteProduct } from 'lib/services';
 
-const DeleteModal: React.FC<DeleteModalProps> = ({ onSave, onCancel, itemName = 'Ürünü', route, action }) => {
+const DeleteModal: React.FC<DeleteModalProps> = ({ id, onSave, onCancel, itemName = 'Ürün', route, action }) => {
 
     const { showToast, handleRequestError } = useToast();
 
     const handleConfirm = () => {
-        if(route) {
-            axiosInstance.delete(route)
-            .then(({data}) => {
-                const { status } = data;
-                if(status) {
+        if(id) {
+            deleteProduct(id)
+            .then((response) => {
+                const { status } = response;
+                if(status === 204) {
                     showToast({message: `${itemName} başarıyla silindi.`, type: 'success'});
                     onSave();
                 } else {
-                    handleRequestError(data);
+                    handleRequestError(response);
                 }
             }).catch(handleRequestError)
         } else {

@@ -223,7 +223,8 @@ const Table = <T extends { id: string | number; passive?: number }>({
                     component: 'DeleteModal',
                     data: { 
                         route: `/api/${apiRoute}/${id}`,
-                        action: 'delete'
+                        action: 'delete',
+                        id: id
                     }
                 })
             );

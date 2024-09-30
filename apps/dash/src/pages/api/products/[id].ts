@@ -66,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     error: `Method ${req.method} Not Allowed`,
                 });
         }
-        return res.status(200).json(response.data);
+        return res.status(response.status).json(response.data);
     } catch (err: any) {
         return handleErrorResponse(err, res);
     }
