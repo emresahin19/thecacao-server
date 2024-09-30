@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { placeholderProductImageBg } from '../../../constants';
-import { imageToCdnUrl } from '../../../utils';
+import { axiosInstance, imageToCdnUrl } from '../../../utils';
 import { TableProps } from '../table.props';
 import IconButton from '../../Button/components/icon-button.component';
 import Checkbox from '../../Input/components/checkbox.component';
@@ -17,15 +17,15 @@ import lodash from 'lodash';
 import { useDispatch } from 'react-redux';
 import { openModal, closeModal } from 'lib/store/modal.slice';
 import { useAppSelector } from 'lib/store';
-import { useToast } from '../../../contexts';
 import Button from '../../Button/components/button.component';
 
-const Table = <T extends { id: string | number; passive?: number }>({
+const Table = <T extends { id: string | number; passive?: number; [key: string]: any }>({
     columns,
     dataHook,
     className = '',
     editPage,
-    apiRoute
+    apiRoute,
+    onAction
 }: TableProps<T>) => {
     const router = useRouter();
     const { query, isReady } = router;
@@ -321,10 +321,12 @@ const Table = <T extends { id: string | number; passive?: number }>({
     );
 
     const handleSave = useCallback(
-        (itemId: string) => {
-            console.log('Saved item:', editValues[itemId]);
+        async (item: T, key: keyof T, value: any) => {
+            item[key] = value;
+            await onAction!(item, 'save');
+            mutateData();
         },
-        [editValues]
+        [editValues, onAction]
     );
 
     const handleCancel = useCallback((itemId: string) => {
@@ -422,7 +424,7 @@ const Table = <T extends { id: string | number; passive?: number }>({
                                     onChange={(e) =>
                                         onEditInputChange(e, String(item.id), String(col.key))
                                     }
-                                    onSave={() => handleSave(String(item.id))}
+                                    onSave={({value}) => handleSave(item, String(col.key), value)}
                                     onCancel={() => handleCancel(String(item.id))}
                                     options={col.options}
                                     render={

@@ -23,3 +23,11 @@ export interface DeleteModalProps {
     route?: string;
     action?: string;
 };
+
+export interface ActionModalProps {
+    item: any;
+    route: string;
+    action: string;
+    onSave: () => void;
+    onCancel: () => void;
+};

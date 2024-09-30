@@ -653,3 +653,12 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .multiple-image-input {
+        .sortable-item {
+            flex: 1 0 100%;
+            max-width: 100%;
+        }
+    }
+}

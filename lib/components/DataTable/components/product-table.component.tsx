@@ -6,9 +6,23 @@ import { useCategoryInputData } from '../../../hooks';
 import { dateToString, imageToCdnUrl } from '../../../utils';
 import { placeholderProductImageBg } from '../../../constants';
 import Table from "../../Table/components/table.component";
+import { convertToProductDataProps, saveProduct } from 'lib/services';
+import { useToast } from 'lib/contexts';
 
-const ProductTable = () => {
+const ProductTable: React.FC = () => {
     const { categories } = useCategoryInputData();
+    const { showToast } = useToast();
+
+    const handleAction = async (item: ProductProps, action: string) => {
+        const product = convertToProductDataProps(item);
+
+        if(action === 'save') {
+            const { data } = await saveProduct(product);
+            const { status, message } = data;
+            showToast({message, type: status ? 'success' : 'danger'});
+            return status;
+        }
+    }
 
     return (
         <div className='table'>
@@ -17,6 +31,7 @@ const ProductTable = () => {
                 dataHook={useProducts}
                 editPage="ProductEditCard"
                 apiRoute="products"
+                onAction={handleAction}
                 columns={[
                     {
                         key: 'images',

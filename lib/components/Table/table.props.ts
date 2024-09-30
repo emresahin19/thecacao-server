@@ -24,5 +24,5 @@ export interface TableProps<T> {
     className?: string;
     editPage?: string;
     apiRoute?: string;
+    onAction?: (item: T, action: 'save' | 'delete') => void;
 }
-  

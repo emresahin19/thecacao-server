@@ -1,5 +1,5 @@
 import { axiosInstance } from 'lib/utils';
-import { ProductDataProps } from 'lib/interfaces';
+import { ProductDataProps, ProductProps } from 'lib/interfaces';
 
 export const fetchProduct = async (id: string | number) => {
     try {
@@ -12,7 +12,7 @@ export const fetchProduct = async (id: string | number) => {
 }
 
 export const saveProduct = async (product: ProductDataProps) => {
-    const id = product.id || 0;
+    const id = product.id;
     const formData = prepareProductFormData(product);
     
     try {
@@ -27,6 +27,19 @@ export const saveProduct = async (product: ProductDataProps) => {
     }
 };
 
+export const saveAsField = async (product: ProductProps) => {
+    const _product: ProductDataProps = convertToProductDataProps(product);
+    const formData = prepareProductFormData(_product);
+    
+    try {
+        const response = await axiosInstance.put(`/api/products/${product.id}`, formData)
+        return response;
+    } catch (error) {
+        console.error('Error updating product:', error);
+        throw error;
+    }
+}
+
 export const deleteProduct = async (id: string | number) => {
     try {
         const response = await axiosInstance.delete(`/api/products/${id}`);
@@ -35,6 +48,20 @@ export const deleteProduct = async (id: string | number) => {
         console.error('Error deleting product:', error);
         throw error;
     }
+};
+
+export const convertToProductDataProps = (product: ProductProps): ProductDataProps => {
+    return {
+        id: product.id,
+        category_id: product.category_id ?? (product.category ? product.category.id : 0),
+        name: product.name,
+        price: product.price,
+        recipe: product.recipe,
+        description: product.description,
+        images: product.images,
+        extra: product.extra || [],
+        passive: product.passive,
+    };
 };
 
 export const prepareProductFormData = (product: ProductDataProps) => {

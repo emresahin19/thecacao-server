@@ -34,7 +34,7 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
                 <div className="extra-items">
                     {extras.map((item, index) => (
                         <div key={index} className="extra-item">
-                            {item && item.image_url && <img src={`${item.image_url}`} alt="" />}
+                            {item && item.image_url && <img draggable="false" src={`${item.image_url}`} alt="" />}
                             <div className="extra-item-content">
                                 <span className="extra-item-title">{item.name}</span>
                                 <span className="extra-item-price">{item.price}₺</span>
