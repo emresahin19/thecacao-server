@@ -81,7 +81,7 @@ export type ColorOptions =
     category_id?: number;
     recipe?: string;
     extra?: Array<number>;
-    extras: Array<ExtraDataProps>;
+    extras?: Array<ExtraDataProps>;
     images?: Array<ImageObject>;
     passive?: number;
     order: number;
