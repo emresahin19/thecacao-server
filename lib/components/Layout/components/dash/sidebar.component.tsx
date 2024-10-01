@@ -78,10 +78,15 @@ const Sidebar: React.FC = () => {
     useEffect(() => {
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = transition;
+            const wrapper = document.body;
             if (isOpen) {
                 sidebarRef.current.style.transform = 'translateX(0)';
+                wrapper!.classList.add('overflow-disabled');
+                wrapper!.style.top = `-${window.scrollY}px`;
             } else {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
+                wrapper!.classList.remove('overflow-disabled');
+                wrapper!.style.top = '';
             }
         }
     }, [isOpen]);
