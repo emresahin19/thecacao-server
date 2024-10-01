@@ -85,8 +85,10 @@ const Sidebar: React.FC = () => {
                 wrapper!.style.top = `-${window.scrollY}px`;
             } else {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
-                wrapper!.classList.remove('overflow-disabled');
-                wrapper!.style.top = '';
+                setTimeout(() => {
+                    wrapper!.classList.remove('overflow-disabled');
+                    wrapper!.style.top = '';
+                }, 300);
             }
         }
     }, [isOpen]);
