@@ -35,7 +35,8 @@
         border-width: 2px 1px 1px 1px;
         border-style: solid;
         animation: modal 0.3s ease;
-        height: 100vh;
+        min-height: 100vh;
+        height: fit-content;
 
         .modal-header {
             padding-top: 30px;
@@ -124,6 +125,7 @@
 
 #dash {
     .modal {
+        min-height: fit-content;
         .modal-header {
             display: none;
         }

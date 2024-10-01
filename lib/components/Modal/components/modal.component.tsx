@@ -14,22 +14,19 @@ const modalTop = 0;
 const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     const dispatch = useDispatch();
     const modalRef = useRef<HTMLDivElement>(null);
-    const modalContentRef = useRef<HTMLDivElement>(null);
     const scrollYRef = useRef<number>(0);
     const startYRef = useRef<number>(0); 
     const moveYRef = useRef<number>(0); 
-    const modalHeightRef = useRef<number>(0);
-    const windowHeightRef = useRef<number>(0);
-    const maxMoveYRef = useRef<number>(0);
+    const modalHeightRef = useRef<number>(0); // Store modalHeight
+    const windowHeightRef = useRef<number>(0); // Store window height
+    const maxMoveYRef = useRef<number>(0); // Store maxMoveY
 
     const [isInitialDataUsed, setIsInitialDataUsed] = useState<boolean>(!!initialData);
     const modalState = useSelector((state: RootState) => state.modal);
     const { show, component, data } = isInitialDataUsed && initialData ? initialData : modalState;
     const shouldHandleTouch = useRef(false);
-    const isDraggingDown = useRef(false); 
-    const startScrollTop = useRef<number>(0);
-    const touchStartTime = useRef<number>(0);
-
+    
+    // Modal open logic
     const handleOpen = useCallback(() => {
         const wrapper = document.body;
         if (wrapper) {
@@ -44,7 +41,8 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
         moveYRef.current = 0;
     }, []);
-
+    
+    // Modal close logic
     const handleClose = useCallback(() => {
         if (initialData) setIsInitialDataUsed(false);
         dispatch(closeModal());
@@ -61,6 +59,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, [initialData, onClose, dispatch]);
 
+    // Update modal height when content changes
     useEffect(() => {
         if (!modalRef.current) return;
 
@@ -73,6 +72,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         const resizeObserver = new ResizeObserver(handleResize);
         resizeObserver.observe(modalRef.current);
 
+        // Call it initially to set the values
         handleResize();
 
         return () => {
@@ -80,6 +80,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         };
     }, [component, data]);
 
+    // Open or close modal based on 'show' state
     useEffect(() => {
         if (show) {
             handleOpen();
@@ -90,10 +91,12 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
 
     const isInteractiveElement = (element: HTMLElement): boolean => {
         const interactiveTags = ['TEXTAREA', 'LABEL'];
+        // Aktif elementin tag'ı input türündeyse ya da draggable bir component içindeyse true döner
         if (interactiveTags.includes(element.tagName)) return true;
         if (element.closest('.interactive')) return true;
     
         const activeElement = document.activeElement as HTMLElement;
+        // Eğer aktif element input veya textarea ise ve modal içinde ise true döner
         if (
             activeElement &&
             (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
@@ -105,6 +108,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         return false;
     };
 
+    // Handle touch start event
     const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (isInteractiveElement(e.target as HTMLElement)) {
             shouldHandleTouch.current = false;
@@ -112,61 +116,42 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     
         shouldHandleTouch.current = true;
-        isDraggingDown.current = false;
         e.stopPropagation();
+        const currentY = Math.min(moveYRef.current, 0);
         const clientY = e.touches[0].clientY;
-        startYRef.current = clientY;
-        touchStartTime.current = Date.now();
-
-        if (modalContentRef.current) {
-            startScrollTop.current = modalContentRef.current.scrollTop;
+        startYRef.current = clientY - currentY;
+        if (modalRef.current) {
+            modalRef.current.style.transition = 'none';
+            modalRef.current.style.overflow = 'hidden';
         }
     }, []);
 
+    // Handle touch move event
     const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (!shouldHandleTouch.current) return;
         const currentY = e.touches[0].clientY;
         const diffY = currentY - startYRef.current;
 
-        if (diffY > 0) {
-            isDraggingDown.current = true;
-        } else {
-            isDraggingDown.current = false;
-        }
+        if (diffY < maxMoveYRef.current) return;
 
-        if (modalRef.current) {
-            const scrollTop = modalRef.current.scrollTop;
-            if (scrollTop > 0 || (scrollTop === 0 && diffY < 0)) {
-                return;
+        moveYRef.current = diffY;
+
+        if (diffY >= 0) {
+            const scale = 1 - Math.min(diffY / window.innerHeight, 0.15);
+            if (scale <= 0.85) {
+                const adjustedDiffY = diffY - (windowHeightRef.current * 0.15);
+                modalRef.current!.style.transform = `translateY(${adjustedDiffY}px) scale(0.85)`;
+            } else {
+                modalRef.current!.style.transform = `translateY(${modalTop}px) scale(${scale})`;
             }
-        }
-
-        if (isDraggingDown.current) {
-            e.preventDefault();
-            moveYRef.current = diffY;
-
-            if (diffY >= 0) {
-                const scale = 1 - Math.min(diffY / window.innerHeight, 0.15);
-                modalRef.current!.style.transition = '';
-                modalRef.current!.style.overflow = 'hidden';
-                if (scale <= 0.85) {
-                    const adjustedDiffY = diffY - (windowHeightRef.current * 0.15);
-                    modalRef.current!.style.transform = `translateY(${adjustedDiffY}px) scale(0.85)`;
-                } else {
-                    modalRef.current!.style.transform = `translateY(${modalTop}px) scale(${scale})`;
-                }
-            }
+        } else if (diffY < 0) {
+            modalRef.current!.style.transform = `translateY(${diffY}px) scale(1)`;
         }
     }, []);
 
+    // Handle touch end event
     const handleTouchEnd = useCallback(() => {
-        if (!shouldHandleTouch.current) return;
-
-        if (!isDraggingDown.current || (modalContentRef.current && modalContentRef.current.scrollTop > 0)) {
-            return;
-        }
-
-        const diffY = moveYRef.current;
+        const diffY = Math.max(moveYRef.current, maxMoveYRef.current);
         const limit = Math.min(windowHeightRef.current / 5, windowHeightRef.current * 0.85);
 
         if (diffY >= 0) {
@@ -181,14 +166,11 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
             }
         } else {
             if (modalRef.current) {
-                modalRef.current.style.transform = `translateY(${modalTop}px) scale(1)`;
+                modalRef.current.style.transform = `translateY(${diffY}px) scale(1)`;
                 modalRef.current.style.transition = 'transform 0.3s ease';
                 modalRef.current.style.overflow = '';
             }
         }
-
-        moveYRef.current = 0;
-        isDraggingDown.current = false;
     }, [handleClose]);
 
     const onSave = () => {
@@ -220,7 +202,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                             Close
                         </button>
                     </div>
-                    <div className="modal-body" ref={modalContentRef}>
+                    <div className="modal-body">
                         {component === 'ProductDetailCard' && data && <ProductDetailCard {...data} />}
                         {component === 'ProductEditCard' && <ProductEditCard {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'CategoryEditCard' && data && <CategoryEditCard {...data} onSave={onSave} onCancel={onCancel} />}
