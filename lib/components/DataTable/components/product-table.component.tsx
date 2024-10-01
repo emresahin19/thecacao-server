@@ -34,6 +34,13 @@ const ProductTable: React.FC = () => {
                 onAction={handleAction}
                 columns={[
                     {
+                        key: 'order',
+                        label: 'Sıra',
+                        sort: true,
+                        editable: true,
+                        filterType: 'number'
+                    },
+                    {
                         key: 'images',
                         label: 'Resim',
                         render: (product: ProductProps) => (

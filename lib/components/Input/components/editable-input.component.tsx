@@ -5,11 +5,15 @@ import MultipleSelectBox from './multiple-selectbox.component';
 
 const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = [], onChange, onSave, onCancel, type = 'text', render }) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [inputValue, setInputValue] = useState(value); // Input değerini yönetmek için
     const inputRef = useRef<HTMLInputElement>(null);
     const allowedTypes = useMemo(() => ['text', 'number', 'email', 'password'], []);
     const dateTypes = useMemo(() => ['date', 'time', 'datetime-local'], []);
     const isDate = useMemo(() => dateTypes.includes(type), [dateTypes, type]);
     const isChanged = useRef(false);
+
+    // Çift dokunuş algılama için değişkenler
+    const lastTapRef = useRef<number>(0);
 
     useEffect(() => {
         if (isEditing && inputRef.current) {
@@ -18,9 +22,10 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
         }
     }, [isEditing]);
 
-    const handleDoubleClick = useCallback(() => {
+    const handleActivateEditMode = useCallback(() => {
         if (isEditing) return;
         setIsEditing(true);
+        isChanged.current = false;
     }, [isEditing]);
 
     const handleBlur = useCallback(() => {
@@ -30,6 +35,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
     }, []);
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
         onChange(e);
         if (!isChanged.current && e.target.value !== value) {
             isChanged.current = true;
@@ -38,13 +44,16 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
 
     const handleSaveClick = useCallback(() => {
         setIsEditing(false);
-        onSave({ value });
-    }, [onSave, value]);
+        onSave({ value: inputValue });
+        isChanged.current = false;
+    }, [onSave, inputValue]);
 
     const handleCancelClick = useCallback(() => {
         setIsEditing(false);
+        setInputValue(value); // Değeri orijinal haline getir
         onCancel();
-    }, [onCancel]);
+        isChanged.current = false;
+    }, [onCancel, value]);
 
     const formatValueForInput = useCallback((value: string) => {
         if (type === 'datetime-local') {
@@ -54,7 +63,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
             const formattedValue = value.split('T')[0];
             return formattedValue;
         } else if (type === 'time') {
-            const formattedValue = value.split('T')[1].split('.')[0];
+            const formattedValue = value.split('T')[1]?.split('.')[0] || value;
             return formattedValue;
         }
         return value;
@@ -69,43 +78,55 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
         return value;
     }, [isDate, render, value]);
 
+    // Touch cihazlarda çift dokunuşu algılamak için
+    const handleTouchStart = useCallback(() => {
+        const now = Date.now();
+        const DOUBLE_TAP_DELAY = 300; // 300ms içinde yapılan çift dokunuşları algılar
+        if (lastTapRef.current && (now - lastTapRef.current) < DOUBLE_TAP_DELAY) {
+            handleActivateEditMode();
+            lastTapRef.current = 0; // Sıfırla
+        } else {
+            lastTapRef.current = now;
+        }
+    }, [handleActivateEditMode]);
+
     return (
         <div className="editable-input">
             {isEditing ? (
-                allowedTypes.includes(type) && (
+                (allowedTypes.includes(type) && (
                     <input
                         type={type}
                         ref={inputRef}
                         name={name}
-                        value={value}
+                        value={inputValue}
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
-                ) || isDate && (
+                )) || (isDate && (
                     <input
                         ref={inputRef}
                         type={type}
                         name={name}
-                        value={formatValueForInput(value)}
+                        value={formatValueForInput(inputValue)}
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
-                ) || (type === 'select' ) && (
+                )) || (type === 'select') && (
                     <MultipleSelectBox
                         label={``}
                         options={options}
                         name={name}
-                        value={value}
+                        value={inputValue}
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
                 ) || (
-                    <div className='input-value ellipsis td-item' onDoubleClick={handleDoubleClick}>
+                    <div className='input-value ellipsis td-item' onDoubleClick={handleActivateEditMode} onTouchStart={handleTouchStart}>
                         {value}
                     </div> 
                 )
             ) : (
-                <div className='input-value ellipsis td-item' onDoubleClick={handleDoubleClick}>
+                <div className='input-value ellipsis td-item' onDoubleClick={handleActivateEditMode} onTouchStart={handleTouchStart}>
                     {displayValue}
                 </div>
             )}
