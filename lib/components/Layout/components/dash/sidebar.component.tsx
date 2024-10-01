@@ -12,28 +12,20 @@ const transition = '0.3s cubic-bezier(.22,.61,.36,1) transform';
 const Sidebar: React.FC = () => {
     const sidebarRef = useRef<HTMLDivElement>(null);
     const startXRef = useRef<number>(0);
+    const isMovingRef = useRef<boolean>(false);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const isOpen = useAppSelector((state) => state.sidebar.isOpen);
     const router = useRouter();
 
-    const isInteractiveElement = useCallback((element: HTMLElement): boolean => {
-        const interactiveTags = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL'];
-        if (interactiveTags.includes(element.tagName)) return true;
-        if (element.closest('.interactive')) return true;
-        return false;
-    }, []);
-
     const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
-        const target = e.target as HTMLElement;
-        if (isInteractiveElement(target)) return;
-
         startXRef.current = e.touches[0].clientX;
+        isMovingRef.current = false;
         setIsDragging(true);
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = 'none';
         }
-    }, [isInteractiveElement]);
+    }, []);
 
     const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (!isDragging) return;
@@ -46,16 +38,12 @@ const Sidebar: React.FC = () => {
     }, [isDragging]);
 
     const handleTouchEnd = useCallback((e: TouchEvent<HTMLDivElement>) => {
-        if (!isDragging) return;
-        const target = e.target as HTMLElement;
-        if (isInteractiveElement(target)) return;
-
         const currentX = e.changedTouches[0].clientX;
         const diffX = currentX - startXRef.current;
-        setIsDragging(false);
 
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = transition;
+
             if (diffX < -50) {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
                 dispatch(closeSidebar());
@@ -64,10 +52,10 @@ const Sidebar: React.FC = () => {
                 dispatch(openSidebar());
             }
         }
-    }, [isDragging, isInteractiveElement, dispatch]);
+    }, [dispatch]);
 
     const isActive = useCallback((href: string = '') => {
-        if(href === '') return false;
+        if (href === '') return false;
         if (router.pathname === href) return true;
         return false;
     }, [router.pathname]);
@@ -80,13 +68,12 @@ const Sidebar: React.FC = () => {
                 href={href || '/'}
                 role="button"
                 aria-label={`${label} sayfasına git`}
-                onClick={() => dispatch(closeSidebar())}
             >
                 {label}
             </Link>
-        )
-    }
-    
+        );
+    };
+
     useEffect(() => {
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = transition;
@@ -95,18 +82,37 @@ const Sidebar: React.FC = () => {
                 sidebarRef.current.style.transform = 'translateX(0)';
                 wrapper.classList.add('overflow-disabled');
                 wrapper.style.top = `-${window.scrollY}px`;
+                setIsDragging(true);
             } else {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
                 setTimeout(() => {
                     wrapper.classList.remove('overflow-disabled');
                     wrapper.style.top = '';
+                    setIsDragging(false);
                 }, 300);
             }
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        const mainElement = document.querySelector('main'); // Ana DOM öğesini seçiyoruz
+        if (!mainElement) return;
+
+        if (isOpen) {
+            const handleClickOutside = () => {
+                dispatch(closeSidebar());
+            };
+
+            mainElement.addEventListener('click', handleClickOutside);
+
+            return () => {
+                mainElement.removeEventListener('click', handleClickOutside);
+            };
+        }
+    }, [isOpen, dispatch]);
+
     return (
-        <div 
+        <div
             className={`dash-sidebar ${isOpen ? 'open' : ''}`}
             ref={sidebarRef}
             onTouchStart={handleTouchStart}
@@ -124,10 +130,10 @@ const Sidebar: React.FC = () => {
                                 <span className="category-label">{route.label}</span>
                                 <ul className="category-list">
                                     {route.children.map((child: SidebarItemProps, childIndex: number) => (
-                                        <li key={`route-item-c${childIndex}`} >
-                                            <SidebarItem 
-                                                label={child.label} 
-                                                icon={child.icon} 
+                                        <li key={`route-item-c${childIndex}`}>
+                                            <SidebarItem
+                                                label={child.label}
+                                                icon={child.icon}
                                                 href={child.href}
                                             />
                                         </li>
@@ -135,10 +141,10 @@ const Sidebar: React.FC = () => {
                                 </ul>
                             </>
                         ) : (
-                            <SidebarItem 
-                                key={`route-item-c${index}`} 
-                                label={route.label} 
-                                icon={route.icon} 
+                            <SidebarItem
+                                key={`route-item-c${index}`}
+                                label={route.label}
+                                icon={route.icon}
                                 href={route.href}
                             />
                         )}
