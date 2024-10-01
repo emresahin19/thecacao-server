@@ -19,6 +19,15 @@
     border-radius: var(--sidebar-border-radius);
     overflow: auto;
     max-width: 1120px;
+
+    .table-header {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 1rem;
+        position: sticky;
+        left: 0;
+    }
     
     table {
         border-collapse: inherit;
@@ -199,39 +208,52 @@
     margin: 12px 0;
     justify-content: space-between;
     width: 100%;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     position: relative;
     .pagination-container {
         display: flex;
         gap: 4px;
-        width: calc(100% - 180px);
-        padding-right: 80px;
-        padding-bottom: 8px;
-        overflow: auto;
+        width: calc(100% - 100px);
         position: relative;
-        button {
+        button, .pagination-ellipsis {
             min-width: 32px;
             width: 32px;
             margin-right: 4px !important;
             padding: 0 !important;
             min-height: 32px;
             font-size: 14px !important;
+            text-align: center;
+        }
+        .pagination-ellipsis {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
         }
     }
-    &:after {  
-        content: "";
-        position: absolute;
-        width: 80px;
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, var(--table-color-2) 100%);
-        right: 100px;
-        z-index: 1;
-        display: flex;
-        height: 100%;
-    }
     small {
-        margin-right: 8px;
-        padding-bottom: 8px;
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        input {
+            border: none;
+            width: 20px;
+            height: 26px;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            text-align: right;
+            padding-right: 4px;
+            padding-bottom: 2px;
+        }
     }
 }
 
 // row'lar 3 renkli olacak
+
+@media (max-width: 768px) {
+    .table {
+        max-height: calc(100vh - var(--header-height) - 5 * var(--header-padding));
+    }
+}

@@ -510,7 +510,9 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
 
     return (
         <>
+        <div className="table-header">
             <Button onClick={() => handleRowAction('create', null)} label='Yeni Ekle' />
+        </div>
             <table className={className}>
                 <thead>
                     <tr>
