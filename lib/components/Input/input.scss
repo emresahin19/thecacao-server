@@ -406,6 +406,11 @@
     .switch {
         display: block;
         font-size: var(--font-size-md);
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .file-info {

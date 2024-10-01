@@ -61,7 +61,6 @@ const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, onChange, o
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            onClick={handleClick}
         >
             <input
                 type="file"
@@ -71,15 +70,16 @@ const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, onChange, o
                 draggable="false"
                 onChange={handleFileChange}
             />
-            {preview ? (
-                <div className="preview-container">
-                    <img src={preview} alt="Preview" className="preview" draggable="false" />
-                </div>
-            ) : (
-                <label htmlFor={`${name}-input`} className="switch">
-                    {label || 'Resmi sürükle veya yüklemek için tıkla'}
-                </label>
-            )}
+            <label htmlFor={`${name}-input`} className="switch">
+                {preview ? (
+                    <div className="preview-container">
+                        <img src={preview} alt="Preview" className="preview" draggable="false" />
+                    </div>
+                ) : (
+                    <>{label || 'Resmi sürükle veya yüklemek için tıkla'}</>
+                )}
+            </label>
+
             {!disablePreview && file && <div className="file-info">{file.name}</div>}
             {preview && <button type="button" className="close" onClick={handleRemove} />}
         </div>
