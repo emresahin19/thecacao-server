@@ -17,13 +17,14 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     const scrollYRef = useRef<number>(0);
     const startYRef = useRef<number>(0); 
     const moveYRef = useRef<number>(0); 
-    const modalHeightRef = useRef<number>(0); // Store modalHeight once
-    const windowHeightRef = useRef<number>(0); // Store window height once
-    const maxMoveYRef = useRef<number>(0); // Store maxMoveY once
+    const modalHeightRef = useRef<number>(0); // Store modalHeight
+    const windowHeightRef = useRef<number>(0); // Store window height
+    const maxMoveYRef = useRef<number>(0); // Store maxMoveY
 
     const [isInitialDataUsed, setIsInitialDataUsed] = useState<boolean>(!!initialData);
     const modalState = useSelector((state: RootState) => state.modal);
     const { show, component, data } = isInitialDataUsed && initialData ? initialData : modalState;
+    const shouldHandleTouch = useRef(false);
     
     // Modal open logic
     const handleOpen = useCallback(() => {
@@ -34,17 +35,13 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
             wrapper.classList.add('overflow-disabled');
         }
 
-        // Calculate constant values once when modal opens
         if (modalRef.current) {
-            modalHeightRef.current = modalRef.current.offsetHeight;
-            windowHeightRef.current = window.innerHeight;
-            maxMoveYRef.current = windowHeightRef.current - modalHeightRef.current - modalTop;
             modalRef.current.style.transform = `translateY(${modalTop}px) scale(1)`;
             modalRef.current.style.transition = 'transform 0.3s ease';
         }
         moveYRef.current = 0;
     }, []);
-
+    
     // Modal close logic
     const handleClose = useCallback(() => {
         if (initialData) setIsInitialDataUsed(false);
@@ -62,6 +59,27 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, [initialData, onClose, dispatch]);
 
+    // Update modal height when content changes
+    useEffect(() => {
+        if (!modalRef.current) return;
+
+        const handleResize = () => {
+            modalHeightRef.current = modalRef.current!.offsetHeight;
+            windowHeightRef.current = window.innerHeight;
+            maxMoveYRef.current = windowHeightRef.current - modalHeightRef.current - modalTop;
+        };
+
+        const resizeObserver = new ResizeObserver(handleResize);
+        resizeObserver.observe(modalRef.current);
+
+        // Call it initially to set the values
+        handleResize();
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, [component, data]);
+
     // Open or close modal based on 'show' state
     useEffect(() => {
         if (show) {
@@ -71,8 +89,28 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, [show]);
 
+    const isInteractiveElement = (element: HTMLElement): boolean => {
+        const interactiveTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'LABEL'];
+        if (interactiveTags.includes(element.tagName)) return true;
+        // You can add more conditions here if needed
+        return element.closest('.interactive') !== null;
+    };
+
     // Handle touch start event
     const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
+        const activeElement = document.activeElement as HTMLElement;
+        // Check if the focused element is an input or textarea inside the modal
+        if (
+            activeElement &&
+            (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
+            modalRef.current &&
+            modalRef.current.contains(activeElement)
+        ) {
+            shouldHandleTouch.current = false;
+            return;
+        }
+    
+        shouldHandleTouch.current = true;
         e.stopPropagation();
         const currentY = Math.min(moveYRef.current, 0);
         const clientY = e.touches[0].clientY;
@@ -85,9 +123,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
 
     // Handle touch move event
     const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
+        if (!shouldHandleTouch.current) return;
         const currentY = e.touches[0].clientY;
         const diffY = currentY - startYRef.current;
-        // const diffY = Math.max(currentY - startYRef.current, maxMoveYRef.current);
 
         if (diffY < maxMoveYRef.current) return;
 
@@ -129,7 +167,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
             }
         }
     }, [handleClose]);
-    
+
     const onSave = () => {
         handleClose();
     };
@@ -139,7 +177,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     };
 
     return (
-        <div className={`modal-container ${show && 'show' || ''}`}>
+        <div className={`modal-container ${show ? 'show' : ''}`}>
             {show && (
                 <div
                     className="modal"
@@ -154,9 +192,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                             className="close"
                             onClick={handleClose}
                             role="button"
-                            aria-label="Pencereyi Kapat"
+                            aria-label="Close Modal"
                         >
-                            Kapat
+                            Close
                         </button>
                     </div>
                     <div className="modal-body">

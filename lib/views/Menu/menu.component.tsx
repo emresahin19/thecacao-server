@@ -33,7 +33,7 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
     const modalRouteHandler = useCallback((path?: string) => {
         return path 
             ? router.push(`/menu/${path}`, undefined, { shallow: true, scroll: false })
-            : router.push('/menu', undefined, { shallow: true, scroll: false });
+            : router.asPath !== '/menu' && router.push('/menu', undefined, { shallow: true, scroll: false });
     }, [handleProductClick, router]);
 
     useEffect(() => {
