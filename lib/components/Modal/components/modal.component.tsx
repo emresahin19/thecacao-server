@@ -14,23 +14,22 @@ const modalTop = 0;
 const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     const dispatch = useDispatch();
     const modalRef = useRef<HTMLDivElement>(null);
-    const modalContentRef = useRef<HTMLDivElement>(null); // Modal içeriği için referans
+    const modalContentRef = useRef<HTMLDivElement>(null);
     const scrollYRef = useRef<number>(0);
     const startYRef = useRef<number>(0); 
     const moveYRef = useRef<number>(0); 
-    const modalHeightRef = useRef<number>(0); // Store modalHeight
-    const windowHeightRef = useRef<number>(0); // Store window height
-    const maxMoveYRef = useRef<number>(0); // Store maxMoveY
+    const modalHeightRef = useRef<number>(0);
+    const windowHeightRef = useRef<number>(0);
+    const maxMoveYRef = useRef<number>(0);
 
     const [isInitialDataUsed, setIsInitialDataUsed] = useState<boolean>(!!initialData);
     const modalState = useSelector((state: RootState) => state.modal);
     const { show, component, data } = isInitialDataUsed && initialData ? initialData : modalState;
     const shouldHandleTouch = useRef(false);
-    const isDraggingDown = useRef(false); // Kullanıcının aşağı doğru çekip çekmediğini takip etmek için
-    const startScrollTop = useRef<number>(0); // Touch start anındaki scroll pozisyonu
-    const touchStartTime = useRef<number>(0); // Touch start zamanı
+    const isDraggingDown = useRef(false); 
+    const startScrollTop = useRef<number>(0);
+    const touchStartTime = useRef<number>(0);
 
-    // Modal open logic
     const handleOpen = useCallback(() => {
         const wrapper = document.body;
         if (wrapper) {
@@ -46,7 +45,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         moveYRef.current = 0;
     }, []);
 
-    // Modal close logic
     const handleClose = useCallback(() => {
         if (initialData) setIsInitialDataUsed(false);
         dispatch(closeModal());
@@ -63,7 +61,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, [initialData, onClose, dispatch]);
 
-    // Update modal height when content changes
     useEffect(() => {
         if (!modalRef.current) return;
 
@@ -76,7 +73,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         const resizeObserver = new ResizeObserver(handleResize);
         resizeObserver.observe(modalRef.current);
 
-        // Call it initially to set the values
         handleResize();
 
         return () => {
@@ -84,7 +80,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         };
     }, [component, data]);
 
-    // Open or close modal based on 'show' state
     useEffect(() => {
         if (show) {
             handleOpen();
@@ -95,12 +90,10 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
 
     const isInteractiveElement = (element: HTMLElement): boolean => {
         const interactiveTags = ['TEXTAREA', 'LABEL'];
-        // Aktif elementin tag'ı input türündeyse ya da draggable bir component içindeyse true döner
         if (interactiveTags.includes(element.tagName)) return true;
         if (element.closest('.interactive')) return true;
     
         const activeElement = document.activeElement as HTMLElement;
-        // Eğer aktif element input veya textarea ise ve modal içinde ise true döner
         if (
             activeElement &&
             (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
@@ -112,7 +105,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         return false;
     };
 
-    // Handle touch start event
     const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (isInteractiveElement(e.target as HTMLElement)) {
             shouldHandleTouch.current = false;
@@ -126,7 +118,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         startYRef.current = clientY;
         touchStartTime.current = Date.now();
 
-        // Modal içeriğinin scroll pozisyonunu al
         if (modalContentRef.current) {
             startScrollTop.current = modalContentRef.current.scrollTop;
         }
@@ -168,11 +159,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, []);
 
-    // Handle touch end event
     const handleTouchEnd = useCallback(() => {
         if (!shouldHandleTouch.current) return;
 
-        // Eğer kullanıcı aşağı doğru çekmiyorsa veya modal içeriği scroll edilebiliyorsa, işlem yapma
         if (!isDraggingDown.current || (modalContentRef.current && modalContentRef.current.scrollTop > 0)) {
             return;
         }
@@ -198,7 +187,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
             }
         }
 
-        // Değerleri sıfırla
         moveYRef.current = 0;
         isDraggingDown.current = false;
     }, [handleClose]);
