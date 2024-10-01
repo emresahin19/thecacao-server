@@ -210,7 +210,13 @@
     width: 100%;
     align-items: flex-start;
     flex-direction: column;
-    position: relative;
+    position: sticky;
+    left: 0;
+    // bottom: 0;
+    // padding-top: 16px;
+    // border-top: 1px solid var(--table-color-1);
+    // background-color: var(--table-color-2);
+
     .pagination-container {
         display: flex;
         gap: 4px;
