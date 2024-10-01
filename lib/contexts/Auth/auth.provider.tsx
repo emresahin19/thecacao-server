@@ -3,20 +3,19 @@ import { useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { useAppDispatch, setUser, clearUser } from 'lib/store';
-import { fetchAuthenticatedUser, login, logout } from 'lib/services'; 
+import { login, logout } from 'lib/services'; 
 import { AuthContext } from './auth.context';
 import { AuthContextType } from './auth.props';
 import axios from 'axios';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [authenticated, setAuthenticated] = useState<boolean>(false);
+    const [redirectAfterLogin, setRedirectAfterLogin] = useState<string | null>(null); // Saklanacak route
     const router = useRouter();
     const dispatch = useAppDispatch();
 
-    // Auth durumu kontrol ediliyor
     const checkAuth = async () => {
         try {
-            // Next.js API'ye istek gönderiyoruz (Sunucu tarafında kimlik doğrulama)
             const { data } = await axios.get('/api/auth/user');
             if (data) {
                 setAuthenticated(true);
@@ -26,7 +25,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 }));
     
                 if (router.pathname === '/login') {
-                    router.push('/dashboard'); // Giriş başarılıysa dashboard'a yönlendirme
+                    const redirectTo = redirectAfterLogin || '/dashboard'; // Saklanan route'a veya dashboard'a yönlendir
+                    router.push(redirectTo);
                 }
             } else {
                 clearAuthenticatedUser();
@@ -37,21 +37,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     useEffect(() => {
-        checkAuth(); // Sayfa yüklendiğinde auth durumu kontrol ediliyor
+        // Eğer kullanıcı authenticated değilse ve login sayfasında değilse, geldiği yolu sakla
+        if (!authenticated && router.pathname !== '/login') {
+            setRedirectAfterLogin(router.asPath);
+        }
+
+        checkAuth();
     }, [router]);
 
-    // Auth durumunu temizleme
     const clearAuthenticatedUser = () => {
         setAuthenticated(false);
-        Cookies.remove('jwt'); // JWT token'ı cookie'den siliyoruz
-        Cookies.remove('authenticated'); // authenticated durumu da temizleniyor
+        Cookies.remove('jwt');
+        Cookies.remove('authenticated');
         dispatch(clearUser());
         if (router.pathname !== '/login') {
-            router.push('/login'); // Kullanıcı login sayfasına yönlendiriliyor
+            router.push('/login');
         }
     };
 
-    // Logout işlemi
     const handleLogout = async () => {
         try {
             const response = await logout();
@@ -65,22 +68,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    // Login işlemi (artık kullanıcı bilgileri login yanıtında geliyor)
     const handleLogin = async ({ email, password, remember = false }: LoginFormProps) => {
         try {
-            // Login isteği yapılır ve token alınır
             const response = await login({ email, password, remember });
             if (response.status === 200) {
                 Cookies.set('jwt', response.data.access_token, { sameSite: 'lax', path: '/' }); 
                 
-                // Kullanıcı bilgileri login yanıtından geliyor
                 const { user } = response.data;
                 setAuthenticated(true);
                 dispatch(setUser({
                     name: user.name,
                     email: user.email,
                 }));
-                router.push('/dashboard'); // Giriş başarılıysa dashboard'a yönlendirme
+
+                // Login başarılı olduğunda saklanan route varsa oraya yönlendir, yoksa dashboard'a yönlendir
+                const redirectTo = redirectAfterLogin || '/dashboard';
+                router.push(redirectTo);
+
                 return true;
             }
             return false;

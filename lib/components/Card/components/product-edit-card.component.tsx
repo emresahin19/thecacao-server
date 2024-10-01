@@ -9,12 +9,11 @@ import MultipleSelectBox from "../../Input/components/multiple-selectbox.compone
 
 import { useCategoryInputData, useExtraInputData, useProduct, useProducts } from "../../../hooks";
 import { ImageObject } from "../../../interfaces";
-import { useLoading, useToast } from "../../../contexts";
+import { useToast } from "../../../contexts";
 import { saveProduct } from '../../../services';
 import { AxiosError } from "axios";
 import { ProductDataProps, ProductEditProps } from "../card.props";
 import { productVariantHeight, productVariantWidth } from "lib/constants";
-import { useRouter } from "next/router";
 
 const emptyProduct: ProductDataProps = {
     id: 0,

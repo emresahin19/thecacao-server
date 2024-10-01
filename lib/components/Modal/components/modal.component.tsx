@@ -90,22 +90,27 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     }, [show]);
 
     const isInteractiveElement = (element: HTMLElement): boolean => {
-        const interactiveTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'LABEL'];
+        const interactiveTags = ['TEXTAREA', 'LABEL'];
+        // Aktif elementin tag'ı input türündeyse ya da draggable bir component içindeyse true döner
         if (interactiveTags.includes(element.tagName)) return true;
-        // You can add more conditions here if needed
-        return element.closest('.interactive') !== null;
+        if (element.closest('.interactive')) return true;
+    
+        const activeElement = document.activeElement as HTMLElement;
+        // Eğer aktif element input veya textarea ise ve modal içinde ise true döner
+        if (
+            activeElement &&
+            (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
+            modalRef.current?.contains(activeElement)
+        ) {
+            return true;
+        }
+    
+        return false;
     };
 
     // Handle touch start event
     const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
-        const activeElement = document.activeElement as HTMLElement;
-        // Check if the focused element is an input or textarea inside the modal
-        if (
-            activeElement &&
-            (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
-            modalRef.current &&
-            modalRef.current.contains(activeElement)
-        ) {
+        if (isInteractiveElement(e.target as HTMLElement)) {
             shouldHandleTouch.current = false;
             return;
         }

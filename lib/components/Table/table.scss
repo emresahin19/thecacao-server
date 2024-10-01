@@ -17,7 +17,7 @@
     background-color: var(--table-color-2);
     border: 1px solid var(--sidebar-hover-color);
     border-radius: var(--sidebar-border-radius);
-    overflow: scroll;
+    overflow: auto;
 
     table {
         border-collapse: inherit;

@@ -125,6 +125,7 @@
 
 #dash {
     .modal {
+        min-height: fit-content;
         .modal-header {
             display: none;
         }
