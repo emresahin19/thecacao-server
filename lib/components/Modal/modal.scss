@@ -103,7 +103,7 @@
     .modal-container {
         .modal {
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             overflow: auto;
             border-radius: 12px;
             border-color: #fff;
@@ -125,7 +125,6 @@
 
 #dash {
     .modal {
-        min-height: fit-content;
         .modal-header {
             display: none;
         }

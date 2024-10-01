@@ -175,13 +175,7 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
                 <div
                     className="sortable-item dragged-clone"
                     style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
                         transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
-                        pointerEvents: 'none',
-                        opacity: 0.8,
-                        zIndex: 1000,
                     }}
                 >
                     <ImageInput
