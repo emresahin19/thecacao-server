@@ -47,8 +47,8 @@ const ProductTable: React.FC = () => {
                             product.images && (
                                 <div className="avatar">
                                     {product.images.length > 0
-                                        ? <img src={imageToCdnUrl({ image: product.images[0]?.filename, type: 'table-avatar' })} />
-                                        : <img src={imageToCdnUrl({ image: placeholderProductImageBg, type: 'table-avatar' })} />
+                                        ? <img draggable="false" src={imageToCdnUrl({ image: product.images[0]?.filename, type: 'table-avatar' })} />
+                                        : <img draggable="false" src={imageToCdnUrl({ image: placeholderProductImageBg, type: 'table-avatar' })} />
                                     }
                                 </div>
                             ))
