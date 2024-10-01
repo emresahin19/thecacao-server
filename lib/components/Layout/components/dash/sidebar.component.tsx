@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, TouchEvent } from "react";
+import React, { useEffect, useState, useRef, TouchEvent, useCallback } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -14,18 +14,28 @@ const Sidebar: React.FC = () => {
     const startXRef = useRef<number>(0);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const isOpen = useAppSelector((state) => state.sidebar.isOpen); // Store selector for sidebar open state
+    const isOpen = useAppSelector((state) => state.sidebar.isOpen);
     const router = useRouter();
 
-    const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    const isInteractiveElement = useCallback((element: HTMLElement): boolean => {
+        const interactiveTags = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL'];
+        if (interactiveTags.includes(element.tagName)) return true;
+        if (element.closest('.interactive')) return true;
+        return false;
+    }, []);
+
+    const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement;
+        if (isInteractiveElement(target)) return;
+
         startXRef.current = e.touches[0].clientX;
         setIsDragging(true);
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = 'none';
         }
-    };
+    }, [isInteractiveElement]);
 
-    const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (!isDragging) return;
         const currentX = e.touches[0].clientX;
         const diffX = currentX - startXRef.current;
@@ -33,10 +43,13 @@ const Sidebar: React.FC = () => {
         if (diffX < 0 && sidebarRef.current) {
             sidebarRef.current.style.transform = `translateX(${diffX}px)`;
         }
-    };
+    }, [isDragging]);
 
-    const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
+    const handleTouchEnd = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (!isDragging) return;
+        const target = e.target as HTMLElement;
+        if (isInteractiveElement(target)) return;
+
         const currentX = e.changedTouches[0].clientX;
         const diffX = currentX - startXRef.current;
         setIsDragging(false);
@@ -45,19 +58,19 @@ const Sidebar: React.FC = () => {
             sidebarRef.current.style.transition = transition;
             if (diffX < -50) {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
-                dispatch(closeSidebar()); // Close sidebar when user drags far enough
+                dispatch(closeSidebar());
             } else {
                 sidebarRef.current.style.transform = 'translateX(0)';
-                dispatch(openSidebar()); // Open sidebar when drag is too small
+                dispatch(openSidebar());
             }
         }
-    };
+    }, [isDragging, isInteractiveElement, dispatch]);
 
-    const isActive = (href: string = '') => {
+    const isActive = useCallback((href: string = '') => {
         if(href === '') return false;
         if (router.pathname === href) return true;
         return false;
-    }
+    }, [router.pathname]);
 
     const SidebarItem: React.FC<SidebarItemProps> = ({ label, icon, href }) => {
         return (
@@ -67,9 +80,8 @@ const Sidebar: React.FC = () => {
                 href={href || '/'}
                 role="button"
                 aria-label={`${label} sayfasına git`}
-                // onClick={() => dispatch(closeSidebar())} // Close sidebar on item click
+                onClick={() => dispatch(closeSidebar())}
             >
-                {/* {icon && (<Icon className="list-icon" path={icon} size={20} />)} */}
                 {label}
             </Link>
         )
@@ -81,13 +93,13 @@ const Sidebar: React.FC = () => {
             const wrapper = document.body;
             if (isOpen) {
                 sidebarRef.current.style.transform = 'translateX(0)';
-                wrapper!.classList.add('overflow-disabled');
-                wrapper!.style.top = `-${window.scrollY}px`;
+                wrapper.classList.add('overflow-disabled');
+                wrapper.style.top = `-${window.scrollY}px`;
             } else {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
                 setTimeout(() => {
-                    wrapper!.classList.remove('overflow-disabled');
-                    wrapper!.style.top = '';
+                    wrapper.classList.remove('overflow-disabled');
+                    wrapper.style.top = '';
                 }, 300);
             }
         }

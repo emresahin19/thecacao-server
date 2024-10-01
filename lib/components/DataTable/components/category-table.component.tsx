@@ -86,7 +86,7 @@ const CategoryTable = () => {
                 onClick={() => handleRowAction('create', null)}
                 label='Yeni Kategori Ekle'
             />
-            <Table<CategoryProps>
+            {/* <Table<CategoryProps>
                 data={categories}
                 className="category-table"
                 columns={[
@@ -131,7 +131,7 @@ const CategoryTable = () => {
                 perPage={perPage}
                 totalItems={total}
                 loading={isLoading}
-            />
+            /> */}
         </div>
     );
 };
