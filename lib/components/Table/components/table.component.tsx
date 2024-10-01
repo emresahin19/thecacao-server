@@ -336,7 +336,6 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             return newEditValues;
         });
     }, []);
-
     const handlePageChange = useCallback((page: number) => {
         setTableState((prevState) => ({
             ...prevState,
@@ -345,9 +344,9 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         setSelectedItems({});
         setSelectAll(false);
     }, []);
-
-    const numPages = useMemo(() => Math.ceil(total / tableState.perPage), [total, tableState.perPage]);
-
+    
+    const numPages = useMemo(() => Math.ceil(total / tableState.perPage), [total, tableState.perPage, router]);
+    
     const { currentPage, perPage, orderBy, orderDirection, filters } = tableState;
 
     const renderedData = useMemo(() => {

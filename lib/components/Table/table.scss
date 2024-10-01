@@ -18,7 +18,8 @@
     border: 1px solid var(--sidebar-hover-color);
     border-radius: var(--sidebar-border-radius);
     overflow: auto;
-
+    max-width: 1120px;
+    
     table {
         border-collapse: inherit;
         text-align: left;

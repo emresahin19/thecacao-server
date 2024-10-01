@@ -568,7 +568,10 @@ body {
     margin-right: var(--header-padding);
     border-radius: var(--sidebar-border-radius);
     transition: var(--layout-transition);
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     &.open {
         width: calc(100% - var(--sidebar-width) - var(--header-padding) * 3);
         margin-left: auto;

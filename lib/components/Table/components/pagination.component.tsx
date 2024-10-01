@@ -7,16 +7,16 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPage
     const [pagesList, setPagesList] = useState<number[]>([]);
 
     useEffect(() => {
-        if (!loading && totalPages !== prevTotalPages.current) {
+        if (!loading) {
             setPagesList(Array.from({ length: totalPages }, (_, i) => i));
             prevTotalPages.current = totalPages;
         }
-    }, [totalPages, loading]);
+    }, [totalPages, loading, onPageChange, currentPage]);
 
     return (
         <div className="pagination">
             <div className="pagination-container">
-                {pagesList.map((page) => (
+                {pagesList.length > 0 && pagesList.map((page) => (
                     <Button
                         key={page}
                         property={`${page % 2 === 1 ? 'reverse' : 'default'}`}
@@ -34,4 +34,4 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPage
     );
 };
 
-export default React.memo(Pagination);
+export default Pagination

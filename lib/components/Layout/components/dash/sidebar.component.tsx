@@ -77,14 +77,16 @@ const Sidebar: React.FC = () => {
     useEffect(() => {
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = transition;
-            const wrapper = document.body;
+            const wrapper = window.innerWidth < 768 ? document.body : null;
             if (isOpen) {
                 sidebarRef.current.style.transform = 'translateX(0)';
+                if (!wrapper) return;
                 wrapper.classList.add('overflow-disabled');
                 wrapper.style.top = `-${window.scrollY}px`;
                 setIsDragging(true);
             } else {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
+                if (!wrapper) return;
                 setTimeout(() => {
                     wrapper.classList.remove('overflow-disabled');
                     wrapper.style.top = '';
@@ -95,10 +97,10 @@ const Sidebar: React.FC = () => {
     }, [isOpen]);
 
     useEffect(() => {
-        const mainElement = document.querySelector('main'); // Ana DOM öğesini seçiyoruz
-        if (!mainElement) return;
-
-        if (isOpen) {
+        if(typeof window !== 'undefined'){
+            const mainElement = window.innerWidth < 768 ? document.querySelector('main') : null;
+            if (!mainElement) return;
+    
             const handleClickOutside = () => {
                 dispatch(closeSidebar());
             };
