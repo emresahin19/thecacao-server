@@ -20,19 +20,16 @@ const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, onChange, o
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
         e.stopPropagation();
         setDragActive(true);
     };
 
     const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
     };
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
         const droppedFile = e.dataTransfer.files?.[0];
@@ -43,7 +40,8 @@ const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, onChange, o
         }
     };
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+        e.stopPropagation();
         const inputElement = document.getElementById(`${name}-input`) as HTMLInputElement;
         inputElement.click();
     };

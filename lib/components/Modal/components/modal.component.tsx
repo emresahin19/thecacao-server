@@ -90,13 +90,12 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
     }, [show]);
 
     const isInteractiveElement = (element: HTMLElement): boolean => {
-        const interactiveTags = ['TEXTAREA', 'LABEL'];
+        // const interactiveTags = ['TEXTAREA', 'LABEL'];
         // Aktif elementin tag'ı input türündeyse ya da draggable bir component içindeyse true döner
-        if (interactiveTags.includes(element.tagName)) return true;
+        // if (interactiveTags.includes(element.tagName)) return true;
         if (element.closest('.interactive')) return true;
     
         const activeElement = document.activeElement as HTMLElement;
-        // Eğer aktif element input veya textarea ise ve modal içinde ise true döner
         if (
             activeElement &&
             (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
@@ -108,7 +107,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         return false;
     };
 
-    // Handle touch start event
     const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (isInteractiveElement(e.target as HTMLElement)) {
             shouldHandleTouch.current = false;
@@ -126,7 +124,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, []);
 
-    // Handle touch move event
     const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (!shouldHandleTouch.current) return;
         const currentY = e.touches[0].clientY;
@@ -149,7 +146,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, []);
 
-    // Handle touch end event
     const handleTouchEnd = useCallback(() => {
         const diffY = Math.max(moveYRef.current, maxMoveYRef.current);
         const limit = Math.min(windowHeightRef.current / 5, windowHeightRef.current * 0.85);
