@@ -23,9 +23,35 @@ export interface ColumnProps<T> {
   
 export interface TableProps<T> {
     columns: Array<ColumnProps<T>>;
-    dataHook: (filterParams: string) => { data: T[]; total: number; isLoading: boolean; isError: any; mutateData: () => void };
+    apiRoute: string;
     className?: string;
     editPage?: string;
-    apiRoute?: string;
     onAction?: (item: T, action: 'save' | 'delete') => void;
 }
+
+export interface TableViewProps<T> {
+    data: T[];
+    columns: Array<ColumnProps<T>>;
+    className?: string;
+    selectedItems: { [key: string]: boolean };
+    selectAll: boolean;
+    orderBy: string;
+    orderDirection: string;
+    filters: { [key: string]: any };
+    handleSelectItem: (e: React.ChangeEvent<HTMLInputElement>, item: T | null) => void;
+    handleSelectAllItems: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFilterChange: (key: string, value: any) => void;
+    handleSort: (key: string) => void;
+    handleRowAction: (action: string, item: T | null) => void;
+    editValues: { [key: string]: any };
+    onEditInputChange: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        itemId: string,
+        key: string
+    ) => void;
+    handleSave: (item: T, key: keyof T, value: any) => void;
+    handleCancel: (itemId: string) => void;
+    isLoading: boolean;
+    perPage: number;
+}
+  

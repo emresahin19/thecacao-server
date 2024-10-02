@@ -1,9 +1,9 @@
 import useSWR, { mutate } from 'swr';
 import { fetcher } from 'lib/utils';
 
-export const useProducts = (params: string) => {
+export const useTableData = (params: string) => {
     const { data, error }: {data: any, error: any} = useSWR(
-        () => (params !== '' ? `/api/products${params}` : null),
+        () => (params !== '' ? `/api/${params}` : null),
         fetcher
     );
     const { items, total, currentPage, lastPage } = data?.data ?? {};
@@ -14,6 +14,6 @@ export const useProducts = (params: string) => {
         lastPage,
         isLoading: !error && !data,
         isError: error,
-        mutateData: () => mutate(`/api/products${params}`),
+        mutateData: () => mutate(`/api/${params}`),
     };
 };

@@ -1,27 +1,19 @@
 "use client";
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { placeholderProductImageBg } from '../../../constants';
-import { imageToCdnUrl } from '../../../utils';
 import { TableProps } from '../table.props';
-import IconButton from '../../Button/components/icon-button.component';
-import Checkbox from '../../Input/components/checkbox.component';
-import Input from '../../Input/components/input.component';
 import Pagination from '../../Table/components/pagination.component';
-import EditableInput from '../../Input/components/editable-input.component';
-import CiEdit from 'lib/assets/icon/svg/CiEdit.svg';
-import CiTrash from 'lib/assets/icon/svg/CiTrash.svg';
-import SortButton from './sort-button.component';
-import MultipleSelectBox from 'lib/components/Input/components/multiple-selectbox.component';
 import { useRouter } from 'next/router';
 import lodash from 'lodash';
 import { useDispatch } from 'react-redux';
 import { openModal, closeModal } from 'lib/store/modal.slice';
 import { useAppSelector } from 'lib/store';
 import Button from '../../Button/components/button.component';
+import TableView from './table-view.component';
+import ListTableView from './list-table-view.component';
+import { useTableData } from '../../../hooks';
 
 const Table = <T extends { id: string | number; passive?: number; [key: string]: any }>({
     columns,
-    dataHook,
     className = '',
     editPage,
     apiRoute,
@@ -58,7 +50,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         [columns]
     );
 
-    const { data = [], total = 0, isLoading = false, isError, mutateData } = dataHook(filterParams);
+    const { data = [], total = 0, isLoading = false, isError, mutateData } = useTableData(filterParams);
 
     const updateQuery = useCallback(
         (newParams: { [key: string]: any }) => {
@@ -186,7 +178,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             const filterParamsObj = { ...newQuery };
             delete filterParamsObj.action;
             delete filterParamsObj.id;
-            const filterAsString = `?${new URLSearchParams(filterParamsObj).toString()}`;
+            const filterAsString = `${apiRoute}?${new URLSearchParams(filterParamsObj).toString()}`;
         
             setFilterParams(filterAsString);
         }, 300);
@@ -271,10 +263,13 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const checked = e.target.checked;
             setSelectAll(checked);
-            const newSelectedItems = data.reduce((acc, item) => {
-                acc[String(item.id)] = checked;
-                return acc;
-            }, {} as { [key: string]: boolean });
+            const newSelectedItems = data.reduce(
+                (acc: any, item: { id: any }) => ({
+                    ...acc,
+                    [String(item.id)]: checked
+                }),
+                {}
+            );
             setSelectedItems(newSelectedItems);
         },
         [data]
@@ -360,259 +355,32 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     
     const { currentPage, perPage, orderBy, orderDirection, filters } = tableState;
 
-    const renderedData = useMemo(() => {
-        if (isLoading) {
-            return Array.from({ length: perPage }, (_, i) => (
-                <tr key={i}>
-                    <td>
-                        <Checkbox
-                            id='selectAll'
-                            name='checkboxes'
-                            onChange={(e) => handleSelectItem(e, null)}
-                        ></Checkbox>
-                    </td>
-                    {columns.map((col, colIndex) => (
-                        <td key={colIndex} data-label={col.label}>
-                            {String(col.key).includes('image') ? (
-                                <div className='avatar'>
-                                    <img
-                                        src={imageToCdnUrl({
-                                            image: placeholderProductImageBg,
-                                            type: 'table-avatar'
-                                        })}
-                                    />
-                                </div>
-                            ) : (
-                                <div className='avatar'>
-                                    <div className='' />
-                                </div>
-                            )}
-                        </td>
-                    ))}
-                    <td>
-                        <div className='button-area'>
-                            <IconButton
-                                onClick={() => handleRowAction('view', null)}
-                                ariaLabel={'Düzenle'}
-                                width={24}
-                            >
-                                <CiEdit />
-                            </IconButton>
-                            <IconButton
-                                onClick={() => handleRowAction('delete', null)}
-                                ariaLabel={'Sil'}
-                                width={24}
-                            >
-                                <CiTrash />
-                            </IconButton>
-                        </div>
-                    </td>
-                </tr>
-            ));
-        }
-
-        return data.map((item, index) => (
-            <tr key={item.id} className={item && item.passive ? '' : ''}>
-                <td>
-                    <Checkbox
-                        id='selectAll'
-                        name='checkboxes'
-                        onChange={(e) => handleSelectItem(e, item)}
-                        checked={selectedItems[String(item.id)]}
-                    ></Checkbox>
-                </td>
-                {columns.map((col) => (
-                    <td key={String(col.key)} data-label={col.label}>
-                        {col.editable && (col.filterType || col.type === 'color')
-                            ? (
-                                <EditableInput
-                                    name={`${String(col.key)}_${index}`}
-                                    type={col.filterType || col.type}
-                                    value={editValues[item.id]?.[col.key] || (item as any)[col.key]}
-                                    onChange={(e) => onEditInputChange(e, String(item.id), String(col.key))}
-                                    onSave={({value}) => handleSave(item, String(col.key), value)}
-                                    onCancel={() => handleCancel(String(item.id))}
-                                    options={col.options}
-                                    render={
-                                        col.render &&
-                                        col.render({
-                                            ...item,
-                                            [col.key]:
-                                                editValues[item.id]?.[col.key] ||
-                                                (item as any)[col.key]
-                                        })
-                                    }
-                                />
-                            ) : (
-                                <div className='ellipsis td-item'>
-                                    {col.render ? col.render(item) : (item as any)[col.key]}
-                                </div>
-                            )}
-                    </td>
-                ))}
-                <td>
-                    <div className='button-area'>
-                        <IconButton
-                            className='text-success'
-                            onClick={() => handleRowAction('view', item)}
-                            ariaLabel={'Düzenle'}
-                            width={24}
-                        >
-                            <CiEdit />
-                        </IconButton>
-                        <IconButton
-                            className='text-danger'
-                            onClick={() => handleRowAction('delete', item)}
-                            ariaLabel={'Sil'}
-                            width={24}
-                        >
-                            <CiTrash />
-                        </IconButton>
-                    </div>
-                </td>
-            </tr>
-        ));
-    }, [
-        data,
-        isLoading,
-        perPage,
-        columns,
-        handleSelectItem,
-        selectedItems,
-        editValues,
-        onEditInputChange,
-        handleSave,
-        handleCancel,
-        handleRowAction,
-        mutateData,
-    ]);
-
     return (
         <>
-        <div className="table-header">
-            <Button onClick={() => handleRowAction('create', null)} label='Yeni Ekle' />
-        </div>
-            <table className={className}>
-                <thead>
-                    <tr>
-                        <th>
-                            <Checkbox
-                                id='selectAll'
-                                name='checkboxes'
-                                onChange={handleSelectAllItems}
-                                checked={selectAll}
-                            ></Checkbox>
-                        </th>
-                        {columns.map((col) => (
-                            <th key={`${String(col.key)}-filter`}>
-                                
-                                {col.filterType 
-                                    ? (
-                                        <div className='th-filter'>
-                                            {col.sort && (
-                                                <span
-                                                    role='button'
-                                                    onClick={() => handleSort(col.key as string)}
-                                                >
-                                                    <SortButton
-                                                        direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
-                                                    />
-                                                </span>
-                                            )}
-                                            {col.filterType === 'text' && (
-                                                <Input
-                                                    type='text'
-                                                    name={`${col.label}`}
-                                                    label={`${col.label}`}
-                                                    value={filters[col.key as string] || ''}
-                                                    onChange={(e) =>
-                                                        handleFilterChange(
-                                                            String(col.key),
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                            )}
-                                            {col.filterType === 'number' && (
-                                                <Input
-                                                    type='number'
-                                                    name={`${col.label}`}
-                                                    label={`${col.label}`}
-                                                    value={filters[col.key as string] || ''}
-                                                    onChange={(e) =>
-                                                        handleFilterChange(
-                                                            String(col.key),
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                            )}
-                                            {col.filterType === 'select' && col.options && (
-                                                <MultipleSelectBox
-                                                    label={`${col.label} Seç`}
-                                                    options={col.options}
-                                                    name={`${col.label}`}
-                                                    value={filters[col.key as string] || ''}
-                                                    onChange={(e: any) =>
-                                                        handleFilterChange(
-                                                            String(col.key),
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                            )}
-                                            {col.filterType === 'date' && (
-                                                <Input
-                                                    type='date'
-                                                    name={`${col.label}`}
-                                                    label={`${col.label}`}
-                                                    value={filters[col.key as string] || ''}
-                                                    onChange={(e) =>
-                                                        handleFilterChange(
-                                                            String(col.key),
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                            )}
-                                            {col.filterType === 'datetime' && (
-                                                <Input
-                                                    type='datetime-local'
-                                                    name={`${col.label}`}
-                                                    label={`${col.label}`}
-                                                    value={filters[col.key as string] || ''}
-                                                    onChange={(e) =>
-                                                        handleFilterChange(
-                                                            String(col.key),
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className='th-item'>
-                                            {col.label}
-                                            {col.sort && (
-                                                <span
-                                                    role='button'
-                                                    onClick={() => handleSort(col.key as string)}
-                                                >
-                                                    <SortButton
-                                                        direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
-                                                    />
-                                                </span>
-                                            )}
-                                        </div>
-                                    )
-                                }
-                            </th>
-                        ))}
-                        <th />
-                    </tr>
-                </thead>
-                <tbody>{renderedData}</tbody>
-            </table>
+            <div className="table-header">
+                <Button onClick={() => handleRowAction('create', null)} label="Yeni Ekle" />
+            </div>
+            <ListTableView
+                className={className}
+                data={data}
+                columns={columns}
+                selectedItems={selectedItems}
+                selectAll={selectAll}
+                orderBy={orderBy}
+                orderDirection={orderDirection}
+                filters={filters}
+                handleSelectItem={handleSelectItem}
+                handleSelectAllItems={handleSelectAllItems}
+                handleFilterChange={handleFilterChange}
+                handleSort={handleSort}
+                handleRowAction={handleRowAction}
+                editValues={editValues}
+                onEditInputChange={onEditInputChange}
+                handleSave={handleSave}
+                handleCancel={handleCancel}
+                isLoading={isLoading}
+                perPage={perPage}
+            />
             <Pagination
                 totalPages={numPages}
                 currentPage={currentPage}

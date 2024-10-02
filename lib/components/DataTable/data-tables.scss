@@ -1,35 +1,52 @@
 
 .product-table {
-    thead {
-        tr {
-            th {
-                &:nth-child(1) {
-                    width: 5%;
-                }
-                &:nth-child(2) {
-                    width: 10%;
-                }
-                &:nth-child(3) {
-                    width: 5%;
-                }
-                &:nth-child(4) {
-                    width: 20%;
-                }
-                &:nth-child(5) {
-                    width: 25%;
-                    min-width: 140px;
-                }
-                &:nth-child(6) {
-                    width: 15%;
-                    min-width: 120px;
-                }
-                &:nth-child(7) {
-                    width: 15%;
-                }
-                &:nth-child(8) {
-                    width: 5%;
-                }
-            }
+    .lt-thead .lt-thead-tr .lt-cell,
+    .lt-tbody .lt-tbody-tr .lt-cell,
+    thead tr th {
+        flex: 1 1 auto;
+    
+        &:nth-child(1) {
+            flex: 0 0 5%;
+            max-width: 5%;
+        }
+    
+        &:nth-child(2) {
+            flex: 0 0 8%;
+            max-width: 8%;
+        }
+    
+        &:nth-child(3) {
+            flex: 0 1 7%;
+            max-width: 7%;
+            min-width: 100px;
+        }
+    
+        &:nth-child(4) {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    
+        &:nth-child(5) {
+            flex: 0 1 23%; 
+            max-width: 23%;
+            min-width: 150px;
+        }
+    
+        &:nth-child(6) {
+            flex: 0 1 15%;
+            max-width: 15%;
+            min-width: 120px; 
+        }
+    
+        &:nth-child(7) {
+            flex: 0 1 15%; 
+            max-width: 15%;
+            min-width: 170px;
+        }
+    
+        &:nth-child(8) {
+            flex: 0 0 8%;
+            max-width: 8%;
         }
     }
 }

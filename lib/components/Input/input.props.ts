@@ -31,7 +31,7 @@ export interface EditableInputProps {
     onSave: ({value}: {value: string}) => void;
     onCancel: () => void;
     options?: OptionsProps[];
-    type?: InputType;
+    type: InputType;
     render?: React.ReactNode;
 }
 

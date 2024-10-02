@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { ProductProps } from '../../../interfaces';
-import { useProducts } from '../../../hooks';
+import { useProducts, useTableData } from '../../../hooks';
 import { useCategoryInputData } from '../../../hooks';
 import { dateToString, imageToCdnUrl } from '../../../utils';
 import { placeholderProductImageBg } from '../../../constants';
@@ -28,7 +28,6 @@ const ProductTable: React.FC = () => {
         <div className='table'>
             <Table<ProductProps>
                 className="product-table"
-                dataHook={useProducts}
                 editPage="ProductEditCard"
                 apiRoute="products"
                 onAction={handleAction}

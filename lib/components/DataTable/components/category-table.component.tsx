@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import { CategoryProps } from '../../../interfaces';
-import { useCategories } from '../../../hooks';
 import Table from "../../Table/components/table.component";
 import { useToast } from 'lib/contexts';
 import { saveCategory } from 'lib/services';
@@ -22,7 +21,6 @@ const CategoryTable: React.FC = () => {
         <div className='table'>
             <Table<CategoryProps>
                 className="category-table"
-                dataHook={useCategories}
                 editPage="CategoryEditCard"
                 apiRoute="categories"
                 onAction={handleAction}

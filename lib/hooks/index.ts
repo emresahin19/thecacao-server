@@ -4,6 +4,7 @@ import { useCategory } from "./use-category.hook";
 import { useProducts } from "./use-products.hook";
 import { useProduct } from "./use-product.hook";
 import { useExtraInputData } from "./use-extra-input-data.hook";
+import { useTableData } from './use-table-data.hook';
 
 export {
     useCategories,
@@ -11,5 +12,6 @@ export {
     useCategory,
     useProducts,
     useProduct,
-    useExtraInputData
+    useExtraInputData,
+    useTableData,
 }
