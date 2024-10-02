@@ -1,122 +1,63 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { CategoryProps } from '../../../interfaces';
-import { useToast } from '../../../contexts';
 import { useCategories } from '../../../hooks';
-
 import Table from "../../Table/components/table.component";
-import Button from "../../Button/components/button.component";
-import DeleteModal from "../../Modal/components/delete-modal.component";
-import CategoryEditCard from "../../Card/components/category-edit-card.component";
+import { useToast } from 'lib/contexts';
+import { saveCategory } from 'lib/services';
 
-import { deleteCategory } from '../../../services';
+const CategoryTable: React.FC = () => {
+    const { showToast } = useToast();
 
-const CategoryTable = () => {
-    const perPage = 10;
-    const [currentPage, setCurrentPage] = useState(0);
-    const [filters, setFilters] = useState<{ [key: string]: any }>({});
-    const { categories, total, isLoading, isError, mutateCategories } = useCategories(currentPage + 1, perPage, filters);
-    const { showToast, handleRequestError } = useToast();
-
-    const handleFilterChange = (newFilters: { [key: string]: any }) => {
-        setFilters(newFilters);
-    };
-
-    useEffect(() => {
-        if (isError) {
-            handleRequestError(isError);
+    const handleAction = async (item: CategoryProps, action: string) => {
+        if(action === 'save') {
+            const { data } = await saveCategory(item);
+            const { status, message } = data;
+            showToast({message, type: status ? 'success' : 'danger'});
+            return status;
         }
-    }, [isError]);
-
-    const handleRowAction = (action: string, item: CategoryProps | null) => {
-        const { id, name } = item || { id: 0 };
-        
-        if (action === 'view' || action === 'create') {
-            // handleShow({
-            //     show: true,
-            //     component: (
-            //         <CategoryEditCard 
-            //             id={id}
-            //             onSave={onCategorySave} 
-            //             onCancel={onCancel} 
-            //         />
-            //     ),
-            // });
-        // } else if (action === 'delete') {
-        //     handleShow({
-        //         show: true,
-        //         component: (
-        //             <DeleteModal
-        //                 itemName={name}
-        //                 onConfirm={() => handleDelete(id)} 
-        //                 onCancel={onCancel}
-        //             />
-        //         ),
-        //     });
-        }
-    };
-
-    const onCategorySave = async (status: boolean) => {
-        if (status) {
-            // handleShow({ show: false });
-            mutateCategories();
-        }
-    };
-
-    const handleDelete = async (id: number | string) => {
-        try {
-            const response = await deleteCategory(id);
-            const { status, message } = response;
-            showToast({ message, type: status ? 'success' : 'danger' });
-        } catch (error) {
-            handleRequestError(error);
-        } finally {
-            mutateCategories();
-            // handleShow({ show: false });
-        }
-    };
-
-    const onCancel = () => {
-        // handleShow({ show: false });
-    };
+    }
 
     return (
         <div className='table'>
-            <Button
-                onClick={() => handleRowAction('create', null)}
-                label='Yeni Kategori Ekle'
-            />
-            {/* <Table<CategoryProps>
-                data={categories}
+            <Table<CategoryProps>
                 className="category-table"
+                dataHook={useCategories}
+                editPage="CategoryEditCard"
+                apiRoute="categories"
+                onAction={handleAction}
                 columns={[
-                    { 
-                        key: 'name', 
-                        label: 'Kategori İsmi', 
-                        editable: true, 
-                        filterType: 'text' 
-                    },
                     { 
                         key: 'order', 
                         label: 'Sıra', 
                         editable: true, 
+                        sort: true,
+                        defaultSort: 'ASC',
                         filterType: 'number' 
+                    },
+                    { 
+                        key: 'name', 
+                        label: 'Kategori İsmi', 
+                        editable: true, 
+                        sort: true,
+                        filterType: 'text' 
                     },
                     {
                         key: 'color',
                         label: 'Arkaplan',
-                        editable: false,
+                        editable: true,
                         type: 'color',
                     },
                     {
                         key: 'textColor',
                         label: 'Yazı',
-                        editable: false,
+                        editable: true,
                         type: 'color',
                     },
                     { 
                         key: 'updated_at', 
                         label: 'Son Düzenleme', 
+                        sort: true,
                         editable: true, 
                         filterType: 'date', 
                         render: (category: CategoryProps) => (
@@ -124,14 +65,7 @@ const CategoryTable = () => {
                         )
                     }
                 ]}
-                onRowAction={handleRowAction}
-                onPageChange={setCurrentPage}
-                onFilterChange={handleFilterChange}
-                currentPage={currentPage}
-                perPage={perPage}
-                totalItems={total}
-                loading={isLoading}
-            /> */}
+            />
         </div>
     );
 };

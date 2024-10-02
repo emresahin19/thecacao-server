@@ -16,6 +16,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
     const [passive, setPassive] = useState<number>(0);
     const [color, setColor] = useState<string>('');
     const [textColor, setTextColor] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     const { category, isError, isLoading, mutateCategory } = useCategory(id);
     const { showToast, handleRequestError } = useToast();
@@ -39,6 +40,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
 
     const handleSave = async () => {
         try {
+            setLoading(true);
             const _category: CategoryDataProps = {
                 id,
                 name,
@@ -47,8 +49,8 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                 color,
                 textColor,
             };
-            const response = await saveCategory(_category);
-            const { status, message } = response;
+            const { data } = await saveCategory(_category);
+            const { status, message, item } = data;
 
             showToast({message, type: status ? 'success' : 'danger'});
             onSave && onSave(status);
@@ -56,6 +58,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
             handleRequestError(error);
         } finally {
             mutateCategory();
+            setLoading(false);
         }
     };
     
@@ -148,6 +151,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                     property="reverse" 
                     onClick={handleSave}
                     color2="success"
+                    loading={loading}
                 >
                     Kaydet
                 </Button>

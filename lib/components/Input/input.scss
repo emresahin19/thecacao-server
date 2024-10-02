@@ -63,7 +63,7 @@
 
         &[type="color"] {
             width: 100%;
-            height: 36px;
+            height: 47px;
             padding: 0; 
             border-radius: var(--border-radius);
             border: var(--border-width-md) solid var(--input-border-color);
@@ -621,6 +621,20 @@
         &[type="date"] {
             min-width: 120px;
             padding-right: 24px;
+        }
+    }
+    .editable-color-input {
+        width: calc(100% - 48px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px !important;
+        input {
+            width: 36px !important;
+            height: 24px;
+            border-radius: 5px;
+            padding: 0 !important;
+            border-color: transparent !important;
         }
     }
     .select-box {

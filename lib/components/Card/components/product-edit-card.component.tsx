@@ -82,7 +82,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
             const { status, message, item } = data;
 
             showToast({message, type: status ? 'success' : 'danger'});
-            onSave && onSave(item);
+            onSave && onSave(status);
         } catch (error: AxiosError | any) {
             handleRequestError(error);
         } finally {

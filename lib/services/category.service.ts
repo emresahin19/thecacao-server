@@ -19,7 +19,7 @@ export const saveCategory = async (category: CategoryDataProps) => {
             ? await axiosInstance.put(`/api/categories/${id}`, category)
             : await axiosInstance.post(`/api/categories`, category);
 
-        return response.data;
+        return response;
     } catch (error) {
         console.error('Error saving category:', error);
         throw error;
@@ -29,7 +29,7 @@ export const saveCategory = async (category: CategoryDataProps) => {
 export const deleteCategory = async (id: string | number) => {
     try {
         const response = await axiosInstance.delete(`/api/categories/${id}`);
-        return response.data;
+        return response;
     } catch (error) {
         console.error('Error deleting category:', error);
         throw error;

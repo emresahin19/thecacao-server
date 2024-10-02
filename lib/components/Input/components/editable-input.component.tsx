@@ -5,18 +5,17 @@ import MultipleSelectBox from './multiple-selectbox.component';
 
 const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = [], onChange, onSave, onCancel, type = 'text', render }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [inputValue, setInputValue] = useState(value); // Input değerini yönetmek için
+    const [inputValue, setInputValue] = useState(value);
     const inputRef = useRef<HTMLInputElement>(null);
     const allowedTypes = useMemo(() => ['text', 'number', 'email', 'password'], []);
     const dateTypes = useMemo(() => ['date', 'time', 'datetime-local'], []);
     const isDate = useMemo(() => dateTypes.includes(type), [dateTypes, type]);
     const isChanged = useRef(false);
-
-    // Çift dokunuş algılama için değişkenler
     const lastTapRef = useRef<number>(0);
 
     useEffect(() => {
         if (isEditing && inputRef.current) {
+            setInputValue(value);
             inputRef.current.focus();
             inputRef.current.select();
         }
@@ -50,7 +49,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
 
     const handleCancelClick = useCallback(() => {
         setIsEditing(false);
-        setInputValue(value); // Değeri orijinal haline getir
+        setInputValue(value); 
         onCancel();
         isChanged.current = false;
     }, [onCancel, value]);
@@ -72,26 +71,32 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
     const displayValue = useMemo(() => {
         if (isDate) {
             return dateToString(value);
+        } else if (type === 'color') {
+            return (
+                <div
+                    className='color-box'
+                    style={{ backgroundColor: value }}
+                />
+            );
         } else if (render) {
             return render;
         }
         return value;
     }, [isDate, render, value]);
 
-    // Touch cihazlarda çift dokunuşu algılamak için
     const handleTouchStart = useCallback(() => {
         const now = Date.now();
-        const DOUBLE_TAP_DELAY = 300; // 300ms içinde yapılan çift dokunuşları algılar
+        const DOUBLE_TAP_DELAY = 300;
         if (lastTapRef.current && (now - lastTapRef.current) < DOUBLE_TAP_DELAY) {
             handleActivateEditMode();
-            lastTapRef.current = 0; // Sıfırla
+            lastTapRef.current = 0;
         } else {
             lastTapRef.current = now;
         }
     }, [handleActivateEditMode]);
 
     return (
-        <div className="editable-input">
+        <div className="editable-input" onDoubleClick={handleActivateEditMode} onTouchStart={handleTouchStart}>
             {isEditing ? (
                 (allowedTypes.includes(type) && (
                     <input
@@ -111,7 +116,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
-                )) || (type === 'select') && (
+                )) || (type === 'select' && (
                     <MultipleSelectBox
                         label={``}
                         options={options}
@@ -120,15 +125,25 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
-                ) || (
-                    <div className='input-value ellipsis td-item' onDoubleClick={handleActivateEditMode} onTouchStart={handleTouchStart}>
-                        {value}
+                )) || (type === 'color' && (
+                    <div className="editable-color-input">
+                        <input
+                            type={type}
+                            ref={inputRef}
+                            name={name}
+                            value={inputValue}
+                            onChange={handleChange}
+                        />
+                    </div>
+                )) || (
+                    <div className='input-value ellipsis td-item'>
+                        {displayValue}
                     </div> 
                 )
             ) : (
-                <div className='input-value ellipsis td-item' onDoubleClick={handleActivateEditMode} onTouchStart={handleTouchStart}>
+                <div className='input-value ellipsis td-item'>
                     {displayValue}
-                </div>
+                </div> 
             )}
             {isEditing && isChanged.current && (
                 <div className="button-area">

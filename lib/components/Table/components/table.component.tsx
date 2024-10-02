@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { placeholderProductImageBg } from '../../../constants';
-import { axiosInstance, imageToCdnUrl } from '../../../utils';
+import { imageToCdnUrl } from '../../../utils';
 import { TableProps } from '../table.props';
 import IconButton from '../../Button/components/icon-button.component';
 import Checkbox from '../../Input/components/checkbox.component';
@@ -41,11 +41,11 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     }>({
         currentPage: 0,
         perPage: 10,
-        orderBy: '',
-        orderDirection: '',
+        orderBy: columns.find((col) => col.defaultSort)?.key as string,
+        orderDirection: columns.find((col) => col.defaultSort)?.defaultSort || 'ASC',
         filters: {}
     });
-
+    
     const [filterParams, setFilterParams] = useState<string>('');
     const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
     const [editValues, setEditValues] = useState<{ [key: string]: any }>({});
@@ -116,10 +116,10 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             }
         });
     
-        const newCurrentPage = page ? Number(page) - 1 : 0;
-        const newPerPage = perPage ? Number(perPage) : 10;
-        const newOrderBy = orderBy ? String(orderBy) : '';
-        const newOrderDirection = orderDirection ? String(orderDirection) : '';
+        const newCurrentPage = page ? Number(page) - 1 : tableState.currentPage;
+        const newPerPage = perPage ? Number(perPage) : tableState.perPage;
+        const newOrderBy = orderBy ? String(orderBy) : tableState.orderBy;
+        const newOrderDirection = orderDirection ? String(orderDirection) : tableState.orderDirection;
     
         const newState = {
             currentPage: newCurrentPage,
@@ -336,6 +336,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             return newEditValues;
         });
     }, []);
+
     const handlePageChange = useCallback((page: number) => {
         setTableState((prevState) => ({
             ...prevState,
@@ -410,19 +411,15 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                         checked={selectedItems[String(item.id)]}
                     ></Checkbox>
                 </td>
-                {columns.map((col) => {
-                    if (col.editable && col.filterType) {
-                        return (
-                            <td key={String(col.key)} data-label={col.label}>
+                {columns.map((col) => (
+                    <td key={String(col.key)} data-label={col.label}>
+                        {col.editable && (col.filterType || col.type === 'color')
+                            ? (
                                 <EditableInput
                                     name={`${String(col.key)}_${index}`}
-                                    type={col.filterType}
-                                    value={
-                                        editValues[item.id]?.[col.key] || (item as any)[col.key]
-                                    }
-                                    onChange={(e) =>
-                                        onEditInputChange(e, String(item.id), String(col.key))
-                                    }
+                                    type={col.filterType || col.type}
+                                    value={editValues[item.id]?.[col.key] || (item as any)[col.key]}
+                                    onChange={(e) => onEditInputChange(e, String(item.id), String(col.key))}
                                     onSave={({value}) => handleSave(item, String(col.key), value)}
                                     onCancel={() => handleCancel(String(item.id))}
                                     options={col.options}
@@ -436,42 +433,13 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                                         })
                                     }
                                 />
-                            </td>
-                        );
-                    }
-                    if (col.editable && !col.filterType) {
-                        return (
-                            <td key={String(col.key)} data-label={col.label}>
-                                <Input
-                                    type='text'
-                                    name={`${col.label}`}
-                                    label={`${col.label}`}
-                                    value={(item as any)[col.key]}
-                                    onChange={(e) =>
-                                        handleFilterChange(String(col.key), e.target.value)
-                                    }
-                                />
-                            </td>
-                        );
-                    }
-                    if (col.type === 'color') {
-                        return (
-                            <td key={String(col.key)} data-label={col.label}>
-                                <div
-                                    className='color-box'
-                                    style={{ backgroundColor: (item as any)[col.key] }}
-                                />
-                            </td>
-                        );
-                    }
-                    return (
-                        <td key={String(col.key)} data-label={col.label}>
-                            <div className='ellipsis td-item'>
-                                {col.render ? col.render(item) : (item as any)[col.key]}
-                            </div>
-                        </td>
-                    );
-                })}
+                            ) : (
+                                <div className='ellipsis td-item'>
+                                    {col.render ? col.render(item) : (item as any)[col.key]}
+                                </div>
+                            )}
+                    </td>
+                ))}
                 <td>
                     <div className='button-area'>
                         <IconButton
@@ -505,7 +473,8 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         onEditInputChange,
         handleSave,
         handleCancel,
-        handleRowAction
+        handleRowAction,
+        mutateData,
     ]);
 
     return (
@@ -526,104 +495,107 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                         </th>
                         {columns.map((col) => (
                             <th key={`${String(col.key)}-filter`}>
-                                {col.filterType ? (
-                                    <div className='th-filter'>
-                                        {col.sort && (
-                                            <span
-                                                role='button'
-                                                onClick={() => handleSort(col.key as string)}
-                                            >
-                                                <SortButton
-                                                    direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
+                                
+                                {col.filterType 
+                                    ? (
+                                        <div className='th-filter'>
+                                            {col.sort && (
+                                                <span
+                                                    role='button'
+                                                    onClick={() => handleSort(col.key as string)}
+                                                >
+                                                    <SortButton
+                                                        direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
+                                                    />
+                                                </span>
+                                            )}
+                                            {col.filterType === 'text' && (
+                                                <Input
+                                                    type='text'
+                                                    name={`${col.label}`}
+                                                    label={`${col.label}`}
+                                                    value={filters[col.key as string] || ''}
+                                                    onChange={(e) =>
+                                                        handleFilterChange(
+                                                            String(col.key),
+                                                            e.target.value
+                                                        )
+                                                    }
                                                 />
-                                            </span>
-                                        )}
-                                        {col.filterType === 'text' && (
-                                            <Input
-                                                type='text'
-                                                name={`${col.label}`}
-                                                label={`${col.label}`}
-                                                value={filters[col.key as string] || ''}
-                                                onChange={(e) =>
-                                                    handleFilterChange(
-                                                        String(col.key),
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                        {col.filterType === 'number' && (
-                                            <Input
-                                                type='number'
-                                                name={`${col.label}`}
-                                                label={`${col.label}`}
-                                                value={filters[col.key as string] || ''}
-                                                onChange={(e) =>
-                                                    handleFilterChange(
-                                                        String(col.key),
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                        {col.filterType === 'select' && col.options && (
-                                            <MultipleSelectBox
-                                                label={`${col.label} Seç`}
-                                                options={col.options}
-                                                name={`${col.label}`}
-                                                value={filters[col.key as string] || ''}
-                                                onChange={(e: any) =>
-                                                    handleFilterChange(
-                                                        String(col.key),
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                        {col.filterType === 'date' && (
-                                            <Input
-                                                type='date'
-                                                name={`${col.label}`}
-                                                label={`${col.label}`}
-                                                value={filters[col.key as string] || ''}
-                                                onChange={(e) =>
-                                                    handleFilterChange(
-                                                        String(col.key),
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                        {col.filterType === 'datetime' && (
-                                            <Input
-                                                type='datetime-local'
-                                                name={`${col.label}`}
-                                                label={`${col.label}`}
-                                                value={filters[col.key as string] || ''}
-                                                onChange={(e) =>
-                                                    handleFilterChange(
-                                                        String(col.key),
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                    </div>
-                                ) : (
-                                    <>
-                                        {col.label}
-                                        {col.sort && (
-                                            <span
-                                                role='button'
-                                                onClick={() => handleSort(col.key as string)}
-                                            >
-                                                <SortButton
-                                                    direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
+                                            )}
+                                            {col.filterType === 'number' && (
+                                                <Input
+                                                    type='number'
+                                                    name={`${col.label}`}
+                                                    label={`${col.label}`}
+                                                    value={filters[col.key as string] || ''}
+                                                    onChange={(e) =>
+                                                        handleFilterChange(
+                                                            String(col.key),
+                                                            e.target.value
+                                                        )
+                                                    }
                                                 />
-                                            </span>
-                                        )}
-                                    </>
-                                )}
+                                            )}
+                                            {col.filterType === 'select' && col.options && (
+                                                <MultipleSelectBox
+                                                    label={`${col.label} Seç`}
+                                                    options={col.options}
+                                                    name={`${col.label}`}
+                                                    value={filters[col.key as string] || ''}
+                                                    onChange={(e: any) =>
+                                                        handleFilterChange(
+                                                            String(col.key),
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            )}
+                                            {col.filterType === 'date' && (
+                                                <Input
+                                                    type='date'
+                                                    name={`${col.label}`}
+                                                    label={`${col.label}`}
+                                                    value={filters[col.key as string] || ''}
+                                                    onChange={(e) =>
+                                                        handleFilterChange(
+                                                            String(col.key),
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            )}
+                                            {col.filterType === 'datetime' && (
+                                                <Input
+                                                    type='datetime-local'
+                                                    name={`${col.label}`}
+                                                    label={`${col.label}`}
+                                                    value={filters[col.key as string] || ''}
+                                                    onChange={(e) =>
+                                                        handleFilterChange(
+                                                            String(col.key),
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className='th-item'>
+                                            {col.label}
+                                            {col.sort && (
+                                                <span
+                                                    role='button'
+                                                    onClick={() => handleSort(col.key as string)}
+                                                >
+                                                    <SortButton
+                                                        direction={orderBy === col.key ? (orderDirection as "ASC" | "DESC") : undefined}
+                                                    />
+                                                </span>
+                                            )}
+                                        </div>
+                                    )
+                                }
                             </th>
                         ))}
                         <th />

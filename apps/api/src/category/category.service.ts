@@ -4,17 +4,33 @@ import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryQueryParams } from './category.props';
+import slugify from 'slugify';
+import { RedisService } from '../common/redis/redis.service';
+import { menuCacheKey, revalidateSecretToken, WWW_URL } from '../common/constants';
+import axios from 'axios';
 
 @Injectable()
 export class CategoryService {
     constructor(
         @InjectRepository(Category)
         private readonly categoryRepository: Repository<Category>,
+        private readonly redisService: RedisService
     ) {}
 
-    async findAll(page: number, perPage: number, orderBy: string, orderDirection: 'ASC' | 'DESC', name?: string, updated_at?: string) {
+    async findAll(params: CategoryQueryParams) {
+        const {
+            page = 1,
+            perPage = 10,
+            orderBy = 'updated_at',
+            orderDirection = 'DESC',
+            name,
+            updated_at,
+        } = params;
+
         const query = this.categoryRepository.createQueryBuilder('category')
-            .where('category.deleted = :deleted', { deleted: false });
+            .where('category.deleted = :deleted', { deleted: false })
+            .andWhere('category.passive = :passive', { passive: false });
 
         if (name) {
             query.andWhere('category.name LIKE :name', { name: `%${name}%` });
@@ -25,7 +41,7 @@ export class CategoryService {
         }
 
         const [items, total] = await query
-            .orderBy(`category.${orderBy}`, orderDirection)
+            .orderBy(`category.${orderBy}`, orderDirection.toUpperCase() as "ASC" | "DESC")
             .skip((page - 1) * perPage)
             .take(perPage)
             .getManyAndCount();
@@ -34,17 +50,28 @@ export class CategoryService {
     }
 
     findOne(id: number): Promise<Category> {
-        return this.categoryRepository.findOne({ where: { id } });
+        return this.categoryRepository.findOne({ where: { id }, relations: ['products'] });
     }
 
-    create(createCategoryDto: CreateCategoryDto) {
+    async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+        createCategoryDto.slug = slugify(createCategoryDto.name, { lower: true });
+        if (!createCategoryDto.created_at) createCategoryDto.created_at = new Date();
+        if (!createCategoryDto.updated_at) createCategoryDto.updated_at = new Date();
+
         const category = this.categoryRepository.create(createCategoryDto);
-        return this.categoryRepository.save(category);
+        await this.categoryRepository.save(category);
+        await this.clearCache();
+        return category;
     }
 
-    async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+        updateCategoryDto.slug = slugify(updateCategoryDto.name, { lower: true });
+        if (!updateCategoryDto.updated_at) updateCategoryDto.updated_at = new Date();
+
         await this.categoryRepository.update(id, updateCategoryDto);
-        return this.findOne(id);
+        const category = await this.categoryRepository.findOne({ where: { id } });
+        await this.clearCache();
+        return category;
     }
 
     async remove(id: number) {
@@ -52,6 +79,18 @@ export class CategoryService {
         category.deleted = true;
         category.passive = true;
         return this.categoryRepository.save(category);
+    }
+
+    async clearCache() {
+        await this.redisService.del(menuCacheKey);
+        try {
+            await axios.post(`${WWW_URL}/api/revalidate`, {
+                secret: revalidateSecretToken,
+            });
+            console.log(`Revalidate request sent`);
+        } catch (error) {
+            console.error(`Revalidate request failed `, error.message);
+        }
     }
 
     async inputData() {

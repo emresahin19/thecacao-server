@@ -11,6 +11,7 @@ export interface ColumnProps<T> {
     key: keyof T | string;
     label: string;
     sort?: boolean;
+    defaultSort?: 'ASC' | 'DESC';
     render?: (item: T) => React.ReactNode;
     type?: InputType;
     filterType?: InputType;

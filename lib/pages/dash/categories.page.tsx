@@ -1,12 +1,12 @@
-// import { CategoryTable } from 'lib/components'
 import LayoutAuthenticated from '../../layouts/authenticated'
 import React from 'react'
 import type { ReactElement } from 'react'
+import CategoryTable from '../../components/DataTable/components/category-table.component'
 
 const CategoriesPage = () => {
   return (
     <>
-      {/* <CategoryTable /> */}
+      <CategoryTable />
     </>
   )
 }

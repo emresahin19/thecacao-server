@@ -6,14 +6,14 @@ import { handleErrorResponse } from 'lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const cookies = new Cookies(req, res);
-    const jwtToken = cookies.get('jwt'); // JWT token'ı cookie'den alıyoruz
+    const jwtToken = cookies.get('jwt');
 
     if (!jwtToken) {
         return res.status(401).json({ error: 'Authentication token not found' });
     }
 
     const headers = {
-        Authorization: `Bearer ${jwtToken}`, // JWT token'ı Bearer token olarak header'da gönderiyoruz
+        Authorization: `Bearer ${jwtToken}`,
     };
 
     if (req.method === 'GET') {
@@ -26,6 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     } else {
         res.setHeader('Allow', ['GET', 'POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+        return res.status(405).end({
+            status: false,
+            error: `Method ${req.method} Not Allowed`,
+        });
     }
 }
