@@ -342,7 +342,7 @@
         input, textarea {
             font-size: var(--font-size-sm);
             padding: var(--padding-sm);
-            border: var(--border-width-sm) solid var(--text-color);
+            border-width: var(--border-width-sm);
             font-weight: var(--font-weight-sm);
         }
         label {
@@ -365,7 +365,7 @@
         input, textarea {
             font-size: var(--font-size-lg);
             padding: var(--padding-lg);
-            border: var(--border-width-lg) solid var(--text-color);
+            border-width: var(--border-width-lg);
             font-weight: var(--font-weight-lg);
         }
         label {
@@ -605,7 +605,7 @@
     position: relative;
     width: 100%;
     input, .input-value, label, .selected-value {
-        padding: 8px 12px 8px 8px !important;
+        padding: 8px 16px 8px 8px !important;
         border: none;
         border-radius: 4px;
         max-width: 100%;
@@ -624,7 +624,7 @@
         }
     }
     .editable-color-input {
-        width: calc(100% - 48px);
+        width: calc(100% - 32px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -653,7 +653,7 @@
         height: 100%;
         top: 0;
         bottom: 0;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         font-weight: 800;
 
@@ -663,8 +663,8 @@
             font-size: 10px;
             line-height: 1;
             text-align: center;
-            margin: 1px 0;
             border-radius: 3px;
+            height: 35%;
             transition: var(--transition);
             height: 12px;
             width: 16px;
@@ -675,12 +675,12 @@
             border: 1px solid var(--text-color);
         }
         .save {
-            border-radius: 2px 6px 2px 2px;
+            border-radius: 2px 4px 2px 2px;
             color: $success;
             border-color: $success;
         }
         .cancel {
-            border-radius: 2px 2px 6px 2px;
+            border-radius: 2px 2px 4px 2px;
             color: var(--danger);
             border-color: var(--danger);
         }

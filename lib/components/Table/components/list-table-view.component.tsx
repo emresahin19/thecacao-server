@@ -160,7 +160,7 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                     </li>
                                 ))}
                                 <li className="lt-cell lt-td">
-                                    <div className="table-cell">
+                                    <div className="button-area">
                                         <IconButton
                                             onClick={() => handleRowAction('view', null)}
                                             ariaLabel={'Düzenle'}

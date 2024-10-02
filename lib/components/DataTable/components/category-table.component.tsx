@@ -54,7 +54,7 @@ const CategoryTable: React.FC = () => {
                     },
                     { 
                         key: 'updated_at', 
-                        label: 'Son Düzenleme', 
+                        label: 'Düzenleme', 
                         sort: true,
                         editable: true, 
                         filterType: 'date', 

@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux';
 import { openModal, closeModal } from 'lib/store/modal.slice';
 import { useAppSelector } from 'lib/store';
 import Button from '../../Button/components/button.component';
-import TableView from './table-view.component';
 import ListTableView from './list-table-view.component';
 import { useTableData } from '../../../hooks';
 
@@ -32,7 +31,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         filters: { [key: string]: any };
     }>({
         currentPage: 0,
-        perPage: 10,
+        perPage: 20,
         orderBy: columns.find((col) => col.defaultSort)?.key as string,
         orderDirection: columns.find((col) => col.defaultSort)?.defaultSort || 'ASC',
         filters: {}

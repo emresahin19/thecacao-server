@@ -79,7 +79,7 @@ const ProductTable: React.FC = () => {
                     },
                     {
                         key: 'updated_at',
-                        label: 'Son Düzenleme',
+                        label: 'Düzenleme',
                         sort: true,
                         defaultSort: 'DESC',
                         editable: true,

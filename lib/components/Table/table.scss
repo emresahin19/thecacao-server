@@ -17,7 +17,7 @@
     border: 1px solid var(--table-color-1);
     border-radius: var(--sidebar-border-radius);
     overflow: auto;
-    max-width: 1120px;
+    max-width: 1200px;
 
     .table-header {
         display: flex;
@@ -232,6 +232,8 @@
     display: flex;
     flex-direction: column;
     margin: 0;
+    min-width: calc(100% - 32px);
+    padding: 0 16px;
 
     * > ul {
         width: 100%;
@@ -307,8 +309,9 @@
         width: 100%;
         align-items: center;
         .lt-thead-tr {
+            gap: 4px;
             .lt-th {
-                padding: 0px 8px;
+                padding: 0px 4px;
 
                 &:after {
                     content: "";
@@ -320,8 +323,11 @@
                     opacity: .5;
                     right: 0;
                 }
-                &:nth-last-child(1):after {
-                    display: none;
+                &:nth-last-child(1) {
+                    padding-right: 16px;
+                    &:after {
+                        display: none;
+                    }
                 }
                 .th-item {
                     width: calc(100% - 16px);
@@ -382,24 +388,32 @@
     .lt-tbody {
         background-color: var(--table-color-2);
         .lt-tbody-tr {
+            gap: 4px;
             .lt-td {
-                padding: 4px 8px;
+                padding: 4px;
 
+                &:nth-last-child(1) {
+                    padding-right: 16px;
+                }
             }
         }
         .editable-input {
             input, .select-box {
-                width: calc(100% - 48px);
+                width: calc(100% - 32px);
                 color: var(--text-color);
                 font-weight: 400;
                 border-color: var(--text-color);
                 background: var(--table-color-2);
+                border-radius: 4px;
                 &:focus, &:hover {
                     background: var(--table-color-1);
                 }
             }
+            .select-box {
+                width: 100%;
+            }
             .input-value {
-                width: calc(100% - 48px);
+                width: calc(100% - 32px);
             }
         }
         &:nth-child(even) {
@@ -449,7 +463,7 @@
     }
     .paginate-props {
         display: flex;
-        gap: 8px;
+        gap: 4px;
         small {
             display: flex;
             align-items: center;

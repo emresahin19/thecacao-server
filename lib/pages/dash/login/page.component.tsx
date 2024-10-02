@@ -7,6 +7,7 @@ import { LayoutGuest } from '../../../layouts'
 import Button from '../../../components/Button/components/button.component';
 import Checkbox from '../../../components/Input/components/checkbox.component';
 import Input from '../../../components/Input/components/input.component';
+import LogoText from '../../../components/Logo/components/logo-text.component';
 
 const LoginPage = () => {
     const { handleLogin } = useAuth();
@@ -58,7 +59,7 @@ const LoginPage = () => {
     return (
         <div className='login-container'>
             <div className="logo-bg">
-                {/* <LogoText width={420} /> */}
+                <LogoText width={420} />
             </div>
             <div className='card'>
                 <form onSubmit={handleSubmit}>
@@ -93,7 +94,8 @@ const LoginPage = () => {
                     <div className="button-area">
                         <Button 
                             onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleSubmit}
-                            property='default'
+                            color1='white'
+                            color2='success'
                         >
                             Giriş Yap
                         </Button>

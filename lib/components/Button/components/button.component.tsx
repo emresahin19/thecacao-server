@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = ({
     color2 
 }) => (
     <button 
-        className={`button-${property}  ${color1 && `button2-${color1}` || ''} ${color2 && `button2-${color2}` || ''} ${className}`}
+        className={`button-${property}  ${color1 && `button1-${color1}` || ''} ${color2 && `button2-${color2}` || ''} ${className}`}
         onClick={onClick}
         disabled={disabled || loading}
         aria-label={ariaLabel}

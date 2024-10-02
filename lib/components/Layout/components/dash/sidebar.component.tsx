@@ -68,6 +68,7 @@ const Sidebar: React.FC = () => {
                 href={href || '/'}
                 role="button"
                 aria-label={`${label} sayfasına git`}
+                onClick={() => dispatch(closeSidebar())}
             >
                 {label}
             </Link>
