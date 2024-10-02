@@ -619,7 +619,7 @@ body {
     .dash-main {
         width: 100%;
         min-height: fit-content;
-        max-height: calc(100vh - var(--header-height) - 3 * var(--header-padding));
+        height: calc(100vh - var(--header-height) - 3 * var(--header-padding));
         &.open {
             width: 100%;
             translate: calc(var(--header-padding) + var(--sidebar-width));
