@@ -345,6 +345,16 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         setSelectedItems({});
         setSelectAll(false);
     }, []);
+
+    const handlePerPageChange = useCallback((perPage: number) => {
+        setTableState((prevState) => ({
+            ...prevState,
+            perPage,
+            currentPage: 0
+        }));
+        setSelectedItems({});
+        setSelectAll(false);
+    }, []);
     
     const numPages = useMemo(() => Math.ceil(total / tableState.perPage), [total, tableState.perPage, router]);
     
@@ -606,7 +616,9 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             <Pagination
                 totalPages={numPages}
                 currentPage={currentPage}
+                perPage={perPage}
                 onPageChange={handlePageChange}
+                onPerPageChange={handlePerPageChange}
                 loading={isLoading}
             />
         </>

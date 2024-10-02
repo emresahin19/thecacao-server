@@ -4,7 +4,7 @@ import { MultipleSelectBoxProps, OptionsProps } from "../input.props";
 
 const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
     options = [],
-    label,
+    label = "",
     className = "",
     name,
     value,
@@ -12,16 +12,24 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
     onBlur,
     error = false,
     size = "md",
+    clearable = true,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const isMultiple = Array.isArray(value);
 
-    const flattenOptions = (opts: OptionsProps[]): OptionsProps[] =>
-        opts.flatMap((opt) =>
-            opt.options ? flattenOptions(opt.options) : opt
-        );
+    const flattenOptions = (opts: OptionsProps[] | OptionsProps['value'][]): OptionsProps[] => {
+        return opts.flatMap((opt) => {
+            if (typeof opt === 'string' || typeof opt === 'number') {
+                return [{ label: opt.toString(), value: opt }];
+            } else if (opt.options) {
+                return flattenOptions(opt.options);
+            } else {
+                return [opt];
+            }
+        });
+    }
 
     const getSelectedLabels = () => {
         const allOptions = options ? flattenOptions(options) : [];
@@ -31,7 +39,7 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
                 .map((opt) => opt.label)
                 .join(", ");
         } else {
-            const selectedOption = allOptions.find((opt) => opt.value == value);
+            const selectedOption = allOptions.find((opt) => opt.value ? opt.value == value : value);
             return selectedOption ? selectedOption.label : "";
         }
     };
@@ -89,30 +97,42 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
         };
     }, []);
 
-  const renderOptions = (opts: OptionsProps[]) =>
-    opts.map((option) => {
-        const isGroup = !!option.options;
-        const isSelected = isMultiple
-            ? isGroup
-                ? option.options!.every((opt) => value.includes(opt.value))
-                : value.includes(option.value)
-            : value == option.value;
-
-        return (
-            <div key={option.value || option.label}>
-                <div
-                    className={`option ${isSelected ? "active" : ""} ${isGroup ? "parent-option" : ""}`}
-                    onClick={(e: React.MouseEvent<HTMLInputElement>) => handleOptionToggle(e, option)}
-                >
-                    {option.label}
-                </div>
-                {isGroup && (
-                    <div className="sub-options">
-                        {renderOptions(option.options!)}
+    const renderOptions = (opts: OptionsProps[] | OptionsProps['value'][]) =>
+        opts.map((option) => {
+            if(typeof option === 'string' || typeof option === 'number') {
+                return (
+                    <div key={option}>
+                        <div
+                            className={`option ${value === option ? "active" : ""}`}
+                            onClick={(e: React.MouseEvent<HTMLInputElement>) => handleOptionToggle(e, { label: option, value: option })}
+                        >
+                            {option}
+                        </div>
                     </div>
-                )}
-            </div>
-        );
+                );
+            }
+            const isGroup = !!option.options;
+            const isSelected = isMultiple
+                ? isGroup
+                    ? option.options!.every((opt) => value.includes(opt.value))
+                    : value.includes(option.value)
+                : value == option.value;
+
+            return (
+                <div key={option.value || option.label}>
+                    <div
+                        className={`option ${isSelected ? "active" : ""} ${isGroup ? "parent-option" : ""}`}
+                        onClick={(e: React.MouseEvent<HTMLInputElement>) => handleOptionToggle(e, option)}
+                    >
+                        {option.label}
+                    </div>
+                    {isGroup && (
+                        <div className="sub-options">
+                            {renderOptions(option.options!)}
+                        </div>
+                    )}
+                </div>
+            );
     });
 
     return (
@@ -129,7 +149,7 @@ const MultipleSelectBox: React.FC<MultipleSelectBoxProps> = ({
 
                 {isOpen && options && <div className="options">{renderOptions(options)}</div>}
 
-                {((isMultiple && value.length > 0) || (!isMultiple && value)) && (
+                {!isMultiple && value && clearable && (
                     <span className="clear-button" onClick={clearValue}>
                         ✕
                     </span>

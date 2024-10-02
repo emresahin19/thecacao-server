@@ -50,20 +50,21 @@ export interface EyeIconProps {
 };
 
 export interface OptionsProps {
-    label: string | number;
+    label?: string | number;
     value: string | number;
-    options: OptionsProps[] | null;
+    options?: OptionsProps[] | null;
 }
 
 export interface MultipleSelectBoxProps {
-    options: OptionsProps[] | null;
-    label: OptionsProps['label'];
+    options: OptionsProps[] | OptionsProps['value'][];
+    label?: OptionsProps['label'];
     value: OptionsProps['value'] | OptionsProps['value'][];
     className?: string;
-    name: string;
+    name?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     error?: boolean;
+    clearable?: boolean;
     size?: 'sm' | 'md' | 'lg';
 }
 

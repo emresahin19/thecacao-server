@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { PaginationProps } from '../table.props';
 import Button from '../../Button/components/button.component';
+import MultipleSelectBox from 'lib/components/Input/components/multiple-selectbox.component';
 
-const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPageChange, loading = false }) => {
+const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, perPage, onPageChange, onPerPageChange, loading = false }) => {
     const prevTotalPages = useRef(totalPages);
     const [pagesList, setPagesList] = useState<(number | string)[]>([]);
 
@@ -70,6 +71,14 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPage
         }
     };
 
+    const onPerPageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.target.value, 10);
+
+        if (value > 0) {
+            onPerPageChange(value);
+        }
+    };
+
     return (
         <div className="pagination">
             <div className="pagination-container">
@@ -90,11 +99,29 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPage
                     }
                 })}
             </div>
-            <small>
-                Page 
-                <input value={currentPage + 1} onChange={onPageInputChange} />
-                 of {totalPages}
-            </small>
+            <div className="paginate-props">
+                <small>
+                    Page 
+                    {<MultipleSelectBox
+                        clearable={false}
+                        size='sm'
+                        options={Array.from({ length: totalPages }, (_, i) => i + 1)}
+                        value={currentPage + 1}
+                        onChange={onPageInputChange}
+                    />}
+                    of {totalPages}
+                </small>
+                <small>
+                    Per Page
+                    {<MultipleSelectBox
+                        clearable={false}
+                        size='sm'
+                        options={Array.from(new Set([...[perPage], ...[10, 20, 50, 100]].sort((a, b) => a - b)))}
+                        value={perPage}
+                        onChange={onPerPageInputChange}
+                    />}
+                </small>
+            </div>
         </div>
     );
 };

@@ -3,7 +3,9 @@ import { InputType, OptionsProps } from "lib/interfaces";
 export interface PaginationProps {
     totalPages: number;
     currentPage: number;
+    perPage: number;
     onPageChange: (page: number) => void;
+    onPerPageChange: (perPage: number) => void;
     loading?: boolean;
 }
 
