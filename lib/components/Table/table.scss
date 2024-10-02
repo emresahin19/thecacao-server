@@ -283,7 +283,6 @@
 
 @media (max-width: 768px) {
     .table {
-        max-height: calc(100vh - var(--header-height) - 5 * var(--header-padding));
         .pagination {
             align-items: flex-start;
             flex-direction: column;
