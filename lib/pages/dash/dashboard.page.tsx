@@ -25,8 +25,7 @@ const DashboardPage = () => {
 
     return () => window.removeEventListener('beforeInstallPrompt', handleBeforeInstallPrompt);
   }, []);
-  console.log('isInstallable', isInstallable);
-  console.log('deferredPrompt', deferredPrompt);
+  
   const handleInstallClick = () => {
     if (deferredPrompt) {
       (deferredPrompt as any).prompt(); 
@@ -44,9 +43,11 @@ const DashboardPage = () => {
   return (
     <>
       <div className="dash-container">
-        <button onClick={handleInstallClick} className="install-button">
-          <MdDownloading />
-        </button>
+          {isInstallable && (
+            <button onClick={handleInstallClick} className="install-button">
+              <MdDownloading />
+            </button>
+          )}
         <div className="dash-apps">
           {routes.map(({ label, icon, href }: SidebarItemProps) => (
             href != router.pathname && (

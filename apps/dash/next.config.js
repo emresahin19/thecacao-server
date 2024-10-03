@@ -3,6 +3,12 @@ const { composePlugins, withNx } = require('@nx/next');
 
 const devMode = process.env.NODE_ENV === 'development';
 
+const withPWA = require('next-pwa')({
+    dest: 'public',
+    register: true,
+    skipWaiting: true
+})
+
 const nextConfig = {
     async redirects() {
         return [
@@ -57,6 +63,7 @@ const nextConfig = {
 const plugins = [
     // Add more Next.js plugins to this list if needed.
     withNx,
+    withPWA,
 ];
 
 module.exports = composePlugins(...plugins)(nextConfig);
