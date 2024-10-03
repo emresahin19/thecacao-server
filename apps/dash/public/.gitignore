@@ -1,4 +1,4 @@
 sitemap-0.xml
 sitemap.xml
-public/**/*.js
-public/**/*.js.map
+/*.js
+/*.js.map
