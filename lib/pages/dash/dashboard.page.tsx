@@ -44,11 +44,9 @@ const DashboardPage = () => {
   return (
     <>
       <div className="dash-container">
-          {isInstallable && (
-            <button onClick={handleInstallClick} className="install-button">
-              <MdDownloading />
-            </button>
-          )}
+        <button onClick={handleInstallClick} className="install-button">
+          <MdDownloading />
+        </button>
         <div className="dash-apps">
           {routes.map(({ label, icon, href }: SidebarItemProps) => (
             href != router.pathname && (
