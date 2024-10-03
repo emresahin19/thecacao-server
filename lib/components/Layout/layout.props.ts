@@ -1,6 +1,6 @@
 export interface SidebarItemProps {
     label: string
-    icon?: string
+    icon?: React.ReactNode
     href?: string
     target?: string
     isLogout?: boolean

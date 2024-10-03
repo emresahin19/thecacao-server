@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef, TouchEvent, useCallback } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { SidebarItemProps } from "../../layout.props";
 import dashRoutes from "lib/utils/dash-route.config";
 import { useAppDispatch, useAppSelector, closeSidebar, openSidebar } from "lib/store";
+import Logo from "lib/components/Logo/components/logo.component";
 
-const Logo = dynamic(() => import('../../../Logo/components/logo.component'), { ssr: false });
 const transition = '0.3s cubic-bezier(.22,.61,.36,1) transform';
 
 const Sidebar: React.FC = () => {
@@ -17,6 +16,7 @@ const Sidebar: React.FC = () => {
     const dispatch = useAppDispatch();
     const isOpen = useAppSelector((state) => state.sidebar.isOpen);
     const router = useRouter();
+    const isMobile = useCallback(() => window.innerWidth < 768, []);
 
     const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
         startXRef.current = e.touches[0].clientX;
@@ -60,59 +60,63 @@ const Sidebar: React.FC = () => {
         return false;
     }, [router.pathname]);
 
-    const SidebarItem: React.FC<SidebarItemProps> = ({ label, icon, href }) => {
-        return (
-            <Link
-                className={`link no-hover ${isActive(href) ? 'active' : ''}`}
-                draggable="false"
-                href={href || '/'}
-                role="button"
-                aria-label={`${label} sayfasına git`}
-                onClick={() => dispatch(closeSidebar())}
-            >
-                {label}
-            </Link>
-        );
-    };
+    const handleClickOutside = useCallback(() => {
+        dispatch(closeSidebar());
+    }, [dispatch]);
 
     useEffect(() => {
+        const body = document.body;
+        const wrapper = isMobile() ? body : null;
         if (sidebarRef.current) {
             sidebarRef.current.style.transition = transition;
-            const wrapper = window.innerWidth < 768 ? document.body : null;
+
             if (isOpen) {
                 sidebarRef.current.style.transform = 'translateX(0)';
-                if (!wrapper) return;
-                wrapper.classList.add('overflow-disabled');
-                wrapper.style.top = `-${window.scrollY}px`;
+                if (wrapper) {
+                    wrapper.classList.add('overflow-disabled');
+                    wrapper.style.top = `-${window.scrollY}px`;
+                }
                 setIsDragging(true);
             } else {
                 sidebarRef.current.style.transform = 'translateX(-110%)';
-                if (!wrapper) return;
-                setTimeout(() => {
-                    wrapper.classList.remove('overflow-disabled');
-                    wrapper.style.top = '';
-                    setIsDragging(false);
-                }, 300);
+                if (wrapper) {
+                    setTimeout(() => {
+                        wrapper.classList.remove('overflow-disabled');
+                        wrapper.style.top = '';
+                        setIsDragging(false);
+                    }, 300);
+                }
             }
         }
-    }, [isOpen]);
+    }, [isOpen, isMobile]);
 
+    // Add event listeners for closing sidebar on outside clicks or touches (depending on device type)
     useEffect(() => {
-        if(typeof window !== 'undefined'){
-            const mainElement = window.innerWidth < 768 ? document.querySelector('main') : null;
+        if (typeof window !== 'undefined') {
+            const mainElement = isMobile() && document.querySelector('main')
             if (!mainElement) return;
-    
-            const handleClickOutside = () => {
-                dispatch(closeSidebar());
-            };
 
-            mainElement.addEventListener('click', handleClickOutside);
+            mainElement.addEventListener('touchstart', handleClickOutside);
 
             return () => {
-                mainElement.removeEventListener('click', handleClickOutside);
+                mainElement.removeEventListener('touchstart', handleClickOutside);
             };
         }
-    }, [isOpen, dispatch]);
+    }, [isOpen, handleClickOutside, isMobile]);
+
+    const SidebarItem: React.FC<SidebarItemProps> = ({ label, icon, href }) => (
+        <Link
+            className={`link no-hover ${router.pathname === href ? 'active' : ''}`}
+            href={href || '/'}
+            draggable="false"
+            role="button"
+            aria-label={`${label} sayfasına git`}
+            onClick={() => isMobile() && dispatch(closeSidebar())}
+        >
+            {icon}
+            {label}
+        </Link>
+    );
 
     return (
         <div

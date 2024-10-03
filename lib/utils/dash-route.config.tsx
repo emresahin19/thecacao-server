@@ -1,4 +1,9 @@
 import { SidebarItemProps } from "../interfaces";
+import RiApps2AddLine from "lib/assets/icon/svg/RiApps2AddLine.svg"
+import RiCake3Line from "lib/assets/icon/svg/RiCake3Line.svg"
+import RiDrinks2Line from "lib/assets/icon/svg/RiDrinks2Line.svg"
+import RiUser2Line from "lib/assets/icon/svg/RiUser2Line.svg"
+import RiListSettingsLine from "lib/assets/icon/svg/RiListSettingsLine.svg"
 
 const dashRoutes: SidebarItemProps[] = [
   {
@@ -6,7 +11,7 @@ const dashRoutes: SidebarItemProps[] = [
     children: [
       {
         href: '/dashboard',
-        icon: 'xd',
+        icon: <RiApps2AddLine />,
         label: 'Dashboard',
       },
     ]
@@ -16,12 +21,12 @@ const dashRoutes: SidebarItemProps[] = [
     children: [
       {
         href: '/products',
-        icon: 'xd',
+        icon: <RiCake3Line />,
         label: 'Ürünler',
       },
       {
         href: '/categories',
-        icon: 'xd',
+        icon: <RiDrinks2Line />,
         label: 'Kategoriler',
       },
     ]
@@ -31,14 +36,14 @@ const dashRoutes: SidebarItemProps[] = [
     children: [
       {
         href: '/users',
-        icon: 'xd',
+        icon: <RiUser2Line />,
         label: 'Kullanıcılar',
       },
     ]
   },
   {
     href: '/settings',
-    icon: 'xd',
+    icon: <RiListSettingsLine />,
     label: 'Genel Ayarlar',
   },
 ]
