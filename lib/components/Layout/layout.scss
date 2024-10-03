@@ -633,7 +633,7 @@ body {
       
         @media (max-width: 768px) {
             flex: 0 1 150px;
-            max-width: calc(50% - 4px);
+            max-width: max(calc(50% - 4px), 100px);
         }
     }
 }
@@ -665,6 +665,26 @@ body {
             width: calc(100% - var(--sidebar-width) - var(--header-padding) * 3);
             margin-left: auto;
         }
+    }
+}
+
+.install-button {
+    position: fixed;
+    right: 0;
+    top: calc(var(--header-height) + 2 * var(--header-padding));
+    z-index: 99;
+    width: fit-content;
+    height: fit-content;
+    padding: 4px;
+    aspect-ratio: 1;
+    border-radius: 4px 0 0 4px;
+    background: var(--header-background-color);
+    border: solid var(--text-color);
+    border-width: 1px 0 1px 1px;
+    cursor: pointer;
+
+    svg {
+        fill: var(--text-color);
     }
 }
 
