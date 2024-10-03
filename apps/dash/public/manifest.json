@@ -5,6 +5,20 @@
     "display": "standalone",
     "background_color": "#ffffff",
     "description": "The Cacao Chocolate & Coffee, Gebze'de çikolata ve kahve üzerine uzmanlaşmış, dünya mutfağından zengin yemek menüsü sunan bir mekandır. En kaliteli çikolata, kahve çeşitleri ve leziz yemekleriyle unutulmaz bir deneyim yaşayın. Gebze'nin en iyi çikolata ve kahve mekanını keşfedin!",
+    "screenshots": [
+        {
+            "src": "https://cdn.thecacao.com.tr/images/crop,w=1280,h=720,f=png,q=80/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "https://cdn.thecacao.com.tr/images/crop,w=375,h=667,f=png,q=80/screenshot-mobile.png",
+            "sizes": "375x667",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ],
     "icons": [
         {
             "src": "/icons/android-icon-36x36.png",
