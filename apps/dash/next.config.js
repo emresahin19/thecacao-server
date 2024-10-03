@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const { composePlugins, withNx } = require('@nx/next');
 
-const devMode = process.env.NODE_ENV === 'development';
+const devMode = process.env.NEXT_PUBLIC_APP_MODE === 'development';
 
 const withPWA = require('next-pwa')({
     dest: 'public',

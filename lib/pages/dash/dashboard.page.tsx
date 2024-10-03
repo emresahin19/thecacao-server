@@ -15,15 +15,15 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('beforeInstallPrompt event:', e);
+      console.log('beforeinstallprompt event:', e);
       e.preventDefault();
       setDeferredPrompt(e);
       setIsInstallable(true);
     };
 
-    window.addEventListener('beforeInstallPrompt', handleBeforeInstallPrompt);
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    return () => window.removeEventListener('beforeInstallPrompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   }, []);
   
   const handleInstallClick = () => {
