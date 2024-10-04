@@ -5,11 +5,16 @@ import { ExtraController } from './extra.controller';
 import { Extra } from './entities/extra.entity';
 import { ExtraCategory } from '../extra-category/entities/extra-category.entity';
 import { ExtraCategoryModule } from '../extra-category/extra-category.module';
+import { ImageService } from '../image/image.service';
+import { Image } from '../image/entities/image.entity';
+import { ImageModule } from '../image/image.module';
+import { RedisService } from '../common/redis/redis.service';
+import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
-    imports: [ExtraCategoryModule, TypeOrmModule.forFeature([Extra, ExtraCategory])],
+    imports: [NestjsFormDataModule, TypeOrmModule.forFeature([Extra, ExtraCategory, Image])],
     controllers: [ExtraController],
-    providers: [ExtraService],
+    providers: [ExtraService, ImageService, RedisService],
     exports: [ExtraService, TypeOrmModule],
 })
 export class ExtraModule {}

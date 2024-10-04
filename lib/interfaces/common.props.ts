@@ -90,7 +90,7 @@ export type ColorOptions =
     created_at?: string;
     updated_at?: string;
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  }
+}
 
 export interface ExtraDataProps {
     id: number;
@@ -98,13 +98,22 @@ export interface ExtraDataProps {
     description	: number;
     image?: string;
     extras: ExtraProps[];
+    passive: number;
+    deleted: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface ExtraProps {
     id: number;
     name: string;
     price: number;
-    image_url: string;
+    image_url?: string;
+    image_urls?: string[];
+    passive: number;
+    deleted: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface ContactProps {
@@ -129,7 +138,6 @@ export interface RouteProps {
 export interface HexToRgba {
   (hex: string, opacity: number): string;
 }
-
 
 export interface CustomImageProps {
   image?: string | null | undefined;

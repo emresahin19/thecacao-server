@@ -1,3 +1,3 @@
 import './data-tables.scss';
 ;
-export type * from './data-tables.props';
+// export type * from './data-tables.props';

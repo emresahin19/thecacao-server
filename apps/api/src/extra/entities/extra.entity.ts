@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { ExtraCategory } from '../../extra-category/entities/extra-category.entity';
+import { Image } from '../../image/entities/image.entity';
 
 @Entity('extras')
 export class Extra {
@@ -15,9 +16,10 @@ export class Extra {
   @Column({ type: 'decimal', precision: 8, scale: 2, default: 0 })
   price: number;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  image: number;
-  image_url?: string;
+  @Column({ type: 'simple-json', nullable: true })
+  image_ids: number[];
+  images?: Image[];
+  image_urls?: string[];
 
   @Column({ type: 'tinyint', default: 0 })
   passive: boolean;
@@ -25,16 +27,16 @@ export class Extra {
   @Column({ type: 'tinyint', default: 0 })
   deleted: boolean;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  @ManyToOne(() => ExtraCategory, (extraCategory) => extraCategory.id, { nullable: true })
+  @ManyToOne(() => ExtraCategory, (extraCategory) => extraCategory.extras, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'category_id' })
   category: ExtraCategory;
 
-  @Column({ name: 'category_id' })
+  @Column({ type: 'int', nullable: false })
   category_id: number;
 }

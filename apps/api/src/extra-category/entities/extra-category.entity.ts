@@ -13,7 +13,7 @@ export class ExtraCategory {
     description: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    image: string;
+    image: number;
 
     image_url?: string;
 

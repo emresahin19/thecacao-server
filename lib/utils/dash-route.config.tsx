@@ -4,6 +4,8 @@ import RiCake3Line from "lib/assets/icon/svg/RiCake3Line.svg"
 import RiDrinks2Line from "lib/assets/icon/svg/RiDrinks2Line.svg"
 import RiUser2Line from "lib/assets/icon/svg/RiUser2Line.svg"
 import RiListSettingsLine from "lib/assets/icon/svg/RiListSettingsLine.svg"
+import LuMilk from "lib/assets/icon/svg/LuMilk.svg"
+import LuIceCream from "lib/assets/icon/svg/LuIceCream.svg"
 
 const dashRoutes: SidebarItemProps[] = [
   {
@@ -28,6 +30,16 @@ const dashRoutes: SidebarItemProps[] = [
         href: '/categories',
         icon: <RiDrinks2Line />,
         label: 'Kategoriler',
+      },
+      {
+        href: '/extra-categories',
+        icon: <LuIceCream />,
+        label: 'Extra Kategoriler',
+      },
+      {
+        href: '/extra',
+        icon: <LuMilk />,
+        label: 'Extra',
       },
     ]
   },

@@ -1,55 +1,40 @@
 "use client";
 import React from 'react';
-import { ProductProps } from '../../../interfaces';
+import { ExtraProps } from '../../../interfaces';
 import { useCategoryInputData } from '../../../hooks';
 import { dateToString, imageToCdnUrl } from '../../../utils';
 import { placeholderProductImageBg } from '../../../constants';
 import Table from "../../Table/components/table.component";
-import { convertToProductDataProps, saveProduct } from 'lib/services';
 import { useToast } from 'lib/contexts';
 
 const ProductTable: React.FC = () => {
     const { categories } = useCategoryInputData();
     const { showToast } = useToast();
 
-    const handleAction = async (item: ProductProps, action: string) => {
-        const product = convertToProductDataProps(item);
-
-        if(action === 'save') {
-            const { data } = await saveProduct(product);
-            const { status, message } = data;
-            showToast({message, type: status ? 'success' : 'danger'});
-            return status;
-        }
+    const handleAction = async (item: ExtraProps, action: string) => {
+        
     }
 
     return (
         <div className='table'>
-            <Table<ProductProps>
-                className="product-table"
+            <Table<ExtraProps>
+                className="extra-table"
                 editPage="ProductEditCard"
-                apiRoute="products"
+                apiRoute="extra"
                 onAction={handleAction}
                 columns={[
                     {
-                        key: 'images',
+                        key: 'image_urls',
                         label: 'Resim',
-                        render: (product: ProductProps) => (
-                            product.images && (
+                        render: (extra: ExtraProps) => (
+                            extra.image_urls && (
                                 <div className="avatar">
-                                    {product.images.length > 0
-                                        ? <img draggable="false" src={imageToCdnUrl({ image: product.images[0]?.filename, type: 'table-avatar' })} />
+                                    {extra.image_urls.length > 0
+                                        ? <img draggable="false" src={extra.image_urls[0]} />
                                         : <img draggable="false" src={imageToCdnUrl({ image: placeholderProductImageBg, type: 'table-avatar' })} />
                                     }
                                 </div>
                             ))
-                    },
-                    {
-                        key: 'order',
-                        label: 'Sıra',
-                        sort: true,
-                        editable: true,
-                        filterType: 'number'
                     },
                     {
                         key: 'name',
@@ -59,24 +44,13 @@ const ProductTable: React.FC = () => {
                         filterType: 'text'
                     },
                     {
-                        key: 'category_id',
-                        label: 'Kategori',
-                        sort: true,
-                        editable: true,
-                        filterType: 'select',
-                        options: categories,
-                        render: (product: ProductProps) => (
-                            <span>{product.category?.name}</span>
-                        )
-                    },
-                    {
                         key: 'price',
                         sort: true,
                         label: 'Fiyat',
                         editable: true,
                         filterType: 'number',
-                        render: (product: ProductProps) => (
-                            <span>{product.price} ₺</span>
+                        render: (extra: ExtraProps) => (
+                            <span>{extra.price} ₺</span>
                         )
                     },
                     {
@@ -86,8 +60,8 @@ const ProductTable: React.FC = () => {
                         defaultSort: 'DESC',
                         editable: true,
                         filterType: 'date',
-                        render: (product: ProductProps) => (
-                            <span>{dateToString(product.updated_at, true)}</span>
+                        render: (extra: ExtraProps) => (
+                            <span>{dateToString(extra.updated_at, true)}</span>
                         )
                     }
                 ]}

@@ -6,7 +6,7 @@ const devMode = process.env.NEXT_PUBLIC_APP_MODE === 'development';
 const withPWA = require('next-pwa')({
     dest: 'public',
     register: true,
-    disable: devMode === 'development',  
+    disable: devMode,  
     skipWaiting: true
 })
 

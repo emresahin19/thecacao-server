@@ -1,5 +1,5 @@
 import LayoutAuthenticated from '../../layouts/authenticated'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import type { ReactElement } from 'react'
 import dashRoutes from "lib/utils/dash-route.config";
 import { SidebarItemProps } from 'lib/interfaces';
