@@ -16,7 +16,7 @@ const RangeInput = forwardRef<HTMLInputElement, RangeInputProps>(({
 }, ref) => {
 
     return (
-        <div className={`input-body ${className} ${error ? "error" : ""} ${size}`}>
+        <div className={`input-body range-input ${className} ${error ? "error" : ""} ${size}`}>
             <input
                 ref={ref}
                 type='range'

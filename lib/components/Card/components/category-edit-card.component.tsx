@@ -139,7 +139,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                     name="textColor"
                     label="Yazı Rengi"
                     value={style.color}
-                    labelColor={style.color}
+                    labelColor={style.backgroundColor}
                     onChange={(e) => handleStyle('color', e.target.value)}
                 />
             </div>

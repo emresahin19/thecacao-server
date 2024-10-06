@@ -32,6 +32,18 @@
                 background-color: var(--input-background-color-focus);
             }
         }
+        .range-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            input[type="range"] {
+                padding: 0;
+                height: 47px;
+            }
+            label {
+                top: -42px;
+            }
+        }
     }
 
     .button-area {

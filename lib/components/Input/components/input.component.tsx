@@ -52,7 +52,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
 
     return (
         <div 
-            className={`input-body ${className} ${error ? "error" : ""} ${size}`}
+            className={`input-body ${className} ${error && "error" || ""} ${size}`}
             {...style && { style }}    
         >
             {type === "textarea" ? (
