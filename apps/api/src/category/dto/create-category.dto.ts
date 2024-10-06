@@ -26,12 +26,7 @@ export class CreateCategoryDto {
     order?: number;
 
     @IsOptional()
-    @IsString()
-    color?: string;
-
-    @IsOptional()
-    @IsString()
-    textColor?: string;
+    style?: object;
 
     @IsOptional()
     @IsBoolean()

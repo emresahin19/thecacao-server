@@ -387,6 +387,8 @@
 
     .lt-tbody {
         background-color: var(--table-color-2);
+        min-height: 48px;
+
         .lt-tbody-tr {
             gap: 4px;
             .lt-td {

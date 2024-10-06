@@ -56,11 +56,10 @@ export type ColorOptions =
     index: number;
     name: string;
     slug: string;
+    style: any;
     order: number;
     products: ProductProps[];
     image?: string;
-    color?: string;
-    textColor?: string;
     isActive?: boolean;
     viewType?: 'grid' | 'list' | 'carousel';
     created_at?: string;

@@ -9,11 +9,26 @@ export interface CheckboxProps {
     checked?: boolean;
 };
 
+export interface RangeInputProps {
+    className?: string;
+    name?: string;
+    label?: string;
+    value: string | number;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    error?: boolean;
+    size?: InputSize;
+    min: number;
+    max: number;
+    step: number;
+};
+
 export interface InputProps {
     className?: string;
-    name: string;
-    label: string;
+    name?: string;
+    label?: string;
     value: string | number;
+    style?: any;
+    inputStyle?: any;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     error?: boolean;
     color1?: ColorOptions;

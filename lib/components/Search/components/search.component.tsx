@@ -19,12 +19,15 @@ const SearchModule: React.FC = () => {
     const [filteredCategory, setFilteredCategory] = useState<CategoryProps>({
         id: 0,
         index: 0,
+        style: {
+            backgroundColor: '',
+            color: '',
+            opacity: 0.2,
+        },
         name: '',
         slug: '',
         order: 0,
         products: [],
-        color: hexToRgba(defaultColor, 0.8),
-        textColor: '#fff',
         isActive: false
     });
 
@@ -131,11 +134,10 @@ const SearchModule: React.FC = () => {
                     id={filteredCategory.id}
                     key={filteredCategory.id}
                     order={filteredCategory.order}
+                    style={filteredCategory.style}
                     slug={filteredCategory.slug}
                     name={filteredCategory.name}
                     products={filteredCategory.products}
-                    color={filteredCategory.color}
-                    textColor={filteredCategory.textColor}
                     viewType={'list'}
                     onProductClick={({ productSlug }) =>
                         handleProductClick({ categorySlug: filteredCategory.slug, productSlug })

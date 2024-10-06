@@ -83,20 +83,21 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
             {data && <CategoryCarousel data={data.map((cat) => ({ id: cat.id, name: cat.name }))} />}
 
             {data?.map((cat, i) => (
-                <CategorySection
-                    key={cat.id}
-                    id={cat.id}
-                    index={i}
-                    order={cat.order}
-                    slug={cat.slug}
-                    name={cat.name}
-                    products={cat.products}
-                    color={cat.color}
-                    textColor={cat.textColor}
-                    onProductClick={({ productSlug }) =>
-                        handleProductClick({ categorySlug: cat.slug, productSlug })
-                    }
-                />
+                cat.products.length > 0 && (
+                    <CategorySection
+                        key={cat.id}
+                        id={cat.id}
+                        index={i}
+                        order={cat.order}
+                        style={cat.style}
+                        slug={cat.slug}
+                        name={cat.name}
+                        products={cat.products}
+                        onProductClick={({ productSlug }) =>
+                            handleProductClick({ categorySlug: cat.slug, productSlug })
+                        }
+                    />
+                ) 
             ))}
             <Modal 
                 onClose={() => modalRouteHandler()} 

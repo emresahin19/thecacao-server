@@ -3,7 +3,7 @@ import React, { useEffect, useState, forwardRef } from "react";
 import EyeIcon from "./eye-icon.component";
 import { InputProps } from "../input.props";
 
-const AsimInput = forwardRef<HTMLInputElement, InputProps>(({
+const Input = forwardRef<HTMLInputElement, InputProps>(({
     type = "text",
     className = "",
     name,
@@ -12,7 +12,9 @@ const AsimInput = forwardRef<HTMLInputElement, InputProps>(({
     labelColor,
     onChange,
     error = false,
-    size = 'md'
+    size = 'md',
+    style,
+    inputStyle
 }, ref) => {
     const [show, setShow] = useState(false);
     const [inputType, setInputType] = useState<string>(type);
@@ -49,7 +51,10 @@ const AsimInput = forwardRef<HTMLInputElement, InputProps>(({
     }, [type]);
 
     return (
-        <div className={`input-body ${className} ${error ? "error" : ""} ${size}`}>
+        <div 
+            className={`input-body ${className} ${error ? "error" : ""} ${size}`}
+            {...style && { style }}    
+        >
             {type === "textarea" ? (
                 <textarea
                     ref={ref as React.Ref<HTMLTextAreaElement>}
@@ -65,6 +70,7 @@ const AsimInput = forwardRef<HTMLInputElement, InputProps>(({
                     name={name}
                     onChange={onChange}
                     value={value ?? ''}
+                    {...inputStyle && { style: inputStyle }}
                 />
             )}
             <label {...labelColor && {style: {color: labelColor}}} >{label}</label>
@@ -93,4 +99,4 @@ const AsimInput = forwardRef<HTMLInputElement, InputProps>(({
     );
 });
 
-export default AsimInput;
+export default Input;

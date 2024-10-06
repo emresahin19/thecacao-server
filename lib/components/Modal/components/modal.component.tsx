@@ -201,7 +201,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                     <div className="modal-body">
                         {component === 'ProductDetailCard' && data && <ProductDetailCard {...data} />}
                         {component === 'ProductEditCard' && <ProductEditCard {...data} onSave={onSave} onCancel={onCancel} />}
-                        {component === 'CategoryEditCard' && data && <CategoryEditCard {...data} onSave={onSave} onCancel={onCancel} />}
+                        {component === 'CategoryEditCard' && <CategoryEditCard {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'DeleteModal' && data && <DeleteModal {...data} onSave={onSave} onCancel={onCancel} />}
                     </div>
                 </div>

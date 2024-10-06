@@ -22,10 +22,10 @@ const viewTypes = [
     },
 ];
 
-const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, color, index, textColor = defaultColor, viewType = 'carousel', onProductClick }) => {
+const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, style, products, index, viewType = 'carousel', onProductClick }) => {
     const [catType, setCatType] = useState<CarouselProps['viewType']>(viewType);
-    const [viewed, setViewed] = useState(index < 3);
-    const [isVisible, setIsVisible] = useState(index < 3);
+    // const [viewed, setViewed] = useState(index < 3);
+    // const [isVisible, setIsVisible] = useState(index < 3);
     const ref = useRef<HTMLDivElement>(null);
     const category_slug = slug;
     
@@ -36,36 +36,36 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
         }
     }, [slug]);
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting && !viewed) {
-                    setIsVisible(true);
-                    setViewed(true); 
-                }
-            },
-            { rootMargin: '150px' }
-        );
+    // useEffect(() => {
+    //     const observer = new IntersectionObserver(
+    //         ([entry]) => {
+    //             if (entry.isIntersecting && !viewed) {
+    //                 setIsVisible(true);
+    //                 setViewed(true); 
+    //             }
+    //         },
+    //         { rootMargin: '150px' }
+    //     );
 
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+    //     if (ref.current) {
+    //         observer.observe(ref.current);
+    //     }
 
-        return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
-        };
-    }, [ref, viewed]);
+    //     return () => {
+    //         if (ref.current) {
+    //             observer.unobserve(ref.current);
+    //         }
+    //     };
+    // }, [ref, viewed]);
 
     const handleProductClick = useCallback(({productSlug} : {productSlug: string}) => {
         onProductClick && onProductClick({productSlug});
     }, [onProductClick]);
 
     const renderContent = () => {
-        if (!viewed) {
-            return <></>;
-        }
+        // if (!viewed) {
+        //     return <></>;
+        // }
 
         const items = products.map((product, i) => {
             const { id, name, slug, description, price, category_id, recipe, extra, images, order }: ProductProps = product;
@@ -86,7 +86,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     images={images}
                     order={order}
                     loading={isEager ? 'eager' : 'lazy'}
-                    textColor={textColor}
+                    textColor={style.color || defaultColor}
                     listView={catType === 'list'}
                     onClick={(e) => handleProductClick({ productSlug: slug })}
                 />
@@ -97,7 +97,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
             <Carousel
                 items={items}
                 viewType={catType}
-                backToStartColor={textColor}
+                backToStartColor={style.color || defaultColor}
                 initialStart={index === 0}
                 dots={true}
             />
@@ -114,18 +114,24 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
 
         setLocalStorageItem('listTypes', currentStorage);
         setCatType(newType);
-    }, [slug, catType, isVisible]);
-
+    }, [slug, catType]);
+    
     return (
         <div 
             id={`category-${id}`} 
             className="category-section" 
-            style={{ background: color ? hexToRgba(color, 0.25) : '' }}
+            style={{...style && style.backgroundColor && style.opacity && 
+                {
+                    backgroundColor: hexToRgba(style.backgroundColor, style.opacity), 
+                    color: style.color || defaultColor,
+                    fill: style.color || defaultColor,
+                }
+            }}
             ref={ref}    
         >
             <div className="category-header">
-                <div className="category-title" style={{ color: textColor }}>
-                    {isVisible && <LogoIcon width={20} color={textColor} />}
+                <div className="category-title">
+                    {<LogoIcon width={20} color={style.color || defaultColor} />}
                     {name}
                 </div>
                 <div
@@ -133,9 +139,8 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, products, co
                     role="button"
                     onClick={showAll}
                     aria-label={currentViewType?.title || 'Show All'}
-                    style={{ color: textColor }}
                 >
-                    {isVisible && currentViewType?.icon}
+                    {currentViewType?.icon}
                     {currentViewType?.title || ''}
                 </div>
             </div>

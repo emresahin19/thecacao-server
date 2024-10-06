@@ -49,7 +49,7 @@ export class MenuService {
         const categories = await this.categoryRepository
             .createQueryBuilder('category')
             .select([
-                'category.id', 'category.name', 'category.slug', 'category.order', 'category.color', 'category.textColor',
+                'category.id', 'category.name', 'category.style', 'category.slug', 'category.order',
                 'product.id', 'product.name', 'product.slug', 'product.price', 'product.description', 'product.order', 'product.category', 'product.category_id', 'product.image_ids', 'product.extra'
             ])
             .leftJoin('category.products', 'product')

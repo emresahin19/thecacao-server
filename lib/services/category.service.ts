@@ -12,12 +12,11 @@ export const fetchCategory = async (id: string | number) => {
 }
 
 export const saveCategory = async (category: CategoryDataProps) => {
-    const id = category.id || 0;
-
+    const id = category.id;
     try {
         const response = id
             ? await axiosInstance.put(`/api/categories/${id}`, category)
-            : await axiosInstance.post(`/api/categories`, category);
+            : await axiosInstance.post(`/api/categories/create`, category);
 
         return response;
     } catch (error) {

@@ -1,5 +1,10 @@
 import { CategoryProps, ImageObject, ProductProps } from "../../interfaces";
 
+export interface CardStyleProps {
+    color: string;
+    backgroundColor: string;
+    opacity: number;
+}
 export interface ProductDetailProps {
     categories: CategoryProps[];
     sliderItems: React.ReactNode[];
@@ -28,10 +33,9 @@ export type CategoryEditProps = {
 
 export interface CategoryDataProps {
     id?: number | string;
+    style?: CardStyleProps;
     name: string;
     order: number;
-    color?: string;
-    textColor?: string;
     passive?: number; 
     deleted?: boolean;
 }

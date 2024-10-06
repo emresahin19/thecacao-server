@@ -41,14 +41,14 @@ const CategoryTable: React.FC = () => {
                         filterType: 'text' 
                     },
                     {
-                        key: 'color',
-                        label: 'Arkaplan',
+                        key: 'style.color',
+                        label: 'Yazı',
                         editable: true,
-                        type: 'color',
+                        type: 'color'
                     },
                     {
-                        key: 'textColor',
-                        label: 'Yazı',
+                        key: 'style.backgroundColor',
+                        label: 'Arkaplan',
                         editable: true,
                         type: 'color',
                     },

@@ -8,19 +8,35 @@ import { useCategory } from "../../../hooks";
 import { saveCategory } from '../../../services';
 import { useToast } from "../../../contexts";
 import { CategoryDataProps, CategoryEditProps } from "../card.props";
+import RangeInput from "../../Input/components/range-input.component";
+
+const emptyCategory: CategoryDataProps = {
+    id: 0,
+    name: '',
+    style: {
+        backgroundColor: '',
+        color: '',
+        opacity: 0.2,
+    },
+    order: 0,
+    passive: 0,
+};
 
 const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => {
     const [initialCategory, setInitialCategory] = useState<CategoryDataProps | null>(null);
     const [name, setName] = useState<string>('');
     const [order, setOrder] = useState<number>(0);
     const [passive, setPassive] = useState<number>(0);
-    const [color, setColor] = useState<string>('');
-    const [textColor, setTextColor] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [style, setStyle] = useState<any>({
+        backgroundColor: '',
+        color: '',
+        opacity: 0.2,
+    });
 
-    const { category, isError, isLoading, mutateCategory } = useCategory(id);
+    const { category, isError, isLoading, mutateCategory } = id ? useCategory(id) : { category: emptyCategory, isError: false, isLoading: false, mutateCategory: () => {} };
     const { showToast, handleRequestError } = useToast();
-
+    
     useEffect(() => {
         if (isError) {
             showToast({message: 'Kategori bilgileri alınamadı.', type: 'danger'});
@@ -31,23 +47,25 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
         if (category && !initialCategory) {
             setInitialCategory(category);
             setName(category.name);
+            setStyle(category.style);
             setOrder(category.order);
             setPassive(category.passive || 0);
-            setColor(category.color || '');
-            setTextColor(category.textColor || '');
         }
     }, [category, initialCategory]);
 
+    const handleStyle = (key: string, value: any) => {
+        setStyle((prevState: any) => ({...prevState, [key]: value}));
+    };
+        
     const handleSave = async () => {
         try {
             setLoading(true);
             const _category: CategoryDataProps = {
                 id,
                 name,
+                style,
                 order,
                 passive,
-                color,
-                textColor,
             };
             const { data } = await saveCategory(_category);
             const { status, message, item } = data;
@@ -67,8 +85,6 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
             setName(initialCategory.name);
             setOrder(initialCategory.order);
             setPassive(initialCategory.passive || 0);
-            setColor(initialCategory.color || '');
-            setTextColor(initialCategory.textColor || '');
         }
         onCancel && onCancel();
     };
@@ -112,9 +128,11 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                     type="color"
                     name="color"
                     label="Arkaplan Rengi"
-                    value={color}
-                    labelColor={textColor}
-                    onChange={(e) => setColor(e.target.value)}
+                    value={style.backgroundColor}
+                    labelColor={style.color}
+                    style={{ backgroundColor: '#fff', borderRadius: 8 }}
+                    inputStyle={style}
+                    onChange={(e) => handleStyle('backgroundColor', e.target.value)}
                 />
             </div>
 
@@ -123,9 +141,20 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                     type="color"
                     name="textColor"
                     label="Yazı Rengi"
-                    value={textColor}
-                    labelColor={color}
-                    onChange={(e) => setTextColor(e.target.value)}
+                    value={style.color}
+                    labelColor={style.color}
+                    onChange={(e) => handleStyle('color', e.target.value)}
+                />
+            </div>
+
+            <div className="edit-input">
+                <RangeInput 
+                    label="Opaklık"
+                    value={style.opacity} 
+                    min={0} 
+                    max={1}
+                    step={0.1}
+                    onChange={(e) => handleStyle('opacity', e.target.value)}
                 />
             </div>
 

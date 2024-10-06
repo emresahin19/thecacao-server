@@ -12,11 +12,8 @@ export class Category {
     @Column({ type: 'varchar', length: 255, nullable: true })
     slug: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
-    color: string;
-
-    @Column({ type: 'varchar', length: 255, nullable: true })
-    textColor: string;
+    @Column({ type: 'simple-json', nullable: true })
+    style: object;
 
     @Column({ type: 'tinyint', default: 0 })
     order: number;

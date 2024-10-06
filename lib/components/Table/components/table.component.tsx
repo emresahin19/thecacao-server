@@ -303,20 +303,21 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     const onEditInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>, itemId: string, key: string) => {
             const value = e.target.value;
-            setEditValues((prevEditValues) => ({
-                ...prevEditValues,
-                [itemId]: {
-                    ...prevEditValues[itemId],
-                    [key]: value
-                }
-            }));
+            setEditValues((prevEditValues) => {
+                const newItemEditValues = { ...prevEditValues[itemId] };
+                lodash.set(newItemEditValues, key, value);
+                return {
+                    ...prevEditValues,
+                    [itemId]: newItemEditValues,
+                };
+            });
         },
         []
     );
 
     const handleSave = useCallback(
         async (item: T, key: keyof T, value: any) => {
-            item[key] = value;
+            lodash.set(item, key as string, value);
             await onAction!(item, 'save');
             mutateData();
         },
@@ -361,7 +362,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             </div>
             <ListTableView
                 className={className}
-                data={data}
+                data={!isLoading && data || Array.from({ length: perPage }).map((_, i) => ({ id: i, loading: true }))}
                 columns={columns}
                 selectedItems={selectedItems}
                 selectAll={selectAll}
