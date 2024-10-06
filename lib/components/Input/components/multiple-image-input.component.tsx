@@ -1,30 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageInput from './image-input.component';
 import { ImageObject, MultipleImageInputProps } from '../input.props';
 import { imageToCdnUrl } from 'lib/utils';
 import { productVariantHeight, productVariantWidth } from 'lib/constants';
+import DraggableList from '../../DragDrop/components/drag-drop.component';
 
-const MultipleImageInput: React.FC<MultipleImageInputProps> = ({ 
-    initialImages, 
-    onImagesChange, 
-    onChange, 
-    onRemove, 
-    width = productVariantWidth, 
-    height = productVariantHeight 
+const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
+    initialImages,
+    onImagesChange,
+    onChange,
+    onRemove,
+    width = productVariantWidth,
+    height = productVariantHeight,
 }) => {
     const [images, setImages] = useState<ImageObject[]>(initialImages);
     const [emptyImage, setEmptyImage] = useState<string | null>(null);
 
-    const [draggedItem, setDraggedItem] = useState<{
-        index: number;
-        image: ImageObject;
-        x: number;
-        y: number;
-        offsetX: number;
-        offsetY: number;
-    } | null>(null);
-
-    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    useEffect(() => {
+        setImages(initialImages);
+    }, [initialImages]);
 
     const handleImageChange = (index: number, file: File | null) => {
         const newImages = [...images];
@@ -36,10 +30,6 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
         setImages(newImages);
         onImagesChange(newImages);
     };
-
-    useEffect(() => {
-        setImages(initialImages);
-    }, [initialImages]);
 
     const handleAddImage = (file: File | null) => {
         if (file) {
@@ -59,133 +49,37 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
         onRemove?.();
     };
 
-    // Touch Event Handler'ları
-    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>, index: number) => {
-        e.stopPropagation();
-
-        const touch = e.touches[0];
-        const item = itemRefs.current[index];
-
-        if (item) {
-            const rect = item.getBoundingClientRect();
-            // Dokunma noktası ile öğenin sol üst köşesi arasındaki offset'i hesaplayalım
-            const offsetX = touch.clientX - rect.left;
-            const offsetY = touch.clientY - item.offsetTop;
-
-            setDraggedItem({
-                index,
-                image: images[index],
-                x: touch.clientX,
-                y: touch.clientY,
-                offsetX,
-                offsetY,
-            });
-        }
-    };
-
-    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        if (!draggedItem) return;
-
-        const touch = e.touches[0];
-        const currentX = touch.clientX;
-        const currentY = touch.clientY;
-
-        // Klon öğenin pozisyonunu güncelle
-        setDraggedItem({
-            ...draggedItem,
-            x: currentX,
-            y: currentY,
-        });
-
-        // Parmağın hangi öğenin üzerinde olduğunu belirle
-        const overIndex = getOverIndex(currentX, currentY);
-        if (overIndex !== null && overIndex !== draggedItem.index) {
-            // Öğelerin yerini değiştir
-            const newImages = [...images];
-            const draggedImage = newImages.splice(draggedItem.index, 1)[0];
-            newImages.splice(overIndex, 0, draggedImage);
-            setImages(newImages);
-            onImagesChange(newImages);
-            // draggedItem index'ini güncelle
-            setDraggedItem({
-                ...draggedItem,
-                index: overIndex,
-            });
-        }
-    };
-
-    const handleTouchEnd = () => {
-        setDraggedItem(null);
-    };
-
-    // Parmağın bulunduğu öğenin indeksini bulmak için yardımcı fonksiyon
-    const getOverIndex = (x: number, y: number): number | null => {
-        for (let i = 0; i < itemRefs.current.length; i++) {
-            const item = itemRefs.current[i];
-            if (item && i !== draggedItem?.index) {
-                const rect = item.getBoundingClientRect();
-                if (
-                    x > rect.left &&
-                    x < rect.right &&
-                    y > rect.top &&
-                    y < rect.bottom
-                ) {
-                    return i;
-                }
-            }
-        }
-        return null;
+    const handleReorder = (newImages: ImageObject[]) => {
+        setImages(newImages);
+        onImagesChange(newImages);
     };
 
     return (
-        <div className="multiple-image-input">
-            {images.map((image, index) => {
-                const img = image.filename ? imageToCdnUrl({ image: image.filename, width, height }) : image.url;
-                return (
-                    <div
-                        key={index}
-                        className="sortable-item interactive"
-                        ref={(el) => {itemRefs.current[index] = el}}
-                        onTouchStart={(e) => handleTouchStart(e, index)}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                        style={{
-                            transition: 'transform 0.2s ease',
-                        }}
-                    >
+        <div className='multiple-image-input'>
+            <DraggableList
+                items={images}
+                onChange={handleReorder}
+                renderItem={(image: ImageObject, index: number) => {
+                    const img = image.filename
+                        ? imageToCdnUrl({ image: image.filename, width, height })
+                        : image.url;
+                    return (
                         <ImageInput
                             name={`image-${index}`}
                             value={img}
                             onChange={(file) => handleImageChange(index, file)}
                             onRemove={() => handleRemoveImage(index)}
                         />
-                    </div>
-                );
-            })}
-            <div className="sortable-item">
-                <ImageInput
-                    name={`image-${images.length}`}
-                    value={emptyImage}
-                    disablePreview={true}
-                    onChange={handleAddImage}
-                />
-            </div>
-            {draggedItem && (
-                <div
-                    className="sortable-item dragged-clone"
-                    style={{
-                        transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
-                    }}
-                >
-                    <ImageInput
-                        name={`image-dragged`}
-                        value={draggedItem.image.filename ? imageToCdnUrl({ image: draggedItem.image.filename, width, height }) : draggedItem.image.url}
-                        onChange={() => {}}
-                        onRemove={() => {}}
-                    />
-                </div>
-            )}
+                    );
+                }}
+            />
+            <ImageInput
+                className='empty-image-input'
+                name={`image-${images.length}`}
+                value={emptyImage}
+                disablePreview={true}
+                onChange={handleAddImage}
+            />
         </div>
     );
 };

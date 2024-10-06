@@ -54,6 +54,7 @@ export interface ImageInputProps {
     label?: string;
     name?: string;
     value?: string | null;
+    className?: string;
     onChange?: (file: File | null) => void;
     onRemove?: () => void;
     disablePreview?: boolean;

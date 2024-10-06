@@ -12,7 +12,6 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
     const isDate = useMemo(() => dateTypes.includes(type), [dateTypes, type]);
     const isChanged = useRef(false);
     const lastTapRef = useRef<number>(0);
-
     useEffect(() => {
         if (isEditing && inputRef.current) {
             setInputValue(value);
@@ -118,7 +117,6 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
                     />
                 )) || (type === 'select' && (
                     <MultipleSelectBox
-                        label={``}
                         options={options}
                         name={name}
                         value={inputValue}

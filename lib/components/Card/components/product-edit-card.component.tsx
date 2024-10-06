@@ -192,7 +192,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                 />
             </div>
             
-            <div className="edit-input">
+            {/* <div className="edit-input">
                 <Checkbox
                     id="passive"
                     name="passive"
@@ -200,7 +200,8 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                     checked={passive === 1}
                     onChange={() => setPassive(passive === 1 ? 0 : 1)}
                 />
-            </div>
+            </div> */}
+            
             <div className="edit-input button-area">
                 <Button 
                     onClick={handleReset}

@@ -448,30 +448,22 @@
 }
 
 .multiple-image-input {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
     padding: 16px;
-    .sortable-item {
+    .draggable-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+    }
+    .draggable-item, .empty-image-input {
         flex: 1 0 50%;
-        max-width: calc(50% - 26px);
+        max-width: calc(50% - 16px);
         display: flex;
         aspect-ratio: 1;
-        &.dragging {
-            opacity: 0.8;
-        }
-        .dragging-over {
-            transform: scale(1.05);
-        }
-        &.dragged-clone {
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            opacity: 0.8;
-            z-index: 1000;
-            max-width: calc(40% - 26px);
-        }
+        cursor: pointer;
+    }
+    .empty-image-input {
+        max-width: calc(50% - 34px);
+        margin-top: 32px;
     }
 }
 
