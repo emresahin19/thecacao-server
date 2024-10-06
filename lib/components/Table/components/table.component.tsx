@@ -213,7 +213,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                 openModal({
                     component: 'DeleteModal',
                     data: { 
-                        route: `/api/${apiRoute}/${id}`,
+                        route: apiRoute,
                         action: 'delete',
                         id: id
                     }

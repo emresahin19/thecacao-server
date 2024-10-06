@@ -9,10 +9,9 @@ import { deleteProduct } from 'lib/services';
 const DeleteModal: React.FC<DeleteModalProps> = ({ id, onSave, onCancel, itemName = 'Ürün', route, action }) => {
 
     const { showToast, handleRequestError } = useToast();
-
     const handleConfirm = () => {
         if(id) {
-            deleteProduct(id)
+            axiosInstance.delete(`api/${route}/${id}`)
             .then((response) => {
                 const { status } = response;
                 if(status === 204) {

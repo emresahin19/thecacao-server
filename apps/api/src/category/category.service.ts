@@ -78,7 +78,10 @@ export class CategoryService {
         const category = await this.findOne(id);
         category.deleted = true;
         category.passive = true;
-        return this.categoryRepository.save(category);
+
+        await this.categoryRepository.save(category)
+        await this.clearCache();
+        return category;
     }
 
     async clearCache() {

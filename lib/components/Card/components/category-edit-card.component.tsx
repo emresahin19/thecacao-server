@@ -9,13 +9,14 @@ import { saveCategory } from '../../../services';
 import { useToast } from "../../../contexts";
 import { CategoryDataProps, CategoryEditProps } from "../card.props";
 import RangeInput from "../../Input/components/range-input.component";
+import { defaultColor } from "lib/constants";
 
 const emptyCategory: CategoryDataProps = {
     id: 0,
     name: '',
     style: {
-        backgroundColor: '',
-        color: '',
+        backgroundColor: defaultColor,
+        color: '#fff',
         opacity: 0.2,
     },
     order: 0,
@@ -28,11 +29,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
     const [order, setOrder] = useState<number>(0);
     const [passive, setPassive] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const [style, setStyle] = useState<any>({
-        backgroundColor: '',
-        color: '',
-        opacity: 0.2,
-    });
+    const [style, setStyle] = useState<any>(emptyCategory.style);
 
     const { category, isError, isLoading, mutateCategory } = id ? useCategory(id) : { category: emptyCategory, isError: false, isLoading: false, mutateCategory: () => {} };
     const { showToast, handleRequestError } = useToast();
