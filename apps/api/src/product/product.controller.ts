@@ -34,8 +34,8 @@ export class ProductController {
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
-                error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
+                error: error.error,
+                message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }
     }
@@ -63,8 +63,8 @@ export class ProductController {
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
-                error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
+                error: error.error,
+                message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }
     }
@@ -91,8 +91,8 @@ export class ProductController {
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
-                error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
+                error: error.error,
+                message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }
     }
@@ -119,8 +119,8 @@ export class ProductController {
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
-                error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
+                error: error.error,
+                message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }
     }
@@ -139,8 +139,8 @@ export class ProductController {
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
-                error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
+                error: error.error,
+                message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }
     }

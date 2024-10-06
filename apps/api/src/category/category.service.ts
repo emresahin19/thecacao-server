@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
@@ -9,6 +9,7 @@ import slugify from 'slugify';
 import { RedisService } from '../common/redis/redis.service';
 import { menuCacheKey, revalidateSecretToken, WWW_URL } from '../common/constants';
 import axios from 'axios';
+import { clearCache } from '../common/lib/clear-cache';
 
 @Injectable()
 export class CategoryService {
@@ -54,23 +55,37 @@ export class CategoryService {
     }
 
     async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+        const existingItem = await this.categoryRepository.findOne({
+            where: { name: createCategoryDto.name },
+        });
+        if (existingItem) {
+            throw new BadRequestException('Bu isimde bir kategori zaten mevcut.');
+        }
+
         createCategoryDto.slug = slugify(createCategoryDto.name, { lower: true });
         if (!createCategoryDto.created_at) createCategoryDto.created_at = new Date();
         if (!createCategoryDto.updated_at) createCategoryDto.updated_at = new Date();
 
         const category = this.categoryRepository.create(createCategoryDto);
         await this.categoryRepository.save(category);
-        await this.clearCache();
+        await clearCache({cacheKey: menuCacheKey})
         return category;
     }
 
     async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+        const existingItem = await this.categoryRepository.find({
+            where: { name: updateCategoryDto.name },
+        });
+        if (existingItem.length > 1) {
+            throw new BadRequestException('Bu isimde bir kategori zaten mevcut.');
+        }
+
         updateCategoryDto.slug = slugify(updateCategoryDto.name, { lower: true });
         if (!updateCategoryDto.updated_at) updateCategoryDto.updated_at = new Date();
 
         await this.categoryRepository.update(id, updateCategoryDto);
         const category = await this.categoryRepository.findOne({ where: { id } });
-        await this.clearCache();
+        await clearCache({cacheKey: menuCacheKey})
         return category;
     }
 
@@ -80,20 +95,8 @@ export class CategoryService {
         category.passive = true;
 
         await this.categoryRepository.save(category)
-        await this.clearCache();
+        await clearCache({cacheKey: menuCacheKey})
         return category;
-    }
-
-    async clearCache() {
-        await this.redisService.del(menuCacheKey);
-        try {
-            await axios.post(`${WWW_URL}/api/revalidate`, {
-                secret: revalidateSecretToken,
-            });
-            console.log(`Revalidate request sent`);
-        } catch (error) {
-            console.error(`Revalidate request failed `, error.message);
-        }
     }
 
     async inputData() {

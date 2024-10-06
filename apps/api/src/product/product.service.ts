@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
@@ -12,6 +12,7 @@ import slugify from 'slugify';
 import { RedisService } from '../common/redis/redis.service';
 import axios from 'axios';
 import { Category } from '../category/entities/category.entity';
+import { clearCache } from '../common/lib/clear-cache';
 
 @Injectable()
 export class ProductService {
@@ -81,6 +82,12 @@ export class ProductService {
     }
 
     async create(createProductDto: CreateProductDto): Promise<Product> {
+        const existingItem = await this.categoryRepository.findOne({
+            where: { name: createProductDto.name },
+        });
+        if (existingItem) {
+            throw new BadRequestException('Bu isimde bir ürün zaten mevcut.');
+        }
         const image_ids = createProductDto.files && createProductDto.files.length > 0
             ? await this.imageService.saveFiles(createProductDto.files.map(fileObject => fileObject.file))
             : [];
@@ -92,6 +99,12 @@ export class ProductService {
     }
 
     async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
+        const existingItem = await this.categoryRepository.find({
+            where: { name: updateProductDto.name },
+        });
+        if (existingItem.length > 1) {
+            throw new BadRequestException('Bu isimde bir ürün zaten mevcut.');
+        }
         const image_ids: number[] = [];
 
         if(updateProductDto.files && updateProductDto.files.length > 0){
@@ -138,26 +151,13 @@ export class ProductService {
 
         // const category = await this.categoryRepository.findOne({ where: { id: productDto.category_id } });
         // const revalidatePath = `/menu/${category.slug}/${product.slug}`;
-        this.clearCache();
+        clearCache({cacheKey: menuCacheKey})
         return product;
-    }
-
-    async clearCache(){
-        await this.redisService.del(menuCacheKey);
-        try {
-            await axios.post(`${WWW_URL}/api/revalidate`, {
-                secret: revalidateSecretToken,
-                // ...revalidatePath && { revalidatePath }
-            });
-            console.log(`Revalidate request sent`);
-        } catch (error) {
-            console.error(`Revalidate request failed `, error.message);
-        }
     }
 
     async remove(id: number): Promise<void> {
         await this.productRepository.delete(id);
-        this.clearCache();
+        clearCache({cacheKey: menuCacheKey})
     }
 
     async getImages(image_ids: number[]): Promise<Image[]> {
