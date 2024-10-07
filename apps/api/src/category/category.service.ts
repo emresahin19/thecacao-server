@@ -10,13 +10,16 @@ import { RedisService } from '../common/redis/redis.service';
 import { menuCacheKey, revalidateSecretToken, WWW_URL } from '../common/constants';
 import axios from 'axios';
 import { clearCache } from '../common/lib/clear-cache';
+import { ImageService } from '../image/image.service';
+import { Image } from '../image/entities/image.entity';
 
 @Injectable()
 export class CategoryService {
     constructor(
         @InjectRepository(Category)
         private readonly categoryRepository: Repository<Category>,
-        private readonly redisService: RedisService
+        private readonly redisService: RedisService,
+        private readonly imageService: ImageService
     ) {}
 
     async findAll(params: CategoryQueryParams) {
@@ -50,8 +53,8 @@ export class CategoryService {
         return { items, total, currentPage: page, lastPage: Math.ceil(total / perPage) };
     }
 
-    findOne(id: number): Promise<Category> {
-        return this.categoryRepository.findOne({
+    async findOne(id: number): Promise<Category> {
+        const cat = await this.categoryRepository.findOne({
             where: { id: id },
             relations: ['products'],
             order: {
@@ -60,6 +63,19 @@ export class CategoryService {
                 },
             },
         });
+
+        if (!cat) {
+            throw new BadRequestException('Kategori bulunamadı.');
+        }
+        cat.products = await Promise.all(cat.products.map(async (product) => {
+            const images = await Promise.all(product.image_ids.map(async (imgId: number) => {
+                const image = await this.imageService.findOne(imgId);
+                return image // Assuming Image type has a url property
+            }));
+            return { ...product, images };
+        }));
+
+        return cat;
     }
 
     async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
