@@ -113,7 +113,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
 
     return (
         <div className='draggable-list' ref={containerRef}>
-            {items.map((item, index) => (
+            {items.length > 0 && items.map((item, index) => (
                 <div
                     key={index}
                     ref={(el) => {

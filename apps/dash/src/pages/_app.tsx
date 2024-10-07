@@ -39,11 +39,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <DTheApp>
-          {isInstallable && (
-            <button onClick={handleInstallClick} className="install-button">
-              <MdDownloading />
-            </button>
-          )}
+        {isInstallable && (
+          <button onClick={handleInstallClick} className="install-button">
+            <MdDownloading />
+          </button>
+        )}
         {getLayout(
           <>
             <GlobalLoading />

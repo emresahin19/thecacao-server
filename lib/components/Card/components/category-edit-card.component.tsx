@@ -5,12 +5,13 @@ import Checkbox from "../../Input/components/checkbox.component";
 import Spinner from "../../Loading/components/spinner.component";
 import DashDivider from "../../Layout/components/dash/divider.component";
 import { useCategory } from "../../../hooks";
-import { saveCategory } from '../../../services';
+import { saveCategory, setProductOrder } from '../../../services';
 import { useToast } from "../../../contexts";
 import { CategoryDataProps, CategoryEditProps } from "../card.props";
 import RangeInput from "../../Input/components/range-input.component";
 import { defaultColor } from "lib/constants";
 import EditableMenuCard from "./editable-menu-card.component";
+import { ProductProps } from "lib/interfaces";
 
 const emptyCategory: CategoryDataProps = {
     id: 0,
@@ -30,7 +31,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
     const [order, setOrder] = useState<number>(0);
     const [passive, setPassive] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<ProductProps[]>([]);
     const [style, setStyle] = useState<any>(emptyCategory.style);
 
     const { category, isError, isLoading, mutateCategory } = id ? useCategory(id) : { category: emptyCategory, isError: false, isLoading: false, mutateCategory: () => {} };
@@ -67,6 +68,8 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                 order,
                 passive,
             };
+            const productOrder = products.map((product, index) => ({ id: product.id, order: index })).filter(Boolean);
+            setProductOrder(productOrder);
             const { data } = await saveCategory(_category);
             const { status, message, item } = data;
 
@@ -149,6 +152,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
 
             <div className="edit-input">
                 <RangeInput 
+                    className="interactive"
                     label="Opaklık"
                     value={style.opacity} 
                     min={0} 
@@ -158,12 +162,12 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                 />
             </div>
             <div className="edit-input">
-                <EditableMenuCard
+                {products && <EditableMenuCard
                     title="Ürünler"
                     items={products}
                     style={style}
                     setItems={setProducts}
-                />
+                />}
             </div>
             {/* <div className="edit-input">
                 <Checkbox
@@ -178,7 +182,8 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
             <div className="edit-input button-area">
                 <Button 
                     onClick={handleReset}
-                    color2="danger"
+                    color1="danger"
+                    color2="white"
                 >
                     İptal
                 </Button>
@@ -186,7 +191,8 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                 <Button 
                     property="reverse" 
                     onClick={handleSave}
-                    color2="success"
+                    color1="success"
+                    color2="white"
                     loading={loading}
                 >
                     Kaydet

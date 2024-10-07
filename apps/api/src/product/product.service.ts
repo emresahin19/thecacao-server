@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Image } from '../image/entities/image.entity';
 import { cdnUrl, menuCacheKey, revalidateSecretToken, WWW_URL } from '../common/constants';
-import { ProductQueryParams } from './product.props';
+import { OrderProps, ProductQueryParams } from './product.props';
 import { ImageService } from '../image/image.service';
 import slugify from 'slugify';
 import { RedisService } from '../common/redis/redis.service';
@@ -158,6 +158,16 @@ export class ProductService {
     async remove(id: number): Promise<void> {
         await this.productRepository.delete(id);
         clearCache({cacheKey: menuCacheKey})
+    }
+
+    async order(items: OrderProps[]): Promise<any> {
+        for(const item of items){
+            this.productRepository.update({ id: item.id }, { order: item.order });
+        }
+        clearCache({ cacheKey: menuCacheKey });
+
+        return { message: 'Products order updated successfully' };
+    
     }
 
     async getImages(image_ids: number[]): Promise<Image[]> {

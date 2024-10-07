@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFiles, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, Res } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { StatusCode } from '../common/constants';
-import { ProductQueryParams } from './product.props';
+import { OrderProps, ProductQueryParams } from './product.props';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Response } from 'express';
 
@@ -31,6 +31,22 @@ export class ProductController {
                     status: false,
                     message: StatusCode.BAD_REQUEST.message,
                 });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.error,
+                message: error.message || StatusCode.BAD_REQUEST.message,
+            });
+        }
+    }
+    @Post('order')
+    async order(
+        @Body() items: OrderProps[],
+        @Res() res: Response
+    ) {
+        try {
+            const response = await this.productService.order(items);
+            return res.status(StatusCode.SUCCESS.statusCode).json(response);
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,

@@ -1,3 +1,5 @@
+import { Product } from "./entities/product.entity";
+
 export interface ProductQueryParams {
     page?: number;
     perPage?: number;
@@ -7,4 +9,10 @@ export interface ProductQueryParams {
     updated_at?: string;
     category_id?: number;
     price?: number;
+}
+
+
+export interface OrderProps {
+    id: Product['id']
+    order: Product['order']
 }

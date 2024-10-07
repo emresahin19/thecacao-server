@@ -51,7 +51,15 @@ export class CategoryService {
     }
 
     findOne(id: number): Promise<Category> {
-        return this.categoryRepository.findOne({ where: { id }, relations: ['products'] });
+        return this.categoryRepository.findOne({
+            where: { id: id },
+            relations: ['products'],
+            order: {
+                products: {
+                    order: 'ASC',
+                },
+            },
+        });
     }
 
     async create(createCategoryDto: CreateCategoryDto): Promise<Category> {

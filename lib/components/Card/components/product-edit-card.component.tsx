@@ -203,7 +203,8 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
             <div className="edit-input button-area">
                 <Button 
                     onClick={handleReset}
-                    color2="danger"
+                    color1="danger"
+                    color2="white"
                 >
                     İptal
                 </Button>
@@ -212,7 +213,8 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                     property="reverse" 
                     onClick={handleSave}
                     loading={loading}
-                    color2="success"
+                    color1="success"
+                    color2="white"
                 >
                     Kaydet
                 </Button>

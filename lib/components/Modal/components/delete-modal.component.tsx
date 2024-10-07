@@ -40,13 +40,15 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ id, onSave, onCancel, itemNam
             <div className="modal-footer">
                 <Button 
                     onClick={handleCancel}
-                    color2="secondary"
+                    color1="light"
+                    color2="white"
                 >
                     İptal
                 </Button>
                 <Button 
                     onClick={handleConfirm}
-                    color2="danger"
+                    color1="danger"
+                    color2="white"
                 >
                     Sil
                 </Button>

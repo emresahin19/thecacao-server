@@ -97,7 +97,7 @@
         border-#{$horizontal}-width: $width;
     }
     
-    &:hover {
+    &:hover, &:focus {
         color: $hover;
         &::before,
         &::after {
@@ -111,7 +111,7 @@
         
         &::after { transition-delay: 0s, $duration, 0s; }
     }
-    &.active {
+    &.active, &:focus {
         color: $hover;
         &::before,
         &::after {

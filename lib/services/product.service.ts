@@ -1,7 +1,7 @@
 import { axiosInstance } from 'lib/utils';
 import { ProductDataProps, ProductProps } from 'lib/interfaces';
 
-export const fetchProduct = async (id: string | number) => {
+export const fetchProduct = async (id: number) => {
     try {
         const response = await axiosInstance.get(`/api/products/${id}`);
         return response.data;
@@ -27,6 +27,16 @@ export const saveProduct = async (product: ProductDataProps) => {
     }
 };
 
+export const setProductOrder = async (items: Array<{id: number; order: number;}>) => {
+    try {
+        const response = await axiosInstance.post(`/api/products/order`, { items });
+        return response;
+    } catch (error) {
+        console.error('Error setting product order:', error);
+        throw error;
+    }
+}
+
 export const saveAsField = async (product: ProductProps) => {
     const _product: ProductDataProps = convertToProductDataProps(product);
     const formData = prepareProductFormData(_product);
@@ -40,7 +50,7 @@ export const saveAsField = async (product: ProductProps) => {
     }
 }
 
-export const deleteProduct = async (id: string | number) => {
+export const deleteProduct = async (id: number) => {
     try {
         const response = await axiosInstance.delete(`/api/products/${id}`);
         return response;
