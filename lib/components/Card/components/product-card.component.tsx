@@ -13,8 +13,8 @@ const ProductCard: React.FC<ProductProps> = memo((product) => {
         price, 
         images,
         textColor, 
-        loading, 
-        listView, 
+        loading = 'lazy', 
+        listView = false, 
         order,
         onClick, 
     } = product;

@@ -241,7 +241,7 @@ const Carousel: React.FC<CarouselProps> = ({
     // }, [initialStart, slideWidth, viewType]);
 
     return (
-        <div className={`carousel ${viewType !== 'carousel' && viewType ? viewType : ''}`}>
+        <div className={`carousel ${viewType !== 'carousel' ? viewType : ''}`}>
             {arrows && viewType === 'carousel' && (
                 <button
                     className="carousel-button prev"
@@ -280,20 +280,15 @@ const Carousel: React.FC<CarouselProps> = ({
                                 item={item}
                                 index={index}
                                 isActive={currentIndex === index}
-                                className={`carousel-item carousel-${
-                                    viewType === 'list' ? 1 : rowItemsCount
-                                }-item`}
+                                className={`carousel-item carousel-${ viewType === 'list' ? 1 : rowItemsCount }-item`}
                                 key={index}
                             />
-                        ))
-                        : items.map((item, index) => (
+                        )): items.map((item, index) => (
                             <CarouselItem
                                 item={item}
                                 index={index}
                                 isActive={currentIndex === index}
-                                className={`carousel-item carousel-${
-                                    viewType === 'list' ? 1 : rowItemsCount
-                                }-item`}
+                                className={`carousel-item carousel-${ viewType === 'list' ? 1 : rowItemsCount }-item`}
                                 key={index}
                             />
                         ))}

@@ -52,5 +52,11 @@ export interface ProductDataProps {
     diy?: number[];
     passive?: number;
     deleted?: boolean;
-  }
-    
+}
+
+export interface EditableMenuCardProps {
+    items: ProductProps[];
+    setItems: (items: ProductProps[]) => void;
+    style: CardStyleProps;
+    title?: string;
+}

@@ -75,7 +75,7 @@ export type ColorOptions =
     name: string;
     slug: string;
     fullpath?: string;
-    description: string;
+    description?: string;
     price: number;
     category_id?: number;
     recipe?: string;
@@ -83,7 +83,7 @@ export type ColorOptions =
     extras?: Array<ExtraDataProps>;
     images?: Array<ImageObject>;
     passive?: number;
-    order: number;
+    order?: number;
     textColor?: string;
     listView?: boolean;
     created_at?: string;

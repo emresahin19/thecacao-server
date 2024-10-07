@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Input from "../../Input/components/input.component";
 import Button from "../../Button/components/button.component";
-import Checkbox from "../../Input/components/checkbox.component";
 import Spinner from "../../Loading/components/spinner.component";
 import DashDivider from "../../Layout/components/dash/divider.component";
 import MultipleImageInput from "../../Input/components/multiple-image-input.component";
 import MultipleSelectBox from "../../Input/components/multiple-selectbox.component";
 
-import { useCategoryInputData, useExtraInputData, useProduct, useProducts } from "../../../hooks";
+import { useCategoryInputData, useExtraInputData, useProduct } from "../../../hooks";
 import { ImageObject } from "../../../interfaces";
 import { useToast } from "../../../contexts";
 import { saveProduct } from '../../../services';
@@ -191,7 +190,6 @@ const ProductEdit: React.FC<ProductEditProps> = ({ id, onSave, onCancel }) => {
                     height={productVariantHeight}
                 />
             </div>
-            
             {/* <div className="edit-input">
                 <Checkbox
                     id="passive"

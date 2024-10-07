@@ -10,6 +10,7 @@ import { useToast } from "../../../contexts";
 import { CategoryDataProps, CategoryEditProps } from "../card.props";
 import RangeInput from "../../Input/components/range-input.component";
 import { defaultColor } from "lib/constants";
+import EditableMenuCard from "./editable-menu-card.component";
 
 const emptyCategory: CategoryDataProps = {
     id: 0,
@@ -29,6 +30,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
     const [order, setOrder] = useState<number>(0);
     const [passive, setPassive] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
+    const [products, setProducts] = useState<any[]>([]);
     const [style, setStyle] = useState<any>(emptyCategory.style);
 
     const { category, isError, isLoading, mutateCategory } = id ? useCategory(id) : { category: emptyCategory, isError: false, isLoading: false, mutateCategory: () => {} };
@@ -47,6 +49,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
             setStyle(category.style);
             setOrder(category.order);
             setPassive(category.passive || 0);
+            setProducts(category.products);
         }
     }, [category, initialCategory]);
 
@@ -154,7 +157,14 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ id, onSave, onCancel }) => 
                     onChange={(e) => handleStyle('opacity', e.target.value)}
                 />
             </div>
-
+            <div className="edit-input">
+                <EditableMenuCard
+                    title="Ürünler"
+                    items={products}
+                    style={style}
+                    setItems={setProducts}
+                />
+            </div>
             {/* <div className="edit-input">
                 <Checkbox
                     id="passive"

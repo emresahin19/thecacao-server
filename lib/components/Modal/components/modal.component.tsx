@@ -64,7 +64,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         if (!modalRef.current) return;
 
         const handleResize = () => {
-            modalHeightRef.current = modalRef.current!.offsetHeight;
+            if (modalRef.current) {
+                modalHeightRef.current = modalRef.current.offsetHeight;
+            }
             windowHeightRef.current = window.innerHeight;
             maxMoveYRef.current = windowHeightRef.current - modalHeightRef.current - modalTop;
         };

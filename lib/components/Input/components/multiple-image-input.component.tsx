@@ -58,8 +58,8 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
         <div className='multiple-image-input'>
             <DraggableList
                 items={images}
-                onChange={handleReorder}
-                renderItem={(image: ImageObject, index: number) => {
+                setItems={handleReorder}
+                render={(image: ImageObject, index: number) => {
                     const img = image.filename
                         ? imageToCdnUrl({ image: image.filename, width, height })
                         : image.url;

@@ -1,21 +1,21 @@
 .draggable-list {
     display: flex;
     flex-wrap: wrap;
+    max-height: 280px;
+    overflow: auto;
+    touch-action: none;
     .draggable-item {
         &.dragging {
             opacity: 0.8;
         }
-        .dragging-over {
-            transform: scale(1.05);
-        }
         &.dragged-clone {
-            position: absolute;
+            width: 90%;
+            opacity: 0.8;
             top: 0;
             left: 0;
+            position: fixed;
             pointer-events: none;
-            opacity: 0.8;
             z-index: 1000;
-            max-width: calc(40% - 16px);
         }
     }
     

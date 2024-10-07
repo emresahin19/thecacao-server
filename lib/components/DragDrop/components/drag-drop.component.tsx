@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { DraggableListProps } from '../drag-drop.props';
 
-
-function DraggableList<T>({ items, className, renderItem, onChange }: DraggableListProps<T>) {
+const DraggableList =  <T extends { }>({ items, className, render, setItems }: DraggableListProps<T>) => {
     const [draggedItem, setDraggedItem] = useState<{
         index: number;
         item: T;
@@ -13,6 +12,7 @@ function DraggableList<T>({ items, className, renderItem, onChange }: DraggableL
     } | null>(null);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>, index: number) => {
         e.stopPropagation();
@@ -23,7 +23,7 @@ function DraggableList<T>({ items, className, renderItem, onChange }: DraggableL
         if (item) {
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
-            const offsetY = touch.clientY - item.offsetTop;
+            const offsetY = touch.clientY - rect.top;
 
             setDraggedItem({
                 index,
@@ -36,7 +36,7 @@ function DraggableList<T>({ items, className, renderItem, onChange }: DraggableL
         }
     };
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
         if (!draggedItem) return;
 
@@ -50,12 +50,14 @@ function DraggableList<T>({ items, className, renderItem, onChange }: DraggableL
             y: currentY,
         });
 
+        autoScrollContainer(currentY);
+
         const overIndex = getOverIndex(currentX, currentY);
         if (overIndex !== null && overIndex !== draggedItem.index) {
             const newItems = [...items];
             const [removedItem] = newItems.splice(draggedItem.index, 1);
             newItems.splice(overIndex, 0, removedItem);
-            onChange(newItems);
+            setItems(newItems);
 
             setDraggedItem({
                 ...draggedItem,
@@ -66,6 +68,34 @@ function DraggableList<T>({ items, className, renderItem, onChange }: DraggableL
 
     const handleTouchEnd = () => {
         setDraggedItem(null);
+    };
+
+    const autoScrollContainer = (currentY: number) => {
+        const container = containerRef.current;
+        if (container) {
+            const containerRect = container.getBoundingClientRect();
+            const scrollThreshold = 60; // Distance from edge to start scrolling
+            const maxScrollSpeed = 20; // Max pixels to scroll per event
+
+            const distanceToTop = currentY - containerRect.top;
+            const distanceToBottom = containerRect.bottom - currentY;
+
+            if (distanceToTop < scrollThreshold) {
+                // Scroll up
+                const scrollSpeed = Math.max(
+                    -maxScrollSpeed,
+                    ((distanceToTop - scrollThreshold) / scrollThreshold) * maxScrollSpeed
+                );
+                container.scrollTop += scrollSpeed;
+            } else if (distanceToBottom < scrollThreshold) {
+                // Scroll down
+                const scrollSpeed = Math.min(
+                    maxScrollSpeed,
+                    ((scrollThreshold - distanceToBottom) / scrollThreshold) * maxScrollSpeed
+                );
+                container.scrollTop += scrollSpeed;
+            }
+        }
     };
 
     const getOverIndex = (x: number, y: number): number | null => {
@@ -82,7 +112,7 @@ function DraggableList<T>({ items, className, renderItem, onChange }: DraggableL
     };
 
     return (
-        <div className='draggable-list'>
+        <div className='draggable-list' ref={containerRef}>
             {items.map((item, index) => (
                 <div
                     key={index}
@@ -94,21 +124,17 @@ function DraggableList<T>({ items, className, renderItem, onChange }: DraggableL
                     onTouchEnd={handleTouchEnd}
                     className="draggable-item"
                 >
-                    {renderItem(item, index)}
+                    {render(item, index)}
                 </div>
             ))}
             {draggedItem && (
                 <div
                     className="draggable-item dragged-clone"
                     style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
                         transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
-                        pointerEvents: 'none',
                     }}
                 >
-                    {renderItem(draggedItem.item, draggedItem.index)}
+                    {render(draggedItem.item, draggedItem.index)}
                 </div>
             )}
         </div>
