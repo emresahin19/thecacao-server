@@ -4,10 +4,52 @@
     max-height: 280px;
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 0 4px;
     &.draggable {
         touch-action: none;
     }
     .draggable-item {
+        padding: 2px;
+        box-shadow: inset 0 0 0 2px transparent;
+        position: relative;
+        &::before,
+        &::after {
+            content: '';
+            box-sizing: inherit;
+            position: absolute;
+            border: 2px solid transparent;
+            width: 0;
+            height: 0;
+            z-index: 9;
+            border-radius: 6px;
+        }
+
+        &::before {
+            top: 2px;
+            left: 2px;
+        }
+
+        &::after {
+            bottom: -2px;
+            right: -2px;
+        }
+        &.holding {
+            &:before, &:after {
+                width: calc(100% - 4px);
+                height: calc(100% - 4px);
+                transition:
+                    width ease-out 0.2s,
+                    height 0.2s ease-out 0.4s;
+            }
+            &::before {
+                border-top-color: $cyan;
+                border-right-color: $cyan;
+            }
+            &::after {
+                border-bottom-color: $cyan; 
+                border-left-color: $cyan;
+            }
+        }
         &.dragging {
             opacity: 0.8;
         }

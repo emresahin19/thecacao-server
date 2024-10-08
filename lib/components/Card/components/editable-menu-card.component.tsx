@@ -3,7 +3,7 @@ import LogoIcon from 'lib/components/Logo/components/logo-icon.component';
 import { defaultColor } from 'lib/constants';
 import { hexToRgba } from 'lib/utils';
 import { EditableMenuCardProps } from '../card.props';
-import DraggableList from 'lib/components/DragDrop/components/drag-drop.component';
+import ScrollableDraggableList from 'lib/components/DragDrop/components/scrollable-drag-drop.component';
 import ProductCard from './product-card.component';
 import { ProductProps } from 'lib/interfaces';
 
@@ -28,7 +28,7 @@ const EditableMenuCard = ({ items,  setItems, title = "Items", style}: EditableM
                         </div>
                     </div>
                     <div className="menu-list">
-                        <DraggableList<ProductProps>
+                        <ScrollableDraggableList<ProductProps>
                             items={items}
                             setItems={setItems}
                             render={(product: ProductProps, index: number) => (
