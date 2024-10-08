@@ -36,7 +36,11 @@ export class ImageService {
     }
 
     findOne(id: number): Promise<Image> {
-        return this.imageRepository.findOne({ where: { id } });
+        try {
+            return this.imageRepository.findOne({ where: { id } });
+        } catch (error) {
+            throw new Error('Image not found');
+        }
     }
 
     async update(id: number, updateImageDto: UpdateImageDto): Promise<Image> {

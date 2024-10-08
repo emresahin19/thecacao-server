@@ -2,8 +2,11 @@
     display: flex;
     flex-wrap: wrap;
     max-height: 280px;
-    overflow: auto;
-    touch-action: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &.draggable {
+        touch-action: none;
+    }
     .draggable-item {
         &.dragging {
             opacity: 0.8;

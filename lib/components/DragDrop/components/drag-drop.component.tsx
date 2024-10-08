@@ -11,6 +11,9 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
         offsetY: number;
     } | null>(null);
 
+    const [isHolding, setIsHolding] = useState<boolean>(false);
+    const [holdTimer, setHoldTimer] = useState<number | null>(null);
+
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,20 +28,28 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
             const offsetX = touch.clientX - rect.left;
             const offsetY = touch.clientY - rect.top;
 
-            setDraggedItem({
-                index,
-                item: items[index],
-                x: touch.clientX,
-                y: touch.clientY,
-                offsetX,
-                offsetY,
-            });
+            // Start the timer for 0.5 seconds to initiate the drag
+            const timer = window.setTimeout(() => {
+                setIsHolding(true);
+                containerRef.current?.classList.add('draggable');
+                setDraggedItem({
+                    index,
+                    item: items[index],
+                    x: touch.clientX,
+                    y: touch.clientY,
+                    offsetX,
+                    offsetY,
+                });
+            }, 500); // 500ms delay
+
+            setHoldTimer(timer);
         }
     };
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
-        if (!draggedItem) return;
+
+        if (!isHolding || !draggedItem) return;
 
         const touch = e.touches[0];
         const currentX = touch.clientX;
@@ -67,6 +78,15 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
     };
 
     const handleTouchEnd = () => {
+        // Cancel the hold timer if it hasn't triggered yet
+        if (holdTimer) {
+            clearTimeout(holdTimer);
+            setHoldTimer(null);
+            containerRef.current?.classList.remove('draggable');
+        }
+
+        // Reset hold state and dragged item
+        setIsHolding(false);
         setDraggedItem(null);
     };
 
@@ -127,7 +147,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
                     {render(item, index)}
                 </div>
             ))}
-            {draggedItem && (
+            {draggedItem && isHolding && (
                 <div
                     className="draggable-item dragged-clone"
                     style={{
