@@ -380,11 +380,7 @@
     border-radius: 8px;
     overflow: hidden;
     .menu-list {
-        .draggable-container {
-            max-height: 280px;
-            overflow: auto;
-        }
-        .draggable-list {
+        .scrollable-draggable-list {
             gap: 8px;
             .draggable-item .card {
                 h3 {

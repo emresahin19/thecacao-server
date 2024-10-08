@@ -3,7 +3,7 @@ import { DraggableListProps } from '../drag-drop.props';
 
 const DraggableList = <T extends {}>({
   items,
-  className,
+  className = '',
   render,
   setItems,
 }: DraggableListProps<T>) => {
@@ -195,9 +195,9 @@ const DraggableList = <T extends {}>({
 
     return (
         <div
-            className="draggable-list"
+            className={`scrollable-draggable-list ${className} ${draggedItem ? 'dragging' : ''}`}
             ref={containerRef}
-            style={{ touchAction: 'none' }} // Start with touch-action: none
+            style={{ touchAction: 'none' }}
         >
         {items.length > 0 &&
             items.map((item, index) => (
