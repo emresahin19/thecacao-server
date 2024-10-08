@@ -17,11 +17,6 @@ function DraggableList<T>({ items, className = '', children, render, setItems }:
         const touch = e.touches[0];
         const item = itemRefs.current[index];
         if (item) {
-            console.log('item', item);
-            if(item.classList.contains('interactive')) {
-                console.log('interactive');
-                return;
-            }
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
             const offsetY = touch.clientY - item.offsetTop;
