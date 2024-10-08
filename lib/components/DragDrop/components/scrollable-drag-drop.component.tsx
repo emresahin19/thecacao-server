@@ -59,7 +59,7 @@ const DraggableList = <T extends {}>({
                     offsetX,
                     offsetY,
                 });
-            }, 500);
+            }, 600);
 
             setHoldTimer(timer);
         }

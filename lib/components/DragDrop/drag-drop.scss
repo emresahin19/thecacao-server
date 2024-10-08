@@ -38,8 +38,8 @@
                 width: calc(100% - 4px);
                 height: calc(100% - 4px);
                 transition:
-                    width ease-out 0.3s,
-                    height 0.3s ease-out 0.4s;
+                    width ease-out 0.4s,
+                    height 0.4s ease-out 0.5s;
             }
             &::before {
                 border-top-color: $cyan;
