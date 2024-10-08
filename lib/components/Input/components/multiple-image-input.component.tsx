@@ -5,6 +5,8 @@ import { imageToCdnUrl } from 'lib/utils';
 import { productVariantHeight, productVariantWidth } from 'lib/constants';
 import DraggableList from '../../DragDrop/components/drag-drop.component';
 
+const emptyImageObject: ImageObject = { id: null, file: null };
+
 const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
     initialImages,
     onImagesChange,
@@ -72,14 +74,14 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
                         />
                     );
                 }}
-            />
-            <ImageInput
-                className='empty-image-input'
-                name={`image-${images.length}`}
-                value={emptyImage}
-                disablePreview={true}
-                onChange={handleAddImage}
-            />
+            >
+                <ImageInput
+                    name={`image-${images.length}`}
+                    value={emptyImage}
+                    disablePreview={true}
+                    onChange={handleAddImage}
+                />
+            </DraggableList>
         </div>
     );
 };

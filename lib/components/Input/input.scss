@@ -450,8 +450,6 @@
 .multiple-image-input {
     padding: 16px;
     .draggable-list {
-        display: flex;
-        flex-wrap: wrap;
         gap: 32px;
     }
     .draggable-item, .empty-image-input {

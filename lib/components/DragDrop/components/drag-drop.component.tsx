@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DraggableListProps } from '../drag-drop.props';
-function DraggableList<T>({ items, className, render, setItems }: DraggableListProps<T>) {
+function DraggableList<T>({ items, className = '', children, render, setItems }: DraggableListProps<T>) {
     const [draggedItem, setDraggedItem] = useState<{
         index: number;
         item: T;
@@ -17,6 +17,11 @@ function DraggableList<T>({ items, className, render, setItems }: DraggableListP
         const touch = e.touches[0];
         const item = itemRefs.current[index];
         if (item) {
+            console.log('item', item);
+            if(item.classList.contains('interactive')) {
+                console.log('interactive');
+                return;
+            }
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
             const offsetY = touch.clientY - item.offsetTop;
@@ -71,9 +76,9 @@ function DraggableList<T>({ items, className, render, setItems }: DraggableListP
         }
         return null;
     };
-    
+
     return (
-        <div className='draggable-list'>
+        <div className={`draggable-list ${className}`}>
             {items.map((item, index) => (
                 <div
                     key={index}
@@ -88,6 +93,9 @@ function DraggableList<T>({ items, className, render, setItems }: DraggableListP
                     {render(item, index)}
                 </div>
             ))}
+            {children && (
+                <div className="draggable-item">{children}</div>
+            )}
             {draggedItem && (
                 <div
                     className="draggable-item dragged-clone"
