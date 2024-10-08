@@ -31,7 +31,6 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
             // Start the timer for 0.5 seconds to initiate the drag
             const timer = window.setTimeout(() => {
                 setIsHolding(true);
-                containerRef.current?.classList.add('draggable');
                 setDraggedItem({
                     index,
                     item: items[index],
@@ -93,6 +92,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
     const autoScrollContainer = (currentY: number) => {
         const container = containerRef.current;
         if (container) {
+            containerRef.current?.classList.add('draggable');
             const containerRect = container.getBoundingClientRect();
             const scrollThreshold = 60; // Distance from edge to start scrolling
             const maxScrollSpeed = 20; // Max pixels to scroll per event
