@@ -14,7 +14,6 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
     const [isHolding, setIsHolding] = useState<boolean>(false);
     const [holdTimer, setHoldTimer] = useState<number | null>(null);
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const [initialTouch, setInitialTouch] = useState<{ x: number; y: number } | null>(null);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -30,15 +29,9 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
             const offsetX = touch.clientX - rect.left;
             const offsetY = touch.clientY - rect.top;
 
-            // Store the initial touch position
-            setInitialTouch({ x: touch.clientX, y: touch.clientY });
-
             // Start the timer for 0.5 seconds to initiate the drag
             const timer = window.setTimeout(() => {
-                setIsHolding(true); // Set holding state to true after 0.5s
-                setIsDragging(true); // Enable dragging
-
-                // Initiate drag state
+                setIsHolding(true);
                 setDraggedItem({
                     index,
                     item: items[index],
@@ -47,6 +40,9 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
                     offsetX,
                     offsetY,
                 });
+
+                // Once dragging starts, apply touch-action: none to the container
+                setIsDragging(true);
             }, 500); // 500ms delay
 
             setHoldTimer(timer);
@@ -55,46 +51,41 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
-
+    
         const touch = e.touches[0];
         const currentX = touch.clientX;
         const currentY = touch.clientY;
-
-        // Detect if the user scrolls (moves significantly) before the hold timer expires
-        if (initialTouch && (Math.abs(currentX - initialTouch.x) > 5 || Math.abs(currentY - initialTouch.y) > 5)) {
-            // Cancel the hold timer and reset dragging if the user scrolls before 0.5 seconds
-            if (holdTimer) {
-                clearTimeout(holdTimer);
-                setHoldTimer(null);
-            }
-            setIsHolding(false);
-            setInitialTouch(null);
-            return;
+    
+        // If the user moves before holding, cancel the hold timer
+        if (!isHolding && holdTimer) {
+            clearTimeout(holdTimer);
+            setHoldTimer(null);
         }
-
-        // Only handle dragging if the hold timer has completed and dragging has started
-        if (!isHolding || !draggedItem || !isDragging) return;
-
-        // Update the dragged item's position
-        setDraggedItem({
-            ...draggedItem,
-            x: currentX,
-            y: currentY,
-        });
-
-        autoScrollContainer(currentY);
-
-        const overIndex = getOverIndex(currentX, currentY);
-        if (overIndex !== null && overIndex !== draggedItem.index) {
-            const newItems = [...items];
-            const [removedItem] = newItems.splice(draggedItem.index, 1);
-            newItems.splice(overIndex, 0, removedItem);
-            setItems(newItems);
-
+    
+        // If dragging has started, prevent the default scroll behavior
+        if (isDragging) {
+            if (!draggedItem) return;
+    
             setDraggedItem({
                 ...draggedItem,
-                index: overIndex,
+                x: currentX,
+                y: currentY,
             });
+    
+            autoScrollContainer(currentY);
+    
+            const overIndex = getOverIndex(currentX, currentY);
+            if (overIndex !== null && overIndex !== draggedItem.index) {
+                const newItems = [...items];
+                const [removedItem] = newItems.splice(draggedItem.index, 1);
+                newItems.splice(overIndex, 0, removedItem);
+                setItems(newItems);
+    
+                setDraggedItem({
+                    ...draggedItem,
+                    index: overIndex,
+                });
+            }
         }
     };
 
@@ -105,11 +96,10 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
             setHoldTimer(null);
         }
 
-        // Reset states after touch ends
+        // Reset hold state and dragged item
         setIsHolding(false);
-        setIsDragging(false); // Reset dragging state
         setDraggedItem(null);
-        setInitialTouch(null); // Reset the initial touch state
+        setIsDragging(false); // Reset dragging state
     };
 
     const autoScrollContainer = (currentY: number) => {
@@ -154,7 +144,11 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
     };
 
     return (
-        <div className='draggable-list' ref={containerRef}>
+        <div
+            className='draggable-list'
+            ref={containerRef}
+            style={{ touchAction: isDragging ? 'none' : 'auto' }}
+        >
             {items.length > 0 && items.map((item, index) => (
                 <div
                     key={index}
@@ -169,7 +163,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
                     {render(item, index)}
                 </div>
             ))}
-            {draggedItem && isHolding && isDragging && (
+            {draggedItem && isHolding && (
                 <div
                     className="draggable-item dragged-clone"
                     style={{
@@ -180,7 +174,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
                 </div>
             )}
         </div>
-    );
+    )
 }
 
 export default DraggableList;
