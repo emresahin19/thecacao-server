@@ -13,6 +13,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
 
     const [isHolding, setIsHolding] = useState<boolean>(false);
     const [holdTimer, setHoldTimer] = useState<number | null>(null);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -39,6 +40,9 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
                     offsetX,
                     offsetY,
                 });
+
+                // Once dragging starts, apply touch-action: none to the container
+                setIsDragging(true);
             }, 500); // 500ms delay
 
             setHoldTimer(timer);
@@ -47,6 +51,11 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
+
+        // If dragging has started, prevent the default scroll behavior
+        if (isDragging) {
+            e.preventDefault();
+        }
 
         if (!isHolding || !draggedItem) return;
 
@@ -81,18 +90,17 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
         if (holdTimer) {
             clearTimeout(holdTimer);
             setHoldTimer(null);
-            containerRef.current?.classList.remove('draggable');
         }
 
         // Reset hold state and dragged item
         setIsHolding(false);
         setDraggedItem(null);
+        setIsDragging(false); // Reset dragging state
     };
 
     const autoScrollContainer = (currentY: number) => {
         const container = containerRef.current;
         if (container) {
-            containerRef.current?.classList.add('draggable');
             const containerRect = container.getBoundingClientRect();
             const scrollThreshold = 60; // Distance from edge to start scrolling
             const maxScrollSpeed = 20; // Max pixels to scroll per event
@@ -132,7 +140,11 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
     };
 
     return (
-        <div className='draggable-list' ref={containerRef}>
+        <div
+            className='draggable-list'
+            ref={containerRef}
+            style={{ touchAction: isDragging ? 'none' : 'auto' }} // Dynamically apply touch-action based on dragging
+        >
             {items.length > 0 && items.map((item, index) => (
                 <div
                     key={index}
