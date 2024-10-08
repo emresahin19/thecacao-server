@@ -15,8 +15,13 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
     const [holdTimer, setHoldTimer] = useState<number | null>(null);
     const [isDragging, setIsDragging] = useState<boolean>(false);
 
+    const [startTouch, setStartTouch] = useState<{ x: number; y: number } | null>(null);
+    const [lastTouch, setLastTouch] = useState<{ x: number; y: number } | null>(null);
+
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const moveThreshold = 5; // pixels
 
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>, index: number) => {
         e.stopPropagation();
@@ -28,6 +33,9 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
             const offsetY = touch.clientY - rect.top;
+
+            setStartTouch({ x: touch.clientX, y: touch.clientY });
+            setLastTouch({ x: touch.clientX, y: touch.clientY });
 
             // Start the timer for 0.5 seconds to initiate the drag
             const timer = window.setTimeout(() => {
@@ -41,7 +49,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
                     offsetY,
                 });
 
-                // Once dragging starts, apply touch-action: none to the container
+                // Once dragging starts, set isDragging to true
                 setIsDragging(true);
             }, 500); // 500ms delay
 
@@ -51,36 +59,55 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
-    
+
         const touch = e.touches[0];
         const currentX = touch.clientX;
         const currentY = touch.clientY;
-    
-        // If the user moves before holding, cancel the hold timer
-        if (!isHolding && holdTimer) {
-            clearTimeout(holdTimer);
-            setHoldTimer(null);
+
+        if (lastTouch) {
+            const deltaX = currentX - lastTouch.x;
+            const deltaY = currentY - lastTouch.y;
+
+            // Update last touch position
+            setLastTouch({ x: currentX, y: currentY });
+
+            if (!isHolding) {
+                // If the user moves before holding time, cancel the hold timer
+                if (holdTimer && startTouch) {
+                    const totalDeltaX = Math.abs(currentX - startTouch.x);
+                    const totalDeltaY = Math.abs(currentY - startTouch.y);
+                    if (totalDeltaX > moveThreshold || totalDeltaY > moveThreshold) {
+                        clearTimeout(holdTimer);
+                        setHoldTimer(null);
+                    }
+                }
+
+                // Manually scroll the container
+                const container = containerRef.current;
+                if (container) {
+                    container.scrollTop -= deltaY;
+                }
+
+                return; // Do not proceed further if not holding
+            }
         }
-    
-        // If dragging has started, prevent the default scroll behavior
-        if (isDragging) {
-            if (!draggedItem) return;
-    
+
+        if (isHolding && draggedItem) {
             setDraggedItem({
                 ...draggedItem,
                 x: currentX,
                 y: currentY,
             });
-    
+
             autoScrollContainer(currentY);
-    
+
             const overIndex = getOverIndex(currentX, currentY);
             if (overIndex !== null && overIndex !== draggedItem.index) {
                 const newItems = [...items];
                 const [removedItem] = newItems.splice(draggedItem.index, 1);
                 newItems.splice(overIndex, 0, removedItem);
                 setItems(newItems);
-    
+
                 setDraggedItem({
                     ...draggedItem,
                     index: overIndex,
@@ -100,6 +127,10 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
         setIsHolding(false);
         setDraggedItem(null);
         setIsDragging(false); // Reset dragging state
+
+        // Reset touch positions
+        setStartTouch(null);
+        setLastTouch(null);
     };
 
     const autoScrollContainer = (currentY: number) => {
@@ -147,7 +178,7 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
         <div
             className='draggable-list'
             ref={containerRef}
-            style={{ touchAction: isDragging ? 'none' : 'auto' }}
+            style={{ touchAction: 'none' }} // Start with touch-action: none
         >
             {items.length > 0 && items.map((item, index) => (
                 <div
@@ -167,7 +198,11 @@ const DraggableList =  <T extends { }>({ items, className, render, setItems }: D
                 <div
                     className="draggable-item dragged-clone"
                     style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
                         transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
+                        pointerEvents: 'none',
                     }}
                 >
                     {render(draggedItem.item, draggedItem.index)}
