@@ -1,4 +1,15 @@
-import { EditTypeProps, InputType, OptionsProps, ProductEditTypeProps } from "lib/interfaces";
+import { InputProps, InputType, OptionsProps, ProductEditTypeProps } from "lib/interfaces";
+
+export type DataRouteProps = 'products' | 'categories' | 'extra' | 'extra-category';
+export type EditTypes = 'text' | 'number' | 'textarea' | 'select' | 'multiselect' | 'image' | 'sorter';
+
+export interface EditCardProps<T> {
+    id: number | string;
+    route: DataRouteProps;
+    onSave?: (response: any) => void;
+    onCancel?: () => void;
+    fields: EditTypeProps<T>[];
+}
 
 export interface PaginationProps {
     totalPages: number;
@@ -13,7 +24,7 @@ export interface ColumnProps<T> {
     key: keyof T | string;
     subKey?: keyof T | string;
     inputKey: string;
-    label: string;
+    label?: string;
     sort?: boolean;
     defaultSort?: 'ASC' | 'DESC';
     render?: (item: T) => React.ReactNode;
@@ -55,6 +66,42 @@ export interface TableViewProps<T> {
     handleCancel: (itemId: string) => void;
     isLoading: boolean;
     perPage: number;
+}
+
+export interface EditTypeProps<T> {
+    key: keyof T;
+    subKey?: string;
+    label?: string;
+    type?: InputType;
+    defaultValue?: T[keyof T];
+    property: 'edit' | 'view' | 'all' | 'none';
+    options?: OptionsProps[];
+    required?: boolean;
+    sort?: boolean;
+    defaultSort?: 'ASC' | 'DESC';
+    render?: (item: T) => React.ReactNode;
+    filterType?: InputType;
+    editable?: boolean;
+    inputData?: Array<{
+        key: keyof InputProps | keyof HTMLInputElement;
+        value?: any;
+        dataKey?: keyof T | keyof T[keyof T];
+    }>;
+}
+
+export interface UseItemProps<T> {
+    id: EditCardProps<T>['id'];
+    route: EditCardProps<T>['route'];
+}
+
+export interface EditFieldProps<T> {
+    field: EditTypeProps<T>;
+    value: any;
+    onChange: (key: string, type: InputType) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+    setFormData: React.Dispatch<React.SetStateAction<Partial<any>>>;
+    inputProps?: {
+        [key in keyof InputProps]?: any;
+    }
 }
 
 

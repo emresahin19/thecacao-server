@@ -4,9 +4,10 @@ import Input from "../../Input/components/input.component";
 import MultipleImageInput from "../../Input/components/multiple-image-input.component";
 import MultipleSelectBox from "../../Input/components/multiple-selectbox.component";
 
-import { EditFieldProps, ImageObject } from "lib/interfaces";
+import { CardStyleProps, EditFieldProps, ImageObject } from "lib/interfaces";
 import RangeInput from "lib/components/Input/components/range-input.component";
 import lodash from "lodash";
+import EditableMenuCard from "lib/components/Card/components/editable-menu-card.component";
 
 const EditField = <T extends {  }>({ field, value, onChange, setFormData, inputProps }: EditFieldProps<T>) => {
     const key = field.subKey ? `${String(field.key)}.${field.subKey}` : String(field.key);
@@ -68,6 +69,26 @@ const EditField = <T extends {  }>({ field, value, onChange, setFormData, inputP
                     }}
                 />
             );
+
+        case 'sorter':
+            if(!inputProps) return null;
+            const { style } = inputProps as { style: CardStyleProps };
+            return (
+                <EditableMenuCard
+                    title="Ürünler"
+                    items={value}
+                    style={style}
+                    setItems={
+                        (items) => {
+                            setFormData((prevFormData) => {
+                                const newFormData = { ...prevFormData };
+                                lodash.set(newFormData, key, items);
+                                return newFormData;
+                            });
+                        }
+                    }
+                />
+            )
 
         default:
             return null;

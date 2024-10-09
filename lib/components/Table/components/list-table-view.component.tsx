@@ -160,7 +160,7 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                                 }
                                             />
                                         ) : (
-                                            <div className={`ellipsis td-item ${(col.inputKey).includes('image') && 'avatar' || '' }`}>
+                                            <div className={`ellipsis ${(col.inputKey).includes('image') && 'avatar' || '' }`}>
                                                 {col.render ? col.render(item) : lodash.get(item, col.inputKey)}
                                             </div>
                                         )}

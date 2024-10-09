@@ -2,12 +2,18 @@ import React from 'react';
 import LogoIcon from 'lib/components/Logo/components/logo-icon.component';
 import { defaultColor } from 'lib/constants';
 import { hexToRgba } from 'lib/utils';
-import { EditableMenuCardProps } from '../card.props';
+import { CardStyleProps, EditableMenuCardProps } from '../card.props';
 import ScrollableDraggableList from 'lib/components/DragDrop/components/scrollable-drag-drop.component';
 import ProductCard from './product-card.component';
 import { ProductProps } from 'lib/interfaces';
 
-const EditableMenuCard = ({ items,  setItems, title = "Items", style}: EditableMenuCardProps) => {
+const defaultStyle: CardStyleProps = {
+    backgroundColor: defaultColor,
+    color: '#fff',
+    opacity: 0.2,
+};
+
+const EditableMenuCard = ({ items,  setItems, title = "Items", style = defaultStyle}: EditableMenuCardProps) => {
     return (
         <>
             <div className="menu-part">
@@ -23,7 +29,7 @@ const EditableMenuCard = ({ items,  setItems, title = "Items", style}: EditableM
                 >
                     <div className="category-header">
                         <div className="category-title">
-                            {<LogoIcon width={20} color={style.color || defaultColor} />}
+                            {<LogoIcon width={20} color={style.color ?? defaultColor} />}
                             {title}
                         </div>
                     </div>

@@ -69,7 +69,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                 modalHeightRef.current = modalRef.current.offsetHeight;
             }
             windowHeightRef.current = window.innerHeight;
-            maxMoveYRef.current = windowHeightRef.current - modalHeightRef.current - modalTop;
+            maxMoveYRef.current = Math.min(windowHeightRef.current - modalHeightRef.current, 0) - modalTop;
         };
 
         const resizeObserver = new ResizeObserver(handleResize);
@@ -131,7 +131,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         if (!shouldHandleTouch.current) return;
         const currentY = e.touches[0].clientY;
         const diffY = currentY - startYRef.current;
-
         if (diffY < maxMoveYRef.current) return;
 
         moveYRef.current = diffY;

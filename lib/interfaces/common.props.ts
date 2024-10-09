@@ -5,7 +5,7 @@ import { ReactElement, ReactNode, RefObject } from "react";
 import { ImageObject } from "../components/Input/input.props";
 
 export type InputSize = 'sm' | 'md' | 'lg';
-export type InputType = 'text' | 'password' | 'email' | 'number' | 'date' | 'time' | 'datetime-local' | 'select' | 'datetime' | 'textarea' | 'color' | 'file' | 'checkbox' | 'radio' | 'range' | 'multiselect' | 'image';
+export type InputType = 'text' | 'password' | 'email' | 'number' | 'date' | 'time' | 'datetime-local' | 'select' | 'datetime' | 'textarea' | 'color' | 'file' | 'checkbox' | 'radio' | 'range' | 'multiselect' | 'image' | 'sorter';
 export type ColorOptions =
   | 'primary'
   | 'secondary'

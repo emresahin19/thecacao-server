@@ -22,7 +22,7 @@ export const saveItem = async <T>({id, route, data}: ItemRequestProps<T>): Promi
             ? await axiosInstance.put(`/api/${route}/${id}`, data)
             : await axiosInstance.post(`/api/${route}/create`, data);
         
-        return response;
+        return response.data;
     } catch (error) {
         console.error('Error saving item:', error);
         throw error;

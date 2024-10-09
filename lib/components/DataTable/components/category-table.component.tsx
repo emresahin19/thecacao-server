@@ -1,9 +1,16 @@
 "use client";
 import React from 'react';
-import { CategoryProps, EditTypeProps } from '../../../interfaces';
+import { CardStyleProps, CategoryProps, EditTypeProps } from '../../../interfaces';
 import Table from "../../Table/components/table.component";
 import { useToast } from 'lib/contexts';
 import { saveCategory } from 'lib/services';
+import { defaultColor } from 'lib/constants';
+
+const defaultStyle: CardStyleProps = {
+    backgroundColor: '#dbf0fd',
+    color: defaultColor,
+    opacity: 0.2,
+}
 
 const CategoryTable: React.FC = () => {
     const { showToast } = useToast();
@@ -12,7 +19,7 @@ const CategoryTable: React.FC = () => {
         if(action === 'save') {
             const { data } = await saveCategory(item);
             const { status, message } = data;
-            showToast({message, type: status ? 'success' : 'danger'});
+            showToast({ message, type: status ? 'success' : 'danger' });
             return status;
         }
     }
@@ -20,7 +27,7 @@ const CategoryTable: React.FC = () => {
     const fields: EditTypeProps<CategoryProps>[] = [
         {
             key: 'order',
-            property: 'all', 
+            property: 'view', 
             label: 'Sıra',
             type: 'number',
             sort: true,
@@ -44,6 +51,7 @@ const CategoryTable: React.FC = () => {
             label: 'Arkaplan Rengi',
             type: 'color',
             editable: true,
+            defaultValue: defaultStyle.backgroundColor,
             inputData: [
                 {
                     key: 'style',
@@ -52,6 +60,10 @@ const CategoryTable: React.FC = () => {
                 {
                     key: 'inputStyle',
                     dataKey: 'style',
+                },
+                {
+                    key: 'labelColor',
+                    dataKey: 'style.color',
                 }
             ],
         },
@@ -61,7 +73,26 @@ const CategoryTable: React.FC = () => {
             property: 'all',
             label: 'Yazı Rengi',
             type: 'color',
-            editable: true
+            editable: true,
+            defaultValue: defaultStyle.color,
+            inputData: [
+                {
+                    key: 'labelColor',
+                    dataKey: 'style.backgroundColor',
+                }
+            ],
+        },
+        {
+            key: 'products',
+            property: 'edit',
+            label: 'Ürünler',
+            type: 'sorter',
+            inputData: [
+                {
+                    key: 'style',
+                    dataKey: 'style',
+                }
+            ]
         },
         {
             key: 'updated_at',
@@ -80,6 +111,7 @@ const CategoryTable: React.FC = () => {
             property: 'edit',
             label: 'Opaklık',
             type: 'range',
+            defaultValue: defaultStyle.opacity,
             inputData: [
                 {
                     key: 'min',

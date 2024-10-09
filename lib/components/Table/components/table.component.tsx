@@ -44,6 +44,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                 key: field.key,
                 subKey: field.subKey,
                 inputKey: field.subKey ? `${String(field.key)}.${String(field.subKey)}` : String(field.key),
+                defaultValue: field.defaultValue,
                 label: field.label,
                 type: field.type,
                 options: field.options,

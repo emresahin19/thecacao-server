@@ -139,7 +139,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
                     </div> 
                 )
             ) : (
-                <div className='input-value ellipsis td-item'>
+                <div className='input-value ellipsis'>
                     {displayValue}
                 </div> 
             )}

@@ -8,14 +8,20 @@ import EditField from "./edit-field.component";
 import { useItem } from "../../../hooks";
 import { useToast } from "../../../contexts";
 import { saveItem } from '../../../services';
-import { EditCardProps, EditTypeProps } from "../../DataTable/data-tables.props";
-import { InputType } from "lib/interfaces";
+import { EditCardProps, EditTypeProps, InputType } from "lib/interfaces";
 
 const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: EditCardProps<T>) => {
-    const emptyItem = useMemo(() => fields.reduce((acc, item) => {
-        const key = item.subKey ? `${String(item.key)}.${item.subKey}` : item.key as keyof T;
-        return { ...acc, [key]: item.type === 'multiselect' ? [] : '' };
-    }, {} as Partial<T>), [fields]);
+    const emptyItem = useMemo(() => {
+        return fields.reduce((acc, item) => {
+            const fullKey = item.subKey ? `${String(item.key)}.${item.subKey}` : String(item.key);
+            const defaultValue = item.defaultValue || (item.type === 'multiselect' ? [] : '');
+
+            lodash.set(acc, fullKey, defaultValue);
+
+            return acc;
+        }, {} as Partial<T>);
+    }, [fields]);
+
 
     const [initialItem, setInitialItem] = useState<Partial<T> | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -76,17 +82,15 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
         });
     }, [formData]);
 
-    const renderFields = useMemo(() => fields.map((field: EditTypeProps<T>) => {
+    const renderFields = useMemo(() => initialItem && fields.map((field: EditTypeProps<T>) => {
         const fullKey = field.subKey ? `${String(field.key)}.${field.subKey}` : String(field.key);
-        const value = lodash.get(formData, fullKey); 
+        const value = lodash.get(formData, fullKey) || field.defaultValue; 
     
-        const inputProps = field.inputData
-            ? field.inputData.reduce((acc, { key, value, dataKey }) => {
+        const inputProps = field.inputData && field.inputData.reduce((acc, { key, value, dataKey }) => {
                 const v = dataKey ? lodash.get(formData, dataKey as keyof T) : value;
                 return { ...acc, [key]: v };
-                }, {})
-            : null;
-    
+            }, {})
+
         return (
             <div className="edit-input" key={fullKey}>
                 <EditField<T>
@@ -98,7 +102,7 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
                 />
             </div>
         );
-      }), [fields, formData, handleInputChange, setFormData]);
+      }), [fields, formData, handleInputChange, setFormData, item, initialItem]);
     
     if (isLoading) {
         return (
