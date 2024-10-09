@@ -62,6 +62,7 @@ const ProductTable: React.FC = () => {
             property: 'view',
             label: 'Güncelleme Tarihi',
             type: 'date',
+            defaultSort: 'DESC',
             sort: true,
             editable: false,
             render: (data: ExtraProps) => new Date(data.updated_at).toLocaleDateString(),

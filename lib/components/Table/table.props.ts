@@ -32,7 +32,7 @@ export interface TableProps<T> {
 }
 
 export interface TableViewProps<T> {
-    data: T[];
+    items: T[];
     columns: Array<ColumnProps<T>>;
     className?: string;
     selectedItems: { [key: string]: boolean };
@@ -59,7 +59,7 @@ export interface TableViewProps<T> {
 
 
 export interface UseTableDataProps<T> {
-    items: T;
+    items: T[];
     total: number;
     currentPage: number;
     lastPage: number;

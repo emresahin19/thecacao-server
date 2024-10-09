@@ -21,37 +21,35 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
 
     const columns = useMemo<ColumnProps<T>[]>(() => {
         return fields
-        .filter(field => field.property === 'view' || field.property === 'all')
-        .map((field) => ({
-            key: field.key,
-            subKey: field.subKey,
-            inputKey: field.subKey ? `${String(field.key)}.${String(field.subKey)}` : String(field.key),  // Benzersiz inputKey
-            label: field.label,
-            sort: field.sort ?? false,
-            defaultSort: field.defaultSort,
-            render: field.render,
-            type: field.type,
-            filterType: field.filterType,
-            options: field.options,
-            editable: field.editable ?? false, 
-        }));
+            .filter(field => field.property === 'view' || field.property === 'all')
+            .map((field) => ({
+                key: field.key,
+                subKey: field.subKey,
+                inputKey: field.subKey ? `${String(field.key)}.${String(field.subKey)}` : String(field.key),
+                label: field.label,
+                sort: field.sort ?? false,
+                defaultSort: field.defaultSort,
+                render: field.render,
+                type: field.type,
+                filterType: field.filterType,
+                options: field.options,
+                editable: field.editable ?? false, 
+            }));
     }, [fields]);
 
     const editFields = useMemo<ColumnProps<T>[]>(() => {
         return fields
-        .filter(field => field.property === 'edit' || field.property === 'all')
-        .map(field => ({
-            key: field.key,
-            subKey: field.subKey,
-            inputKey: field.subKey ? `${String(field.key)}.${String(field.subKey)}` : String(field.key),  // Benzersiz inputKey
-            label: field.label,
-            type: field.type,
-            options: field.options,
-            required: field.required || false,
-            width: field.width,
-            height: field.height,
-            inputData: field.inputData,
-        }));
+            .filter(field => field.property === 'edit' || field.property === 'all')
+            .map(field => ({
+                key: field.key,
+                subKey: field.subKey,
+                inputKey: field.subKey ? `${String(field.key)}.${String(field.subKey)}` : String(field.key),
+                label: field.label,
+                type: field.type,
+                options: field.options,
+                required: field.required || false,
+                inputData: field.inputData,
+            }));
     }, [fields]);
 
     const [tableState, setTableState] = useState<{
@@ -67,6 +65,16 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         orderDirection: columns.find((col: ColumnProps<T>) => col.defaultSort)?.defaultSort || 'ASC',
         filters: {}
     });
+    const initialParams = useMemo(() => {
+        const { currentPage, perPage, orderBy, orderDirection } = tableState;
+        const filterParamsObj = {
+            page: String(currentPage + 1),
+            perPage: String(perPage),
+            orderBy,
+            orderDirection
+        };
+        return `${apiRoute}?${new URLSearchParams(filterParamsObj).toString()}`
+    }, [tableState]);
 
     const router = useRouter();
     const { query, isReady } = router;
@@ -74,7 +82,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     const dispatch = useDispatch();
     const { show } = useAppSelector((state) => state.modal);
 
-    const [filterParams, setFilterParams] = useState<string>('');
+    const [filterParams, setFilterParams] = useState<string>(initialParams);
     const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
     const [editValues, setEditValues] = useState<{ [key: string]: any }>({});
     const [selectAll, setSelectAll] = useState(false);
@@ -86,7 +94,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         [columns]
     );
 
-    const { items: data = [], total = 0, isLoading = false, mutateData } = useTableData<T>(filterParams);
+    const { items, total = 0, isLoading = false, mutateData } = useTableData<T>(filterParams) 
 
     const updateQuery = useCallback(
         (newParams: { [key: string]: any }) => {
@@ -298,7 +306,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const checked = e.target.checked;
             setSelectAll(checked);
-            const newSelectedItems = data.reduce(
+            const newSelectedItems = items.reduce(
                 (acc: any, item: { id: any }) => ({
                     ...acc,
                     [String(item.id)]: checked
@@ -307,7 +315,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             );
             setSelectedItems(newSelectedItems);
         },
-        [data]
+        [items]
     );
 
     const handleFilterChange = useCallback(
@@ -398,7 +406,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             </div>
             <ListTableView
                 className={className}
-                data={data as T[]}
+                items={items}
                 columns={columns}
                 selectedItems={selectedItems}
                 selectAll={selectAll}

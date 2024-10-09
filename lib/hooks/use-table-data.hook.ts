@@ -5,7 +5,7 @@ import { UseTableDataProps } from 'lib/interfaces';
 
 export const useTableData = <T>(params: string) => {
     const { data, error } = useSWR<{ data: UseTableDataProps<T>}>(`/api/${params}`, tableFetcher as SWRConfiguration<{ data: UseTableDataProps<T> }>)
-    const { items, total, currentPage, lastPage }: UseTableDataProps<T> = data?.data ?? { items: [] as T, total: 0, currentPage: 0, lastPage: 0 };
+    const { items, total, currentPage, lastPage }: UseTableDataProps<T> = data?.data ?? { items: [], total: 0, currentPage: 0, lastPage: 0 };
 
     return {
         items,

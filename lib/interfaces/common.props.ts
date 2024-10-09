@@ -66,6 +66,7 @@ export type ColorOptions =
     updated_at?: string;
     onProductClick?: ({productSlug} : {productSlug: string}) => void;
     isVisible?: boolean;
+    customInputField?: string;
   }
 
   export interface ProductProps {

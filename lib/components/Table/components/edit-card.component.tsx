@@ -1,0 +1,154 @@
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import lodash from 'lodash';
+import { AxiosError } from "axios";
+import Button from "../../Button/components/button.component";
+import Spinner from "../../Loading/components/spinner.component";
+import DashDivider from "../../Layout/components/dash/divider.component";
+import EditField from "./edit-field.component";
+import { useItem } from "../../../hooks";
+import { useToast } from "../../../contexts";
+import { saveItem } from '../../../services';
+import { EditCardProps, EditTypeProps } from "../../DataTable/data-tables.props";
+import { InputType } from "lib/interfaces";
+
+const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: EditCardProps<T>) => {
+    const emptyItem = useMemo(() => fields.reduce((acc, item) => {
+        const key = item.subKey ? `${String(item.key)}.${item.subKey}` : item.key as keyof T;
+        return { ...acc, [key]: item.type === 'multiselect' ? [] : '' };
+    }, {} as Partial<T>), [fields]);
+
+    const [initialItem, setInitialItem] = useState<Partial<T> | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [formData, setFormData] = useState<Partial<T>>(emptyItem);
+    const { item, isError, isLoading, mutateProduct } = id ? useItem<T>({ id, route }) : { item: emptyItem, isError: false, isLoading: false, mutateProduct: () => {} };
+    const { showToast, handleRequestError } = useToast();
+
+    useEffect(() => {
+        if (isError) {
+            showToast({ message: 'Ürün bilgileri alınamadı.', type: 'danger' });
+        }
+    }, [isError]);
+
+    useEffect(() => {
+        if (item && !initialItem) {
+            setInitialItem(item);
+            setFormData(item);
+        }
+    }, [item, initialItem]);
+
+    const handleSave = useCallback(async () => {
+        if (!item) return;
+        setLoading(true);
+        try {
+            const { data } = await saveItem<T>({ id, route, data: formData as T });
+            const { status, message }: { status: string, message: string } = data as any;
+
+            showToast({ message, type: status ? 'success' : 'danger' });
+            onSave && onSave(status);
+        } catch (error: AxiosError | any) {
+            handleRequestError(error);
+        } finally {
+            setLoading(false);
+            mutateProduct();
+        }
+    }, [formData, id, item, mutateProduct, onSave, route, showToast]);
+
+    const handleReset = useCallback(() => {
+        if (initialItem) {
+            setFormData(initialItem);
+        }
+        onCancel && onCancel();
+    }, [initialItem, onCancel]);
+
+    const handleInputChange = useCallback((key: string, type: InputType) => (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+        let value: any = e.target.value;
+        if (type === 'number') {
+            value = Number(value);
+        } else if (type === 'multiselect' && e.target instanceof HTMLSelectElement) {
+            value = Array.from((e.target as HTMLSelectElement).selectedOptions, (option) => option.value);
+        }
+        setFormData((prevFormData) => {
+            const newFormData = lodash.cloneDeep(prevFormData);
+            lodash.set(newFormData, key, value);
+            return newFormData;
+        });
+    }, [formData]);
+
+    const renderFields = useMemo(() => fields.map((field: EditTypeProps<T>) => {
+        const fullKey = field.subKey ? `${String(field.key)}.${field.subKey}` : String(field.key);
+        const value = lodash.get(formData, fullKey); 
+    
+        const inputProps = field.inputData
+            ? field.inputData.reduce((acc, { key, value, dataKey }) => {
+                const v = dataKey ? lodash.get(formData, dataKey as keyof T) : value;
+                return { ...acc, [key]: v };
+                }, {})
+            : null;
+    
+        return (
+            <div className="edit-input" key={fullKey}>
+                <EditField<T>
+                    field={field}
+                    value={value}
+                    onChange={handleInputChange}
+                    setFormData={setFormData}
+                    {...inputProps && { inputProps }}
+                />
+            </div>
+        );
+      }), [fields, formData, handleInputChange, setFormData]);
+    
+    if (isLoading) {
+        return (
+            <div className="edit-section modal-loading">
+                <Spinner absolute={true} />
+            </div>
+        );
+    }
+
+    return (
+        <div className="edit-section">
+            <div className="modal-custom-header">
+                <h3>{id === 0 ? 'Yeni Ürün Ekle' : `Düzenle`}</h3>
+
+                <button
+                    className="close"
+                    onClick={handleReset}
+                    role="button"
+                    aria-label="Pencereyi Kapat"
+                >
+                    Kapat
+                </button>
+            </div>
+
+            <DashDivider />
+
+            {renderFields}
+
+            <div className="edit-input button-area">
+                <Button
+                    onClick={handleReset}
+                    color1="danger"
+                    color2="white"
+                >
+                    İptal
+                </Button>
+
+                <Button
+                    property="reverse"
+                    onClick={handleSave}
+                    loading={loading}
+                    color1="success"
+                    color2="white"
+                >
+                    Kaydet
+                </Button>
+            </div>
+
+        </div>
+    );
+};
+
+export default EditCard;

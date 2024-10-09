@@ -1,5 +1,5 @@
 import { InputType } from "lib/interfaces";
-import { OptionsProps } from "../Input/input.props";
+import { InputProps, OptionsProps } from "../Input/input.props";
 
 export type DataRouteProps = 'products' | 'categories' | 'extra' | 'extra-category';
 export type EditTypes = 'text' | 'number' | 'textarea' | 'select' | 'multiselect' | 'image';
@@ -18,21 +18,31 @@ export interface EditTypeProps<T> {
     label: string;
     type: InputType;
     property: 'edit' | 'view' | 'all' | 'none';
-    tableOrder?: number;
-    editOrder?: number;
     options?: OptionsProps[];
     required?: boolean;
-    width?: number;
-    height?: number;
     sort?: boolean;
     defaultSort?: 'ASC' | 'DESC';
     render?: (item: T) => React.ReactNode;
     filterType?: InputType;
     editable?: boolean;
-    inputData?: Partial<Record<keyof HTMLInputElement, any>>;
+    inputData?: Array<{
+        key: string;
+        value?: any;
+        dataKey?: keyof T;
+    }>;
 }
 
 export interface UseItemProps<T> {
     id: EditCardProps<T>['id'];
     route: EditCardProps<T>['route'];
+}
+
+export interface EditFieldProps<T> {
+    field: EditTypeProps<T>;
+    value: any;
+    onChange: (key: string, type: InputType) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+    setFormData: React.Dispatch<React.SetStateAction<Partial<any>>>;
+    inputProps?: {
+        [key in keyof InputProps]?: any;
+    }
 }

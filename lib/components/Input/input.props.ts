@@ -9,19 +9,6 @@ export interface CheckboxProps {
     checked?: boolean;
 };
 
-export interface RangeInputProps {
-    className?: string;
-    name?: string;
-    label?: string;
-    value: string | number;
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    error?: boolean;
-    size?: InputSize;
-    min: number;
-    max: number;
-    step: number;
-};
-
 export interface InputProps {
     className?: string;
     name?: string;
@@ -36,6 +23,12 @@ export interface InputProps {
     labelColor?: string;
     size?: InputSize;
     type?: InputType;
+};
+
+export interface RangeInputProps extends InputProps {
+    min?: number;
+    max?: number;
+    step?: number;
 };
 
 export interface EditableInputProps {

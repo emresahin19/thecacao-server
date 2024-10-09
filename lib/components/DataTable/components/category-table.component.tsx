@@ -39,19 +39,29 @@ const CategoryTable: React.FC = () => {
         },
         {
             key: 'style',
-            subKey: 'color',
-            property: 'all',
-            label: 'Yazı Rengi',
-            type: 'color',
-            editable: true,
-        },
-        {
-            key: 'style',
             subKey: 'backgroundColor',
             property: 'all',
             label: 'Arkaplan Rengi',
             type: 'color',
             editable: true,
+            inputData: [
+                {
+                    key: 'style',
+                    value: { backgroundColor: '#fff', borderRadius: 8 },
+                },
+                {
+                    key: 'inputStyle',
+                    dataKey: 'style',
+                }
+            ],
+        },
+        {
+            key: 'style',
+            subKey: 'color',
+            property: 'all',
+            label: 'Yazı Rengi',
+            type: 'color',
+            editable: true
         },
         {
             key: 'updated_at',
@@ -59,7 +69,6 @@ const CategoryTable: React.FC = () => {
             label: 'Düzenleme',
             type: 'date',
             sort: true,
-            editable: false,
             filterType: 'date',
             render: (category: CategoryProps) => (
                 <span>{category && category.updated_at && new Date(category.updated_at).toLocaleDateString()}</span>
@@ -71,12 +80,20 @@ const CategoryTable: React.FC = () => {
             property: 'edit',
             label: 'Opaklık',
             type: 'range',
-            inputData: {
-                min: 0,
-                max: 1,
-                step: 0.1,
-            },
-            editable: true,
+            inputData: [
+                {
+                    key: 'min',
+                    value: 0,
+                },
+                {
+                    key: 'max',
+                    value: 1,
+                },
+                {
+                    key: 'step',
+                    value: 0.1,
+                },
+            ],
         },
     ];
 

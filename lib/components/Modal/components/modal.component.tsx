@@ -6,7 +6,7 @@ import ProductDetailCard from "lib/components/Card/components/product-detail-car
 import ProductEditCard from "lib/components/Card/components/product-edit-card.component";
 import CategoryEditCard from "lib/components/Card/components/category-edit-card.component";
 import DeleteModal from "./delete-modal.component"
-import EditCard from "lib/components/DataTable/components/edit-card.component";
+import EditCard from "lib/components/Table/components/edit-card.component";
 import Logo from "lib/components/Logo/components/logo.component";
 import { ModalInitialProps } from "../modal.props";
 

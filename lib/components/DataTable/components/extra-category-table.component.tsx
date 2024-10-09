@@ -68,6 +68,7 @@ const ProductTable: React.FC = () => {
             property: 'view',
             label: 'Güncelleme Tarihi',
             type: 'date',
+            defaultSort: 'DESC',
             sort: true,
             editable: false,
             render: (data: ExtraDataProps) => new Date(data.updated_at).toLocaleDateString(),
@@ -81,33 +82,6 @@ const ProductTable: React.FC = () => {
                 apiRoute="extra-categories"
                 onAction={handleAction}
                 fields={fields}
-                // columns={[
-                //     {
-                //         key: 'name',
-                //         label: 'Ürün İsmi',
-                //         sort: true,
-                //         editable: true,
-                //         filterType: 'text'
-                //     },
-                //     {
-                //         key: 'price',
-                //         sort: true,
-                //         label: 'Fiyat',
-                //         editable: true,
-                //         filterType: 'number'
-                //     },
-                //     {
-                //         key: 'updated_at',
-                //         label: 'Düzenleme',
-                //         sort: true,
-                //         defaultSort: 'DESC',
-                //         editable: true,
-                //         filterType: 'date',
-                //         render: (extra: ExtraDataProps) => (
-                //             <span>{dateToString(extra.updated_at, true)}</span>
-                //         )
-                //     }
-                // ]}
             />
         </div>
     );

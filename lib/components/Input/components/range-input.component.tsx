@@ -10,9 +10,9 @@ const RangeInput = forwardRef<HTMLInputElement, RangeInputProps>(({
     onChange,
     error = false,
     size = 'md',
-    min,
-    max,
-    step,
+    min = 0,
+    max = 100,
+    step = 1,
 }, ref) => {
 
     return (

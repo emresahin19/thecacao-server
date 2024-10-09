@@ -1,10 +1,10 @@
 "use client";
 import React from 'react';
+import Table from "../../Table/components/table.component";
 import { EditTypeProps, ProductProps } from '../../../interfaces';
 import { useCategoryInputData, useExtraInputData } from '../../../hooks';
 import { dateToString, imageToCdnUrl } from '../../../utils';
 import { placeholderProductImageBg, productVariantHeight, productVariantWidth } from '../../../constants';
-import Table from "../../Table/components/table.component";
 import { convertToProductDataProps, saveProduct } from 'lib/services';
 import { useToast } from 'lib/contexts';
 
@@ -30,9 +30,6 @@ const ProductTable: React.FC = () => {
             property: 'all',
             label: 'Resim',
             type: 'image',
-            width: productVariantWidth,
-            height: productVariantHeight,
-            tableOrder: 0,
             render: (product: ProductProps) => (
                 product.images && (
                     <div className="avatar">
@@ -122,7 +119,7 @@ const ProductTable: React.FC = () => {
             defaultSort: 'DESC',
             filterType: 'date',
             render: (product: ProductProps) => (
-                <span>{dateToString(product.updated_at, true)}</span>
+                dateToString(product.updated_at, false) as React.ReactNode
             ),
         },
     ];
