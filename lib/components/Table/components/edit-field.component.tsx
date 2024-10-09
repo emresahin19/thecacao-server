@@ -9,7 +9,7 @@ import RangeInput from "lib/components/Input/components/range-input.component";
 import lodash from "lodash";
 import EditableMenuCard from "lib/components/Card/components/editable-menu-card.component";
 
-const EditField = <T extends {  }>({ field, value, onChange, setFormData, inputProps }: EditFieldProps<T>) => {
+const EditField = <T extends {  }>({ field, value, onChange, setItemData, inputProps }: EditFieldProps<T>) => {
     const key = field.subKey ? `${String(field.key)}.${field.subKey}` : String(field.key);
 
     switch (field.type) {
@@ -61,10 +61,10 @@ const EditField = <T extends {  }>({ field, value, onChange, setFormData, inputP
                     key={key}
                     initialImages={value as ImageObject[]}
                     onImagesChange={(images) => {
-                        setFormData((prevFormData) => {
-                            const newFormData = { ...prevFormData };
-                            lodash.set(newFormData, key, images);
-                            return newFormData;
+                        setItemData((prevItemData) => {
+                            const newItemData = { ...prevItemData };
+                            lodash.set(newItemData, key, images);
+                            return newItemData;
                         });
                     }}
                 />
@@ -80,10 +80,10 @@ const EditField = <T extends {  }>({ field, value, onChange, setFormData, inputP
                     style={style}
                     setItems={
                         (items) => {
-                            setFormData((prevFormData) => {
-                                const newFormData = { ...prevFormData };
-                                lodash.set(newFormData, key, items);
-                                return newFormData;
+                            setItemData((prevItemData) => {
+                                const newItemData = { ...prevItemData };
+                                lodash.set(newItemData, key, items);
+                                return newItemData;
                             });
                         }
                     }

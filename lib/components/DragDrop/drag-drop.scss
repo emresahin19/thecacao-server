@@ -3,6 +3,10 @@
     .draggable-item {
         box-shadow: inset 0 0 0 2px transparent;
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
         &::before,
         &::after {
             content: '';
@@ -11,7 +15,7 @@
             border: 2px solid transparent;
             width: 0;
             height: 0;
-            z-index: 9;
+            z-index: 1;
             border-radius: 8px;
         }
 
@@ -24,13 +28,13 @@
             bottom: 0px;
             right: 0px;
         }
-        &.holding {
+        &.hovered {
             &:before, &:after {
                 width: calc(100% - 4px);
                 height: calc(100% - 4px);
                 transition:
-                    width ease-out 0.3s,
-                    height 0.3s ease-out 0.4s;
+                    width ease-out 0.1s,
+                    height 0.1s ease-out 0.2s;
             }
             &::before {
                 border-top-color: var(--info);
@@ -40,6 +44,9 @@
                 border-bottom-color: var(--info); 
                 border-left-color: var(--info);
             }
+        }
+        &.dragged {
+            opacity: 0;
         }
         &.dragging {
             opacity: 0.8;
@@ -52,6 +59,16 @@
             position: fixed;
             pointer-events: none;
             z-index: 1000;
+        }
+        &.hover-up {
+            .card {
+                transform: translateY(-100%);
+            }
+        }
+        &.hover-down {
+            .card {
+                transform: translateY(100%);
+            }
         }
     }
 

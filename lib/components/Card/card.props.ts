@@ -57,7 +57,7 @@ export interface ProductDataProps {
 
 export interface EditableMenuCardProps {
     items: ProductProps[];
-    setItems: (items: ProductProps[]) => void;
+    setItems: React.Dispatch<React.SetStateAction<ProductProps[]>>;
     style: CardStyleProps;
     title?: string;
 }

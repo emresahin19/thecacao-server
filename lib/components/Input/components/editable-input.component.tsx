@@ -12,6 +12,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
     const isDate = useMemo(() => dateTypes.includes(type), [dateTypes, type]);
     const isChanged = useRef(false);
     const lastTapRef = useRef<number>(0);
+    
     useEffect(() => {
         if (isEditing && inputRef.current) {
             setInputValue(value);
@@ -96,7 +97,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
 
     return (
         <div className="editable-input" onDoubleClick={handleActivateEditMode} onTouchStart={handleTouchStart}>
-            {isEditing ? (
+            {isEditing && 
                 (allowedTypes.includes(type) && (
                     <input
                         type={type}
@@ -106,7 +107,7 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
-                )) || (isDate && (
+                ) || (isDate && (
                     <input
                         ref={inputRef}
                         type={type}
@@ -133,16 +134,12 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
                             onChange={handleChange}
                         />
                     </div>
-                )) || (
-                    <div className='input-value ellipsis td-item'>
+                ))) || (
+                    <div className='input-value ellipsis'>
                         {displayValue}
                     </div> 
                 )
-            ) : (
-                <div className='input-value ellipsis'>
-                    {displayValue}
-                </div> 
-            )}
+            }
             {isEditing && isChanged.current && (
                 <div className="button-area">
                     <span 

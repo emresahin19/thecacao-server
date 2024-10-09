@@ -25,7 +25,7 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
 
     const [initialItem, setInitialItem] = useState<Partial<T> | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [formData, setFormData] = useState<Partial<T>>(emptyItem);
+    const [itemData, setItemData] = useState<Partial<T>>(emptyItem);
     const { item, isError, isLoading, mutateProduct } = id ? useItem<T>({ id, route }) : { item: emptyItem, isError: false, isLoading: false, mutateProduct: () => {} };
     const { showToast, handleRequestError } = useToast();
 
@@ -38,7 +38,7 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
     useEffect(() => {
         if (item && !initialItem) {
             setInitialItem(item);
-            setFormData(item);
+            setItemData(item);
         }
     }, [item, initialItem]);
 
@@ -46,7 +46,7 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
         if (!item) return;
         setLoading(true);
         try {
-            const { data } = await saveItem<T>({ id, route, data: formData as T });
+            const { data } = await saveItem<T>({ id, route, data: itemData as T });
             const { status, message }: { status: string, message: string } = data as any;
 
             showToast({ message, type: status ? 'success' : 'danger' });
@@ -57,11 +57,11 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
             setLoading(false);
             mutateProduct();
         }
-    }, [formData, id, item, mutateProduct, onSave, route, showToast]);
+    }, [itemData, id, item, mutateProduct, onSave, route, showToast]);
 
     const handleReset = useCallback(() => {
         if (initialItem) {
-            setFormData(initialItem);
+            setItemData(initialItem);
         }
         onCancel && onCancel();
     }, [initialItem, onCancel]);
@@ -75,19 +75,19 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
         } else if (type === 'multiselect' && e.target instanceof HTMLSelectElement) {
             value = Array.from((e.target as HTMLSelectElement).selectedOptions, (option) => option.value);
         }
-        setFormData((prevFormData) => {
-            const newFormData = lodash.cloneDeep(prevFormData);
-            lodash.set(newFormData, key, value);
-            return newFormData;
+        setItemData((prevItemData) => {
+            const newItemData = lodash.cloneDeep(prevItemData);
+            lodash.set(newItemData, key, value);
+            return newItemData;
         });
-    }, [formData]);
+    }, [itemData]);
 
     const renderFields = useMemo(() => initialItem && fields.map((field: EditTypeProps<T>) => {
         const fullKey = field.subKey ? `${String(field.key)}.${field.subKey}` : String(field.key);
-        const value = lodash.get(formData, fullKey) || field.defaultValue; 
+        const value = lodash.get(itemData, fullKey) || field.defaultValue; 
     
         const inputProps = field.inputData && field.inputData.reduce((acc, { key, value, dataKey }) => {
-                const v = dataKey ? lodash.get(formData, dataKey as keyof T) : value;
+                const v = dataKey ? lodash.get(itemData, dataKey as keyof T) : value;
                 return { ...acc, [key]: v };
             }, {})
 
@@ -97,12 +97,12 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
                     field={field}
                     value={value}
                     onChange={handleInputChange}
-                    setFormData={setFormData}
+                    setItemData={setItemData}
                     {...inputProps && { inputProps }}
                 />
             </div>
         );
-      }), [fields, formData, handleInputChange, setFormData, item, initialItem]);
+      }), [fields, itemData, handleInputChange, setItemData, item, initialItem]);
     
     if (isLoading) {
         return (

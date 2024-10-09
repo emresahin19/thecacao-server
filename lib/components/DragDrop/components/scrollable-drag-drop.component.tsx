@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { DraggableListProps } from '../drag-drop.props';
 
 const DraggableList = <T extends {}>({
@@ -31,9 +31,9 @@ const DraggableList = <T extends {}>({
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const moveThreshold = 5; 
+    const moveThreshold = 5;
 
-    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>, index: number) => {
+    const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>, index: number) => {
         e.stopPropagation();
 
         const touch = e.touches[0];
@@ -65,13 +65,13 @@ const DraggableList = <T extends {}>({
                     width: rect.width,
                     height: rect.height,
                 });
-            }, 600);
+            }, 400);
 
             setHoldTimer(timer);
         }
-    };
+    }, [items]);
 
-    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    const handleTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
         e.stopPropagation();
 
         const touch = e.touches[0];
@@ -99,7 +99,7 @@ const DraggableList = <T extends {}>({
                     }
                 }
 
-                if(holdingIndex !== null) {
+                if (holdingIndex !== null) {
                     setHoldingIndex(null);
                 }
 
@@ -109,35 +109,29 @@ const DraggableList = <T extends {}>({
                     (property === 'horizontal' || property === 'both') && (container.scrollLeft -= deltaX);
                 }
 
-                return; 
+                return;
             }
         }
 
         if (isHolding && draggedItem) {
-            setDraggedItem({
-                ...draggedItem,
+            setDraggedItem((prevItem) => ({
+                ...prevItem!,
                 x: currentX,
                 y: currentY,
-            });
+            }));
 
             autoScrollContainer(currentX, currentY);
 
             const overIndex = getOverIndex(currentX, currentY);
             if (overIndex !== null && overIndex !== draggedItem.index) {
                 const newItems = [...items];
-                const [removedItem] = newItems.splice(draggedItem.index, 1);
-                newItems.splice(overIndex, 0, removedItem);
                 setItems(newItems);
                 setHoldingIndex(overIndex);
-                setDraggedItem({
-                    ...draggedItem,
-                    index: overIndex,
-                });
             }
         }
-    };
+    }, [draggedItem, holdTimer, startTouch, isHolding, lastTouch, animationTimer, setItems, holdingIndex]);
 
-    const handleTouchEnd = () => {
+    const handleTouchEnd = useCallback(() => {
         if (holdTimer) {
             clearTimeout(holdTimer);
             setHoldTimer(null);
@@ -150,22 +144,19 @@ const DraggableList = <T extends {}>({
 
         setIsHolding(false);
         setDraggedItem(null);
-
-        // Reset touch positions
         setStartTouch(null);
         setLastTouch(null);
         setHoldingIndex(null);
-    };
+    }, [holdTimer, animationTimer]);
 
-    const autoScrollContainer = (currentX: number, currentY: number) => {
+    const autoScrollContainer = useCallback((currentX: number, currentY: number) => {
         const container = containerRef.current;
         if (container) {
             const containerRect = container.getBoundingClientRect();
-            const scrollThreshold = 60; 
-            const maxScrollSpeed = 20; 
+            const scrollThreshold = 60;
+            const maxScrollSpeed = 20;
 
-            if(property === 'vertical' || property === 'both') {
-
+            if (property === 'vertical' || property === 'both') {
                 const distanceToTop = currentY - containerRect.top;
                 const distanceToBottom = containerRect.bottom - currentY;
 
@@ -183,8 +174,7 @@ const DraggableList = <T extends {}>({
                     container.scrollTop += scrollSpeed;
                 }
             }
-            if(property === 'horizontal' || property === 'both') {
-
+            if (property === 'horizontal' || property === 'both') {
                 const distanceToLeft = currentX - containerRect.left;
                 const distanceToRight = containerRect.right - currentX;
 
@@ -203,9 +193,9 @@ const DraggableList = <T extends {}>({
                 }
             }
         }
-    };
+    }, [property]);
 
-    const getOverIndex = (x: number, y: number): number | null => {
+    const getOverIndex = useCallback((x: number, y: number): number | null => {
         for (let i = 0; i < itemRefs.current.length; i++) {
             const item = itemRefs.current[i];
             if (item && i !== draggedItem?.index) {
@@ -216,46 +206,61 @@ const DraggableList = <T extends {}>({
             }
         }
         return null;
-    };
+    }, [draggedItem]);
 
-    return (
-        <div
-            className={`scrollable-draggable-list ${className} ${draggedItem ? 'dragging' : ''}`}
-            ref={containerRef}
-            style={{ touchAction: 'none' }}
-        >
-        {items.length > 0 &&
-            items.map((item, index) => (
+    const memoizedItems = useMemo(() => {
+        return items.map((item, index) => {
+            const isHover = holdingIndex === index;
+            const isDragged = draggedItem?.index === index ? 'dragged' : '';
+            const toDown = holdingIndex && draggedItem && (
+                draggedItem?.index > index 
+                    ? (holdingIndex <= index ? 'hover-down' : '') 
+                    : (holdingIndex >= index ? 'hover-up' : '')
+                ) || '';
+                    
+            const className = `draggable-item ${isDragged} ${toDown}`;
+
+            return (
                 <div
                     key={index}
-                    ref={(el) => {itemRefs.current[index] = el}}
+                    ref={(el) => { itemRefs.current[index] = el; }}
                     onTouchStart={(e) => handleTouchStart(e, index)}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
-                    className={`draggable-item ${holdingIndex === index ? 'holding' : ''}`}
+                    className={className}
                 >
                     {render(item, index)}
                 </div>
-        ))}
-        {children && (
-            <div className="draggable-item">{children}</div>
-        )}
-        {draggedItem && isHolding && (
-            <div
-                className="draggable-item dragged-clone"
-                style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    width: draggedItem.width,
-                    height: draggedItem.height,
-                    transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
-                    pointerEvents: 'none',
-                }}
-            >
-                {render(draggedItem.item, draggedItem.index)}
-            </div>
-        )}
+            )
+        });
+    }, [items, handleTouchStart, handleTouchMove, handleTouchEnd, holdingIndex, draggedItem, render]);
+
+    return (
+        <div
+            className={`scrollable-draggable-list ${className}`}
+            ref={containerRef}
+            style={{ touchAction: 'none' }}
+        >
+            {memoizedItems}
+            {children && (
+                <div className="draggable-item">{children}</div>
+            )}
+            {draggedItem && isHolding && (
+                <div
+                    className="draggable-item dragged-clone"
+                    style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        width: draggedItem.width,
+                        height: draggedItem.height,
+                        transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
+                        pointerEvents: 'none',
+                    }}
+                >
+                    {render(draggedItem.item, draggedItem.index)}
+                </div>
+            )}
         </div>
     );
 };

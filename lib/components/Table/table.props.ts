@@ -98,7 +98,7 @@ export interface EditFieldProps<T> {
     field: EditTypeProps<T>;
     value: any;
     onChange: (key: string, type: InputType) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
-    setFormData: React.Dispatch<React.SetStateAction<Partial<any>>>;
+    setItemData: React.Dispatch<React.SetStateAction<Partial<any>>>;
     inputProps?: {
         [key in keyof InputProps]?: any;
     }
