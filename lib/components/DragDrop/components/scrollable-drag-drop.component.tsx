@@ -2,32 +2,34 @@ import React, { useState, useRef } from 'react';
 import { DraggableListProps } from '../drag-drop.props';
 
 const DraggableList = <T extends {}>({
-  items,
-  className = '',
-  render,
-  setItems,
+    items = [],
+    className = '',
+    children,
+    render,
+    setItems,
+    property = 'both',
 }: DraggableListProps<T>) => {
-  const [draggedItem, setDraggedItem] = useState<{
-    index: number;
-    item: T;
-    x: number;
-    y: number;
-    offsetX: number;
-    offsetY: number;
-  } | null>(null);
+    const [draggedItem, setDraggedItem] = useState<{
+        index: number;
+        item: T;
+        x: number;
+        y: number;
+        offsetX: number;
+        offsetY: number;
+    } | null>(null);
 
-  const [isHolding, setIsHolding] = useState<boolean>(false);
-  const [holdTimer, setHoldTimer] = useState<number | null>(null);
-  const [animationTimer, setAnimationTimer] = useState<number | null>(null);
-  const [holdingIndex, setHoldingIndex] = useState<number | null>(null);
+    const [isHolding, setIsHolding] = useState<boolean>(false);
+    const [holdTimer, setHoldTimer] = useState<number | null>(null);
+    const [animationTimer, setAnimationTimer] = useState<number | null>(null);
+    const [holdingIndex, setHoldingIndex] = useState<number | null>(null);
 
-  const [startTouch, setStartTouch] = useState<{ x: number; y: number } | null>(null);
-  const [lastTouch, setLastTouch] = useState<{ x: number; y: number } | null>(null);
+    const [startTouch, setStartTouch] = useState<{ x: number; y: number } | null>(null);
+    const [lastTouch, setLastTouch] = useState<{ x: number; y: number } | null>(null);
 
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-  const moveThreshold = 5; 
+    const moveThreshold = 5; 
 
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>, index: number) => {
         e.stopPropagation();
@@ -99,8 +101,8 @@ const DraggableList = <T extends {}>({
 
                 const container = containerRef.current;
                 if (container) {
-                    container.scrollTop -= deltaY;
-                    // container.scrollLeft -= deltaX;
+                    (property === 'vertical' || property === 'both') && (container.scrollTop -= deltaY);
+                    (property === 'horizontal' || property === 'both') && (container.scrollLeft -= deltaX);
                 }
 
                 return; 
@@ -114,7 +116,7 @@ const DraggableList = <T extends {}>({
                 y: currentY,
             });
 
-            autoScrollContainer(currentY);
+            autoScrollContainer(currentX, currentY);
 
             const overIndex = getOverIndex(currentX, currentY);
             if (overIndex !== null && overIndex !== draggedItem.index) {
@@ -132,19 +134,16 @@ const DraggableList = <T extends {}>({
     };
 
     const handleTouchEnd = () => {
-        // Cancel the hold timer if it hasn't triggered yet
         if (holdTimer) {
             clearTimeout(holdTimer);
             setHoldTimer(null);
         }
 
-        // Cancel the animation timer if it's still active
         if (animationTimer) {
             clearTimeout(animationTimer);
             setAnimationTimer(null);
         }
 
-        // Reset hold state and dragged item
         setIsHolding(false);
         setDraggedItem(null);
 
@@ -154,28 +153,50 @@ const DraggableList = <T extends {}>({
         setHoldingIndex(null);
     };
 
-    const autoScrollContainer = (currentY: number) => {
+    const autoScrollContainer = (currentX: number, currentY: number) => {
         const container = containerRef.current;
         if (container) {
             const containerRect = container.getBoundingClientRect();
-            const scrollThreshold = 60; // Distance from edge to start scrolling
-            const maxScrollSpeed = 20; // Max pixels to scroll per event
+            const scrollThreshold = 60; 
+            const maxScrollSpeed = 20; 
 
-            const distanceToTop = currentY - containerRect.top;
-            const distanceToBottom = containerRect.bottom - currentY;
+            if(property === 'vertical' || property === 'both') {
 
-            if (distanceToTop < scrollThreshold) {
-                const scrollSpeed = Math.max(
-                    -maxScrollSpeed,
-                    ((distanceToTop - scrollThreshold) / scrollThreshold) * maxScrollSpeed
-                );
-                container.scrollTop += scrollSpeed;
-            } else if (distanceToBottom < scrollThreshold) {
-                const scrollSpeed = Math.min(
-                    maxScrollSpeed,
-                    ((scrollThreshold - distanceToBottom) / scrollThreshold) * maxScrollSpeed
-                );
-                container.scrollTop += scrollSpeed;
+                const distanceToTop = currentY - containerRect.top;
+                const distanceToBottom = containerRect.bottom - currentY;
+
+                if (distanceToTop < scrollThreshold) {
+                    const scrollSpeed = Math.max(
+                        -maxScrollSpeed,
+                        ((distanceToTop - scrollThreshold) / scrollThreshold) * maxScrollSpeed
+                    );
+                    container.scrollTop += scrollSpeed;
+                } else if (distanceToBottom < scrollThreshold) {
+                    const scrollSpeed = Math.min(
+                        maxScrollSpeed,
+                        ((scrollThreshold - distanceToBottom) / scrollThreshold) * maxScrollSpeed
+                    );
+                    container.scrollTop += scrollSpeed;
+                }
+            }
+            if(property === 'horizontal' || property === 'both') {
+
+                const distanceToLeft = currentX - containerRect.left;
+                const distanceToRight = containerRect.right - currentX;
+
+                if (distanceToLeft < scrollThreshold) {
+                    const scrollSpeed = Math.max(
+                        -maxScrollSpeed,
+                        ((distanceToLeft - scrollThreshold) / scrollThreshold) * maxScrollSpeed
+                    );
+                    container.scrollLeft += scrollSpeed;
+                } else if (distanceToRight < scrollThreshold) {
+                    const scrollSpeed = Math.min(
+                        maxScrollSpeed,
+                        ((scrollThreshold - distanceToRight) / scrollThreshold) * maxScrollSpeed
+                    );
+                    container.scrollLeft += scrollSpeed;
+                }
             }
         }
     };
@@ -211,21 +232,24 @@ const DraggableList = <T extends {}>({
                 >
                     {render(item, index)}
                 </div>
-            ))}
-            {draggedItem && isHolding && (
-                <div
-                    className="draggable-item dragged-clone"
-                    style={{
-                        position: 'absolute',
-                        left: 0,
-                        top: 0,
-                        transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
-                        pointerEvents: 'none',
-                    }}
-                >
-                    {render(draggedItem.item, draggedItem.index)}
-                </div>
-            )}
+        ))}
+        {children && (
+            <div className="draggable-item">{children}</div>
+        )}
+        {draggedItem && isHolding && (
+            <div
+                className="draggable-item dragged-clone"
+                style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
+                    pointerEvents: 'none',
+                }}
+            >
+                {render(draggedItem.item, draggedItem.index)}
+            </div>
+        )}
         </div>
     );
 };

@@ -1,6 +1,7 @@
 export * from './common.props';
 export type * from '../components/Badge/badge.props';
 export type * from '../components/Button/button.props';
+export type * from '../components/DataTable/data-tables.props';
 export type * from '../components/Carousel/carousel.props';
 export type * from '../components/Image/image.props';
 export type * from '../components/Layout/layout.props';

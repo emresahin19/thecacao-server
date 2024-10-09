@@ -449,6 +449,16 @@
 
 .multiple-image-input {
     padding: 16px;
+    .scrollable-draggable-list {
+        touch-action: none;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        width: fit-content;
+        gap: 12px;
+        padding: 8px 0;
+    }
+
     .draggable-list {
         gap: 32px;
     }

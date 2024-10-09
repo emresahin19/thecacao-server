@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
-const axiosInstance = axios.create({
+const axiosInstance: AxiosInstance = axios.create({
     withCredentials: true,
 });
 
@@ -12,6 +12,14 @@ export const fetcher = async (url: string) => {
     } catch (error) {
         return error;
     }
+};
+
+export const tableFetcher = async <T>(url: string): Promise<AxiosResponse<T>> => {
+    const response = await axiosInstance.get(url);
+    if (response.status !== 200) {
+        throw new Error('Network response was not ok');
+    }
+    return response;
 };
 
 axiosInstance.interceptors.request.use(config => {

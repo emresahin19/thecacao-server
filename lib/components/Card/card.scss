@@ -382,6 +382,11 @@
     .menu-list {
         .scrollable-draggable-list {
             gap: 8px;
+            flex-wrap: wrap;
+            max-height: 280px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0 4px;
             .draggable-item .card {
                 h3 {
                     color: var(--black);

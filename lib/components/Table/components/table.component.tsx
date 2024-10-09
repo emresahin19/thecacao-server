@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { TableProps } from '../table.props';
+import { ColumnProps, TableProps, UseTableDataProps } from '../table.props';
 import Pagination from '../../Table/components/pagination.component';
 import { useRouter } from 'next/router';
 import lodash from 'lodash';
@@ -12,16 +12,47 @@ import ListTableView from './list-table-view.component';
 import { useTableData } from '../../../hooks';
 
 const Table = <T extends { id: string | number; passive?: number; [key: string]: any }>({
-    columns,
     className = '',
-    editPage,
+    editPage = 'EditCard',
     apiRoute,
+    fields,
     onAction
 }: TableProps<T>) => {
-    const router = useRouter();
-    const { query, isReady } = router;
-    const dispatch = useDispatch();
-    const { show } = useAppSelector((state) => state.modal);
+
+    const columns = useMemo<ColumnProps<T>[]>(() => {
+        return fields
+        .filter(field => field.property === 'view' || field.property === 'all')
+        .map((field) => ({
+            key: field.key,
+            subKey: field.subKey,
+            inputKey: field.subKey ? `${String(field.key)}.${String(field.subKey)}` : String(field.key),  // Benzersiz inputKey
+            label: field.label,
+            sort: field.sort ?? false,
+            defaultSort: field.defaultSort,
+            render: field.render,
+            type: field.type,
+            filterType: field.filterType,
+            options: field.options,
+            editable: field.editable ?? false, 
+        }));
+    }, [fields]);
+
+    const editFields = useMemo<ColumnProps<T>[]>(() => {
+        return fields
+        .filter(field => field.property === 'edit' || field.property === 'all')
+        .map(field => ({
+            key: field.key,
+            subKey: field.subKey,
+            inputKey: field.subKey ? `${String(field.key)}.${String(field.subKey)}` : String(field.key),  // Benzersiz inputKey
+            label: field.label,
+            type: field.type,
+            options: field.options,
+            required: field.required || false,
+            width: field.width,
+            height: field.height,
+            inputData: field.inputData,
+        }));
+    }, [fields]);
 
     const [tableState, setTableState] = useState<{
         currentPage: number;
@@ -32,11 +63,17 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     }>({
         currentPage: 0,
         perPage: 20,
-        orderBy: columns.find((col) => col.defaultSort)?.key as string,
-        orderDirection: columns.find((col) => col.defaultSort)?.defaultSort || 'ASC',
+        orderBy: columns.find((col: ColumnProps<T>) => col.defaultSort)?.key as string,
+        orderDirection: columns.find((col: ColumnProps<T>) => col.defaultSort)?.defaultSort || 'ASC',
         filters: {}
     });
-    
+
+    const router = useRouter();
+    const { query, isReady } = router;
+
+    const dispatch = useDispatch();
+    const { show } = useAppSelector((state) => state.modal);
+
     const [filterParams, setFilterParams] = useState<string>('');
     const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
     const [editValues, setEditValues] = useState<{ [key: string]: any }>({});
@@ -45,11 +82,11 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const filterKeys = useMemo(
-        () => columns.filter((col) => col.filterType).map((col) => col.key as string),
+        () => columns.filter((col) => col.filterType).map((col: ColumnProps<T>) => col.inputKey),
         [columns]
     );
 
-    const { data = [], total = 0, isLoading = false, isError, mutateData } = useTableData(filterParams);
+    const { items: data = [], total = 0, isLoading = false, mutateData } = useTableData<T>(filterParams);
 
     const updateQuery = useCallback(
         (newParams: { [key: string]: any }) => {
@@ -88,7 +125,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
 
     useEffect(() => {
         if (!isReady) return;
-    
+
         const {
             page,
             perPage,
@@ -98,20 +135,20 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             id,
             ...rest
         } = query;
-    
+
         const queryFilters: { [key: string]: any } = {};
-    
+
         filterKeys.forEach((key) => {
-            if (query[key] !== undefined) {
+            if (key && query[key] !== undefined) {
                 queryFilters[key] = query[key];
             }
         });
-    
+
         const newCurrentPage = page ? Number(page) - 1 : tableState.currentPage;
         const newPerPage = perPage ? Number(perPage) : tableState.perPage;
         const newOrderBy = orderBy ? String(orderBy) : tableState.orderBy;
         const newOrderDirection = orderDirection ? String(orderDirection) : tableState.orderDirection;
-    
+
         const newState = {
             currentPage: newCurrentPage,
             perPage: newPerPage,
@@ -119,7 +156,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             orderDirection: newOrderDirection,
             filters: queryFilters
         };
-    
+
         if (!lodash.isEqual(newState, tableState)) {
             setTableState((prevState) => ({
                 ...prevState,
@@ -148,15 +185,16 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                 orderBy,
                 orderDirection
             };
-    
+
             filterKeys.forEach((key) => {
+                if (!key) return;
                 if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
                     newQuery[key] = filters[key];
                 } else {
                     delete newQuery[key];
                 }
             });
-    
+
             Object.keys(newQuery).forEach((key) => {
                 if (
                     newQuery[key] === null ||
@@ -166,7 +204,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                     delete newQuery[key];
                 }
             });
-    
+
             if (!lodash.isEqual(newQuery, query)) {
                 router.replace(
                     { pathname: router.pathname, query: newQuery },
@@ -178,7 +216,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             delete filterParamsObj.action;
             delete filterParamsObj.id;
             const filterAsString = `${apiRoute}?${new URLSearchParams(filterParamsObj).toString()}`;
-        
+
             setFilterParams(filterAsString);
         }, 300);
 
@@ -190,22 +228,20 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     }, [tableState, isReady]);
 
     useEffect(() => {
-        if (!editPage) return;
-
         const { action, id } = query;
 
         if (action === 'update' && id) {
             dispatch(
                 openModal({
                     component: editPage,
-                    data: { id }
+                    data: { id, fields: editFields, route: apiRoute }
                 })
             );
         } else if (action === 'create') {
             dispatch(
                 openModal({
                     component: editPage,
-                    data: null
+                    data: { fields: editFields, route: apiRoute }
                 })
             );
         } else if (action === 'delete' && id) {
@@ -222,7 +258,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         } else {
             dispatch(closeModal());
         }
-    }, [query, dispatch, editPage]);
+    }, [query, dispatch, editPage, editFields]);
 
     const handleRowAction = useCallback(
         (action: string, item: T | null) => {
@@ -301,11 +337,11 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     );
 
     const onEditInputChange = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>, itemId: string, key: string) => {
+        (e: React.ChangeEvent<HTMLInputElement>, itemId: string, inputKey: string) => {
             const value = e.target.value;
             setEditValues((prevEditValues) => {
                 const newItemEditValues = { ...prevEditValues[itemId] };
-                lodash.set(newItemEditValues, key, value);
+                lodash.set(newItemEditValues, inputKey, value);
                 return {
                     ...prevEditValues,
                     [itemId]: newItemEditValues,
@@ -316,8 +352,8 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     );
 
     const handleSave = useCallback(
-        async (item: T, key: keyof T, value: any) => {
-            lodash.set(item, key as string, value);
+        async (item: T, inputKey: string, value: any) => {
+            lodash.set(item, inputKey, value);
             await onAction!(item, 'save');
             mutateData();
         },
@@ -362,7 +398,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             </div>
             <ListTableView
                 className={className}
-                data={!isLoading && data || Array.from({ length: perPage }).map((_, i) => ({ id: i, loading: true }))}
+                data={data as T[]}
                 columns={columns}
                 selectedItems={selectedItems}
                 selectAll={selectAll}

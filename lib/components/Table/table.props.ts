@@ -1,4 +1,4 @@
-import { InputType, OptionsProps } from "lib/interfaces";
+import { EditTypeProps, InputType, OptionsProps, ProductEditTypeProps } from "lib/interfaces";
 
 export interface PaginationProps {
     totalPages: number;
@@ -11,6 +11,8 @@ export interface PaginationProps {
 
 export interface ColumnProps<T> {
     key: keyof T | string;
+    subKey?: keyof T | string;
+    inputKey: string;
     label: string;
     sort?: boolean;
     defaultSort?: 'ASC' | 'DESC';
@@ -22,10 +24,10 @@ export interface ColumnProps<T> {
 }
   
 export interface TableProps<T> {
-    columns: Array<ColumnProps<T>>;
     apiRoute: string;
     className?: string;
     editPage?: string;
+    fields: Array<EditTypeProps<T>>;
     onAction?: (item: T, action: 'save' | 'delete') => void;
 }
 
@@ -49,9 +51,16 @@ export interface TableViewProps<T> {
         itemId: string,
         key: string
     ) => void;
-    handleSave: (item: T, key: keyof T, value: any) => void;
+    handleSave: (item: T, key: string, value: any) => void;
     handleCancel: (itemId: string) => void;
     isLoading: boolean;
     perPage: number;
 }
-  
+
+
+export interface UseTableDataProps<T> {
+    items: T;
+    total: number;
+    currentPage: number;
+    lastPage: number;
+}

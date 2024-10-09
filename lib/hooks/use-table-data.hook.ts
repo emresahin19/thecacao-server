@@ -1,14 +1,14 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { fetcher } from 'lib/utils';
+import { tableFetcher } from 'lib/utils/instance';
+import { UseTableDataProps } from 'lib/interfaces';
 
-export const useTableData = (params: string) => {
-    const { data, error }: {data: any, error: any} = useSWR(
-        () => (params !== '' ? `/api/${params}` : null),
-        fetcher
-    );
-    const { items, total, currentPage, lastPage } = data?.data ?? {};
+export const useTableData = <T>(params: string) => {
+    const { data, error } = useSWR<{ data: UseTableDataProps<T>}>(`/api/${params}`, tableFetcher as SWRConfiguration<{ data: UseTableDataProps<T> }>)
+    const { items, total, currentPage, lastPage }: UseTableDataProps<T> = data?.data ?? { items: [] as T, total: 0, currentPage: 0, lastPage: 0 };
+
     return {
-        data: items,
+        items,
         total,
         currentPage,
         lastPage,

@@ -4,4 +4,5 @@ export interface DraggableListProps<T> {
     render: (item: T, index: number) => React.ReactNode;
     setItems: (newItems: T[]) => void;
     children?: React.ReactNode;
+    property?: 'vertical' | 'horizontal' | 'both';
 }

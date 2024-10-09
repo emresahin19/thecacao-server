@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DraggableListProps } from '../drag-drop.props';
-function DraggableList<T>({ items, className = '', children, render, setItems }: DraggableListProps<T>) {
+function DraggableList<T>({ items = [], className = '', children, render, setItems }: DraggableListProps<T>) {
     const [draggedItem, setDraggedItem] = useState<{
         index: number;
         item: T;
@@ -74,7 +74,7 @@ function DraggableList<T>({ items, className = '', children, render, setItems }:
 
     return (
         <div className={`draggable-list ${className}`}>
-            {items.map((item, index) => (
+            {items.length > 0 && items.map((item, index) => (
                 <div
                     key={index}
                     ref={(el) => {

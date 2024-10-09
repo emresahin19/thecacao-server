@@ -42,14 +42,14 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                     />
                 </li>
                 {columns.map((col) => (
-                    <li className="lt-cell lt-th" key={`${String(col.key)}-filter`}>
+                    <li className="lt-cell lt-th" key={`${col.inputKey}-filter`}>
                         {col.filterType ? (
                             <div className="th-filter">
                                 {col.sort && (
-                                    <span role="button" onClick={() => handleSort(col.key as string)}>
+                                    <span role="button" onClick={() => handleSort(col.inputKey)}>
                                         <SortButton
                                             direction={
-                                                orderBy === col.key ? (orderDirection as 'ASC' | 'DESC') : undefined
+                                                orderBy === col.inputKey ? (orderDirection as 'ASC' | 'DESC') : undefined
                                             }
                                         />
                                     </span>
@@ -59,8 +59,8 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                         type="text"
                                         name={`${col.label}`}
                                         label={`${col.label}`}
-                                        value={filters[col.key as string] || ''}
-                                        onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                        value={filters[col.inputKey] || ''}
+                                        onChange={(e) => handleFilterChange(col.inputKey, e.target.value)}
                                     />
                                 )}
                                 {col.filterType === 'number' && (
@@ -68,8 +68,8 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                         type="number"
                                         name={`${col.label}`}
                                         label={`${col.label}`}
-                                        value={filters[col.key as string] || ''}
-                                        onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                        value={filters[col.inputKey] || ''}
+                                        onChange={(e) => handleFilterChange(col.inputKey, e.target.value)}
                                     />
                                 )}
                                 {col.filterType === 'select' && col.options && (
@@ -77,8 +77,8 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                         label={`${col.label} Seç`}
                                         options={col.options}
                                         name={`${col.label}`}
-                                        value={filters[col.key as string] || ''}
-                                        onChange={(e: any) => handleFilterChange(String(col.key), e.target.value)}
+                                        value={filters[col.inputKey] || ''}
+                                        onChange={(e: any) => handleFilterChange(col.inputKey, e.target.value)}
                                     />
                                 )}
                                 {col.filterType === 'date' && (
@@ -86,8 +86,8 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                         type="date"
                                         name={`${col.label}`}
                                         label={`${col.label}`}
-                                        value={filters[col.key as string] || ''}
-                                        onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                        value={filters[col.inputKey] || ''}
+                                        onChange={(e) => handleFilterChange(col.inputKey, e.target.value)}
                                     />
                                 )}
                                 {col.filterType === 'datetime' && (
@@ -95,8 +95,8 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                         type="datetime-local"
                                         name={`${col.label}`}
                                         label={`${col.label}`}
-                                        value={filters[col.key as string] || ''}
-                                        onChange={(e) => handleFilterChange(String(col.key), e.target.value)}
+                                        value={filters[col.inputKey] || ''}
+                                        onChange={(e) => handleFilterChange(col.inputKey, e.target.value)}
                                     />
                                 )}
                             </div>
@@ -104,9 +104,9 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                             <div className="th-item">
                                 {col.label}
                                 {col.sort && (
-                                    <span role="button" onClick={() => handleSort(String(col.key))}>
+                                    <span role="button" onClick={() => handleSort(col.inputKey)}>
                                         <SortButton
-                                            direction={orderBy === col.key && (orderDirection as 'ASC' | 'DESC') || undefined}
+                                            direction={orderBy === col.inputKey && (orderDirection as 'ASC' | 'DESC') || undefined}
                                         />
                                     </span>
                                 )}
@@ -131,30 +131,30 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                     />
                 </li>
                 {columns.map((col) => (
-                    <li className="lt-cell lt-td" key={String(col.key)} data-label={col.label}>
+                    <li className="lt-cell lt-td" key={col.inputKey} data-label={col.label}>
                         {col.editable && (col.filterType || col.type === 'color') 
                             ? (
                                 <EditableInput
-                                    name={`${String(col.key)}_${index}`}
+                                    name={`${col.inputKey}_${index}`}
                                     type={col.filterType || 'color'}
-                                    value={lodash.get(editValues[item.id], col.key as string) || lodash.get(item, col.key as string)}
+                                    value={lodash.get(editValues[item.id], col.inputKey) || lodash.get(item, col.inputKey)}
                                     onChange={(e) =>
-                                        onEditInputChange(e, String(item.id), String(col.key))
+                                        onEditInputChange(e, String(item.id), col.inputKey)
                                     }
-                                    onSave={({ value }) => handleSave(item, col.key, value)}
+                                    onSave={({ value }) => handleSave(item, col.inputKey, value)}
                                     onCancel={() => handleCancel(String(item.id))}
                                     options={col.options}
                                     render={
                                         col.render &&
                                         col.render({
                                             ...item,
-                                            [col.key]: lodash.get(editValues[item.id], col.key as string) || lodash.get(item, col.key as string),
+                                            [col.inputKey]: lodash.get(editValues[item.id], col.inputKey) || lodash.get(item, col.inputKey),
                                         })
                                     }
                                 />
                             ) : (
-                                <div className={`ellipsis td-item ${(col.key as string).includes('image') && 'avatar' || '' }`}>
-                                    {col.render ? col.render(item) : lodash.get(item, col.key as string)}
+                                <div className={`ellipsis td-item ${(col.inputKey).includes('image') && 'avatar' || '' }`}>
+                                    {col.render ? col.render(item) : lodash.get(item, col.inputKey)}
                                 </div>
                             )}
                     </li>

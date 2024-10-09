@@ -3,12 +3,10 @@ import ImageInput from './image-input.component';
 import { ImageObject, MultipleImageInputProps } from '../input.props';
 import { imageToCdnUrl } from 'lib/utils';
 import { productVariantHeight, productVariantWidth } from 'lib/constants';
-import DraggableList from '../../DragDrop/components/drag-drop.component';
-
-const emptyImageObject: ImageObject = { id: null, file: null };
+import ScrollableDraggableList from '../../DragDrop/components/scrollable-drag-drop.component';
 
 const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
-    initialImages,
+    initialImages = [],
     onImagesChange,
     onChange,
     onRemove,
@@ -58,9 +56,10 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
 
     return (
         <div className='multiple-image-input'>
-            <DraggableList
+            <ScrollableDraggableList<ImageObject>
                 items={images}
                 setItems={handleReorder}
+                property='horizontal'
                 render={(image: ImageObject, index: number) => {
                     const img = image.filename
                         ? imageToCdnUrl({ image: image.filename, width, height })
@@ -81,7 +80,7 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
                     disablePreview={true}
                     onChange={handleAddImage}
                 />
-            </DraggableList>
+            </ScrollableDraggableList>
         </div>
     );
 };

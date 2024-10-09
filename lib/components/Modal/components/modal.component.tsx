@@ -6,6 +6,7 @@ import ProductDetailCard from "lib/components/Card/components/product-detail-car
 import ProductEditCard from "lib/components/Card/components/product-edit-card.component";
 import CategoryEditCard from "lib/components/Card/components/category-edit-card.component";
 import DeleteModal from "./delete-modal.component"
+import EditCard from "lib/components/DataTable/components/edit-card.component";
 import Logo from "lib/components/Logo/components/logo.component";
 import { ModalInitialProps } from "../modal.props";
 
@@ -205,6 +206,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                         {component === 'ProductEditCard' && <ProductEditCard {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'CategoryEditCard' && <CategoryEditCard {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'DeleteModal' && data && <DeleteModal {...data} onSave={onSave} onCancel={onCancel} />}
+                        {component === 'EditCard' && data && <EditCard {...data} onSave={onSave} onCancel={onCancel} />}
                     </div>
                 </div>
             )}

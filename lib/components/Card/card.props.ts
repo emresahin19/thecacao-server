@@ -1,4 +1,4 @@
-import { CategoryProps, ImageObject, ProductProps } from "../../interfaces";
+import { CategoryProps, ImageObject, OptionsProps, ProductProps } from "../../interfaces";
 
 export interface CardStyleProps {
     color: string;
@@ -17,6 +17,7 @@ export type ProductEditProps = {
     onSave?: (response?: any) => void;
     onCancel?: () => void;
     closed?: boolean;
+    editFields?: Array<ProductEditTypeProps>;
 };
 
 export interface CategoryDetailProps {
@@ -59,4 +60,14 @@ export interface EditableMenuCardProps {
     setItems: (items: ProductProps[]) => void;
     style: CardStyleProps;
     title?: string;
+}
+
+export interface ProductEditTypeProps {
+    key: 'name' | 'category_id' | 'price' | 'description' | 'recipe' | 'extra' | 'images';
+    label: string;
+    type: 'text' | 'number' | 'textarea' | 'select' | 'multiselect' | 'image';
+    options?: OptionsProps[];
+    required?: boolean;
+    width?: number;
+    height?: number;
 }
