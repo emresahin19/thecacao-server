@@ -12,7 +12,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('beforeinstallprompt event:', e);
       e.preventDefault();
       setDeferredPrompt(e);
       setIsInstallable(true);
@@ -28,9 +27,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       (deferredPrompt as any).prompt(); 
       (deferredPrompt as any).userChoice.then((choiceResult: { outcome: string }) => {
         if (choiceResult.outcome === 'accepted') {
-          console.log('Kullanıcı yüklemeyi kabul etti.');
         } else {
-          console.log('Kullanıcı yüklemeyi reddetti.');
         }
         setDeferredPrompt(null);
       });

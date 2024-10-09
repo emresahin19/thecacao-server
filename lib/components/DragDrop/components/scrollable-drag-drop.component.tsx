@@ -16,6 +16,8 @@ const DraggableList = <T extends {}>({
         y: number;
         offsetX: number;
         offsetY: number;
+        width?: number;
+        height?: number;
     } | null>(null);
 
     const [isHolding, setIsHolding] = useState<boolean>(false);
@@ -60,6 +62,8 @@ const DraggableList = <T extends {}>({
                     y: touch.clientY,
                     offsetX,
                     offsetY,
+                    width: rect.width,
+                    height: rect.height,
                 });
             }, 600);
 
@@ -243,6 +247,8 @@ const DraggableList = <T extends {}>({
                     position: 'absolute',
                     left: 0,
                     top: 0,
+                    width: draggedItem.width,
+                    height: draggedItem.height,
                     transform: `translate(${draggedItem.x - draggedItem.offsetX}px, ${draggedItem.y - draggedItem.offsetY}px)`,
                     pointerEvents: 'none',
                 }}
