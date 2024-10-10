@@ -7,6 +7,7 @@
         align-items: center;
         justify-content: center;
         padding: 2px;
+        transition: transform 0.2s ease-out;
         &::before,
         &::after {
             content: '';
@@ -60,16 +61,19 @@
             pointer-events: none;
             z-index: 1000;
         }
-        &.hover-up {
-            .card {
-                transform: translateY(-100%);
-            }
-        }
-        &.hover-down {
-            .card {
-                transform: translateY(100%);
-            }
-        }
+    }
+
+    &.vertical .hover-up {
+        transform: translateY(-100%);
+    }
+    &.vertical .hover-down {
+        transform: translateY(100%);
+    }
+    &.horizontal .hover-up {
+        transform: translateX(-100%);
+    }
+    &.horizontal .hover-down {
+        transform: translateX(100%);
     }
 
     &.dragging {

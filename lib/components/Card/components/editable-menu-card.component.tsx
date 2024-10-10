@@ -37,6 +37,7 @@ const EditableMenuCard = ({ items,  setItems, title = "Items", style = defaultSt
                         <ScrollableDraggableList<ProductProps>
                             items={items}
                             setItems={setItems}
+                            property='vertical'
                             render={(product: ProductProps, index: number) => (
                                 <ProductCard 
                                     key={index}

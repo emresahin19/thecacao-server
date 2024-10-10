@@ -42,7 +42,7 @@ const DraggableList = <T extends {}>({
         if (item) {
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
-            const offsetY = touch.clientY - rect.top;
+            const offsetY = touch.clientY - item.offsetTop;
 
             setStartTouch({ x: touch.clientX, y: touch.clientY });
             setLastTouch({ x: touch.clientX, y: touch.clientY });
@@ -200,8 +200,15 @@ const DraggableList = <T extends {}>({
             const item = itemRefs.current[i];
             if (item) {
                 const rect = item.getBoundingClientRect();
-                if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
-                    return i;
+                if(property === 'horizontal' || property === 'both') {
+                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                        return i;
+                    }
+                }
+                if(property === 'vertical' || property === 'both') {
+                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                        return i;
+                    }
                 }
             }
         }
@@ -210,15 +217,14 @@ const DraggableList = <T extends {}>({
 
     const memoizedItems = useMemo(() => {
         return items.map((item, index) => {
-            const isHover = holdingIndex === index;
             const isDragged = draggedItem?.index === index ? 'dragged' : '';
-            const toDown = holdingIndex != null && draggedItem != null && (
-                draggedItem?.index >= index 
+            const hover = holdingIndex != null && draggedItem != null && (
+                draggedItem?.index > index 
                     ? (holdingIndex <= index ? 'hover-down' : '') 
                     : (holdingIndex >= index ? 'hover-up' : '')
                 ) || '';
                     
-            const className = `draggable-item ${isDragged} ${toDown}`;
+            const className = `draggable-item ${isDragged} ${hover}`;
 
             return (
                 <div
@@ -237,7 +243,7 @@ const DraggableList = <T extends {}>({
 
     return (
         <div
-            className={`scrollable-draggable-list ${className}`}
+            className={`scrollable-draggable-list ${property} ${className}`}
             ref={containerRef}
             style={{ touchAction: 'none' }}
         >
