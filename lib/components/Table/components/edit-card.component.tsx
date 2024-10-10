@@ -10,7 +10,7 @@ import { useToast } from "../../../contexts";
 import { saveItem } from '../../../services';
 import { EditCardProps, EditTypeProps, InputType } from "lib/interfaces";
 
-const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: EditCardProps<T>) => {
+const EditCard = <T extends object>({ id, route, fields, onSave, onCancel, isFormData = false }: EditCardProps<T>) => {
     const emptyItem = useMemo(() => {
         return fields.reduce((acc, item) => {
             const fullKey = item.subKey ? `${String(item.key)}.${item.subKey}` : String(item.key);
@@ -46,7 +46,7 @@ const EditCard = <T extends object>({ id, route, fields, onSave, onCancel }: Edi
         if (!item) return;
         setLoading(true);
         try {
-            const { data } = await saveItem<T>({ id, route, data: itemData as T });
+            const { data } = await saveItem<T>({ id, route, item: itemData as T, isFormData });
             const { status, message }: { status: string, message: string } = data as any;
 
             showToast({ message, type: status ? 'success' : 'danger' });

@@ -64,17 +64,19 @@
         }
     }
 
+    --translate-plus: calc(100% + 8px);
+    --translate-minus: calc(-100% - 8px);
     &.vertical .hover-up {
-        transform: translateY(-100%);
+        transform: translateY(var(--translate-minus));
     }
     &.vertical .hover-down {
-        transform: translateY(100%);
+        transform: translateY(var(--translate-plus));
     }
     &.horizontal .hover-up {
-        transform: translateX(-100%);
+        transform: translateX(var(--translate-minus));
     }
     &.horizontal .hover-down {
-        transform: translateX(100%);
+        transform: translateX(var(--translate-plus));
     }
 
     &.dragging {

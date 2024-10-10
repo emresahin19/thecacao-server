@@ -16,7 +16,8 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     editPage = 'EditCard',
     apiRoute,
     fields,
-    onAction
+    onAction,
+    isFormData = false,
 }: TableProps<T>) => {
 
     const columns = useMemo<ColumnProps<T>[]>(() => {
@@ -243,14 +244,14 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             dispatch(
                 openModal({
                     component: editPage,
-                    data: { id, fields: editFields, route: apiRoute }
+                    data: { id, fields: editFields, route: apiRoute, isFormData }
                 })
             );
         } else if (action === 'create') {
             dispatch(
                 openModal({
                     component: editPage,
-                    data: { fields: editFields, route: apiRoute }
+                    data: { fields: editFields, route: apiRoute, isFormData }
                 })
             );
         } else if (action === 'delete' && id) {

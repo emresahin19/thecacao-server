@@ -24,6 +24,7 @@ const DraggableList = <T extends {}>({
     const [holdTimer, setHoldTimer] = useState<number | null>(null);
     const [animationTimer, setAnimationTimer] = useState<number | null>(null);
     const [holdingIndex, setHoldingIndex] = useState<number | null>(null);
+    const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right' | null>(null);
 
     const [startTouch, setStartTouch] = useState<{ x: number; y: number } | null>(null);
     const [lastTouch, setLastTouch] = useState<{ x: number; y: number } | null>(null);
@@ -42,7 +43,7 @@ const DraggableList = <T extends {}>({
         if (item) {
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
-            const offsetY = touch.clientY - item.offsetTop + containerRef.current!.scrollTop;
+            const offsetY = touch.clientY - rect.top; // Corrected offsetY calculation
 
             setStartTouch({ x: touch.clientX, y: touch.clientY });
             setLastTouch({ x: touch.clientX, y: touch.clientY });
@@ -112,7 +113,6 @@ const DraggableList = <T extends {}>({
                 return;
             }
         }
-
         if (isHolding && draggedItem) {
             setDraggedItem((prevItem) => ({
                 ...prevItem!,
@@ -124,6 +124,11 @@ const DraggableList = <T extends {}>({
 
             const overIndex = getOverIndex(currentX, currentY);
             if (overIndex != null) {
+                if(overIndex < holdingIndex!) {
+                    setDirection('up');
+                } else if (overIndex > holdingIndex!) {
+                    setDirection('down');
+                }
                 const newItems = [...items];
                 setItems(newItems);
                 setHoldingIndex(overIndex);
@@ -142,12 +147,22 @@ const DraggableList = <T extends {}>({
             setAnimationTimer(null);
         }
 
+        if (isHolding && draggedItem && holdingIndex !== null && holdingIndex !== draggedItem.index) {
+            // Create a copy of the items array
+            const newItems = [...items];
+            newItems.splice(draggedItem.index, 1);
+            newItems.splice(holdingIndex, 0, draggedItem.item);
+            setItems(newItems);
+        }
+
         setIsHolding(false);
         setDraggedItem(null);
         setStartTouch(null);
         setLastTouch(null);
         setHoldingIndex(null);
-    }, [holdTimer, animationTimer]);
+        setDirection(null);
+    }, [holdTimer, animationTimer, isHolding, draggedItem, holdingIndex, items, setItems]);
+
 
     const autoScrollContainer = useCallback((currentX: number, currentY: number) => {
         const container = containerRef.current;
@@ -196,35 +211,58 @@ const DraggableList = <T extends {}>({
     }, [property]);
 
     const getOverIndex = useCallback((x: number, y: number): number | null => {
+        if (!draggedItem) return null;
+    
         for (let i = 0; i < itemRefs.current.length; i++) {
             const item = itemRefs.current[i];
             if (item) {
                 const rect = item.getBoundingClientRect();
-                if(property === 'horizontal' || property === 'both') {
-                    if (x > rect.left && x < rect.right) {
-                        return i;
+               
+                if (property === 'vertical' || property === 'both') {
+                    const itemCenterY = draggedItem.index! >= i 
+                        ? rect.top + rect.height / 2 
+                        : rect.bottom - rect.height / 2;
+
+                    if (direction === 'up') {
+                        if (y > rect.top && y < itemCenterY) {
+                            return i;
+                        }
+                    } else {
+                        if (y < rect.bottom && y > itemCenterY) {
+                            return i;
+                        }
                     }
                 }
-                if(property === 'vertical' || property === 'both') {
-                    if (y > rect.top && y < rect.bottom) {
-                        return i;
+                
+                if (property === 'horizontal' || property === 'both') {
+                    const itemCenterX = rect.left + rect.width / 2;
+                    if (draggedItem.index < holdingIndex!) {
+                        if (x > rect.left && x < itemCenterX) {
+                            return i;
+                        }
+                    } else {
+                        if (x < rect.right && x > itemCenterX) {
+                            return i;
+                        }
                     }
                 }
             }
         }
         return null;
-    }, [draggedItem]);
+    }, [draggedItem, holdingIndex, property]);
+    
 
     const memoizedItems = useMemo(() => {
         return items.map((item, index) => {
             const isDragged = draggedItem?.index === index ? 'dragged' : '';
-            const hover = holdingIndex != null && draggedItem != null && (
+            const hover = holdingIndex != null && draggedItem != null && draggedItem.index != holdingIndex && (
                 draggedItem?.index >= index 
                     ? (holdingIndex <= index ? 'hover-down' : '') 
                     : (holdingIndex >= index ? 'hover-up' : '')
                 ) || '';
+            const isHolding = holdingIndex === index && !draggedItem ? 'hovered' : '';
                     
-            const className = `draggable-item ${isDragged} ${hover}`;
+            const className = `draggable-item ${isDragged} ${hover} ${isHolding}`;
 
             return (
                 <div

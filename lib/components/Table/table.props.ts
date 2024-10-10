@@ -9,6 +9,7 @@ export interface EditCardProps<T> {
     onSave?: (response: any) => void;
     onCancel?: () => void;
     fields: EditTypeProps<T>[];
+    isFormData?: boolean;
 }
 
 export interface PaginationProps {
@@ -40,6 +41,7 @@ export interface TableProps<T> {
     editPage?: string;
     fields: Array<EditTypeProps<T>>;
     onAction?: (item: T, action: 'save' | 'delete') => void;
+    isFormData?: boolean;
 }
 
 export interface TableViewProps<T> {

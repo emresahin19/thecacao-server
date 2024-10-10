@@ -83,6 +83,28 @@ const CategoryTable: React.FC = () => {
             ],
         },
         {
+            key: 'style',
+            subKey: 'opacity',
+            property: 'edit',
+            label: 'Opaklık',
+            type: 'range',
+            defaultValue: defaultStyle.opacity,
+            inputData: [
+                {
+                    key: 'min',
+                    value: 0,
+                },
+                {
+                    key: 'max',
+                    value: 1,
+                },
+                {
+                    key: 'step',
+                    value: 0.1,
+                },
+            ],
+        },
+        {
             key: 'products',
             property: 'edit',
             label: 'Ürünler',
@@ -104,28 +126,6 @@ const CategoryTable: React.FC = () => {
             render: (category: CategoryProps) => (
                 <span>{category && category.updated_at && new Date(category.updated_at).toLocaleDateString()}</span>
             ),
-        },
-        {
-            key: 'style',
-            subKey: 'opacity',
-            property: 'edit',
-            label: 'Opaklık',
-            type: 'range',
-            defaultValue: defaultStyle.opacity,
-            inputData: [
-                {
-                    key: 'min',
-                    value: 0,
-                },
-                {
-                    key: 'max',
-                    value: 1,
-                },
-                {
-                    key: 'step',
-                    value: 0.1,
-                },
-            ],
         },
     ];
 

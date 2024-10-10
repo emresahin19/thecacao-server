@@ -34,6 +34,7 @@ const EditField = <T extends {  }>({ field, value, onChange, setItemData, inputP
                 <RangeInput
                     key={key}
                     name={key}
+                    className="interactive"
                     label={field.label}
                     value={value as number}
                     onChange={onChange(key, field.type)}

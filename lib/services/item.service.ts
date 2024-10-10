@@ -3,7 +3,8 @@ import { axiosInstance } from 'lib/utils';
 import axios, { AxiosResponse } from 'axios';
 
 interface ItemRequestProps<T> extends UseItemProps<T> {
-    data: T;
+    item: T;
+    isFormData?: boolean;
 }
 
 export const fetchItem = async <T>({id, route}: UseItemProps<T>): Promise<T> => {
@@ -16,20 +17,22 @@ export const fetchItem = async <T>({id, route}: UseItemProps<T>): Promise<T> => 
     }
 };
 
-export const saveItem = async <T>({id, route, data}: ItemRequestProps<T>): Promise<AxiosResponse<T>> => {
+export const saveItem = async <T>({id, route, item, isFormData = false}: ItemRequestProps<T>): Promise<AxiosResponse<T>> => {
     try {
+        const data = isFormData ? await prepareItemFormData({ item }) : item;
+        
         const response = id
             ? await axiosInstance.put(`/api/${route}/${id}`, data)
             : await axiosInstance.post(`/api/${route}/create`, data);
         
-        return response.data;
+        return response;
     } catch (error) {
         console.error('Error saving item:', error);
         throw error;
     }
 };
 
-export const prepareItemFormData = async <T extends Record<string, any>>({ item }: { item: T }): Promise<FormData> => {
+export const prepareItemFormData = async <T extends Record<keyof T, any>>({ item }: { item: T }): Promise<FormData> => {
     const formData = new FormData();
 
     for (const key in item) {

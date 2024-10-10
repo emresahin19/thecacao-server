@@ -131,6 +131,7 @@ const ProductTable: React.FC = () => {
                 fields={fields}
                 apiRoute="products"
                 onAction={handleAction}
+                isFormData={true}
             />
         </div>
     );
