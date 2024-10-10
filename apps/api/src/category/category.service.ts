@@ -9,12 +9,15 @@ import slugify from 'slugify';
 import { menuCacheKey } from '../common/constants';
 import { clearCache } from '../common/lib/clear-cache';
 import { ImageService } from '../image/image.service';
+import { Product } from '../product/entities/product.entity';
 
 @Injectable()
 export class CategoryService {
     constructor(
         @InjectRepository(Category)
         private readonly categoryRepository: Repository<Category>,
+        @InjectRepository(Product)
+        private readonly productRepository: Repository<Product>,
         private readonly imageService: ImageService
     ) {}
 
@@ -101,6 +104,16 @@ export class CategoryService {
 
         updateCategoryDto.slug = slugify(updateCategoryDto.name, { lower: true });
         if (!updateCategoryDto.updated_at) updateCategoryDto.updated_at = new Date();
+
+        if(updateCategoryDto.products && updateCategoryDto.products.length > 0) {
+            await Promise.all(updateCategoryDto.products.map(async (product) => {
+                const productEntity = await this.productRepository.findOne({ where: { id }});
+                productEntity.order = product.order;
+                return this.productRepository.save(productEntity);
+            }));
+        }
+        console.log(updateCategoryDto.products)
+        delete updateCategoryDto.products;
 
         await this.categoryRepository.update(id, updateCategoryDto);
         const category = await this.categoryRepository.findOne({ where: { id } });

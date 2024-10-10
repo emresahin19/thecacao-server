@@ -24,7 +24,6 @@ const DraggableList = <T extends {}>({
     const [holdTimer, setHoldTimer] = useState<number | null>(null);
     const [animationTimer, setAnimationTimer] = useState<number | null>(null);
     const [holdingIndex, setHoldingIndex] = useState<number | null>(null);
-    const [direction, setDirection] = useState<'up' | 'down' | 'left' | 'right' | null>(null);
 
     const [startTouch, setStartTouch] = useState<{ x: number; y: number } | null>(null);
     const [lastTouch, setLastTouch] = useState<{ x: number; y: number } | null>(null);
@@ -43,7 +42,7 @@ const DraggableList = <T extends {}>({
         if (item) {
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
-            const offsetY = touch.clientY - rect.top; // Corrected offsetY calculation
+            const offsetY = touch.clientY - item.offsetTop + containerRef.current!.scrollTop;
 
             setStartTouch({ x: touch.clientX, y: touch.clientY });
             setLastTouch({ x: touch.clientX, y: touch.clientY });
@@ -123,12 +122,7 @@ const DraggableList = <T extends {}>({
             autoScrollContainer(currentX, currentY);
 
             const overIndex = getOverIndex(currentX, currentY);
-            if (overIndex != null) {
-                if(overIndex < holdingIndex!) {
-                    setDirection('up');
-                } else if (overIndex > holdingIndex!) {
-                    setDirection('down');
-                }
+            if (overIndex != null && overIndex !== holdingIndex) {
                 const newItems = [...items];
                 setItems(newItems);
                 setHoldingIndex(overIndex);
@@ -146,7 +140,6 @@ const DraggableList = <T extends {}>({
             clearTimeout(animationTimer);
             setAnimationTimer(null);
         }
-
         if (isHolding && draggedItem && holdingIndex !== null && holdingIndex !== draggedItem.index) {
             // Create a copy of the items array
             const newItems = [...items];
@@ -160,7 +153,6 @@ const DraggableList = <T extends {}>({
         setStartTouch(null);
         setLastTouch(null);
         setHoldingIndex(null);
-        setDirection(null);
     }, [holdTimer, animationTimer, isHolding, draggedItem, holdingIndex, items, setItems]);
 
 
@@ -218,39 +210,32 @@ const DraggableList = <T extends {}>({
             if (item) {
                 const rect = item.getBoundingClientRect();
                
-                if (property === 'vertical' || property === 'both') {
-                    const itemCenterY = draggedItem.index! >= i 
-                        ? rect.top + rect.height / 2 
-                        : rect.bottom - rect.height / 2;
+                if (property === 'vertical') {
+                    const enterTop = y > rect.top && y < rect.top + rect.height / 2 
+                    const enterBottom = y < rect.bottom && y > rect.bottom - rect.height / 2
+                    const isDown = lastTouch!.y < y;
 
-                    if (direction === 'up') {
-                        if (y > rect.top && y < itemCenterY) {
-                            return i;
-                        }
-                    } else {
-                        if (y < rect.bottom && y > itemCenterY) {
-                            return i;
-                        }
+                    if (enterTop && isDown) {
+                        return i < draggedItem!.index ? i + 1 : i
+                    } else if (enterBottom && !isDown) {
+                        return i > draggedItem!.index ? i - 1 : i
                     }
                 }
                 
-                if (property === 'horizontal' || property === 'both') {
-                    const itemCenterX = rect.left + rect.width / 2;
-                    if (draggedItem.index < holdingIndex!) {
-                        if (x > rect.left && x < itemCenterX) {
-                            return i;
-                        }
-                    } else {
-                        if (x < rect.right && x > itemCenterX) {
-                            return i;
-                        }
+                if (property === 'horizontal') {
+                    const enterLeft = x > rect.left && x < rect.left + rect.width / 2
+                    const enterRight = x < rect.right && x > rect.right - rect.width / 2
+                    const isRight = lastTouch!.x < x;
+                    if (enterLeft && isRight) {
+                        return i < draggedItem!.index ? i + 1 : i
+                    } else if (enterRight && !isRight) {
+                        return i > draggedItem!.index ? i - 1 : i
                     }
                 }
             }
         }
         return null;
     }, [draggedItem, holdingIndex, property]);
-    
 
     const memoizedItems = useMemo(() => {
         return items.map((item, index) => {

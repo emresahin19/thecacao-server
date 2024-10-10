@@ -1,6 +1,7 @@
-import { IsString, IsOptional, IsBoolean, IsInt, IsNotEmpty, IsDate } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsInt, IsNotEmpty, IsDate, IsArray } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common';
+import { Product } from '../../product/entities/product.entity';
 
 export class CreateCategoryDto {
     @IsOptional()
@@ -47,4 +48,14 @@ export class CreateCategoryDto {
     @IsDate()
     @Transform(({ value }) => value ? new Date(value) : new Date())
     updated_at?: Date;
+
+    @IsOptional()
+    @Transform(({ value }: { value: Product[] }) => {
+        try {
+            return value.map((item: Product, index: number) => ({id: item.id, order: index}));
+        } catch (error) {
+            throw new BadRequestException('Geçersiz JSON formatı');
+        }
+    })
+    products?: { id: number, order: number }[];
 }
