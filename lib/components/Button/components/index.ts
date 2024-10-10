@@ -6,6 +6,7 @@ import LogoutButton from "./logout.component";
 import HamburgerButton from "./hamburger-button.component";
 import SearchButton from "./search-button.component";
 import GoHomeButton from "./go-home-button.component";
+import RefreshButton from "./refresh.component";
 
 export {
     IconButton,
@@ -16,4 +17,5 @@ export {
     HamburgerButton,
     SearchButton,
     GoHomeButton,
+    RefreshButton
 }

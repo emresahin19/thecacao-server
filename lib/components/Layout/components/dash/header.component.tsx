@@ -3,6 +3,7 @@ import IconButton from "lib/components/Button/components/icon-button.component";
 import LogoutButton from "lib/components/Button/components/logout.component";
 import ThemeSwitcher from "lib/components/Button/components/theme-switcher.component";
 import GoHomeButton from "lib/components/Button/components/go-home-button.component";
+import RefreshButton from "lib/components/Button/components/refresh.component";
 
 import DashSidebar from "./sidebar.component";
 import MdMenu from 'lib/assets/icon/svg/MdMenu.svg'
@@ -39,6 +40,9 @@ const Header: React.FC = () => {
               </li>
               <li>
                 <GoHomeButton path="/dashboard" />
+              </li>
+              <li>
+                <RefreshButton />
               </li>
             </ul>
           </div>
