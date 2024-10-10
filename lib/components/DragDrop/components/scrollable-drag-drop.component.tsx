@@ -123,7 +123,7 @@ const DraggableList = <T extends {}>({
             autoScrollContainer(currentX, currentY);
 
             const overIndex = getOverIndex(currentX, currentY);
-            if (overIndex !== null && overIndex !== draggedItem.index) {
+            if (overIndex != null) {
                 const newItems = [...items];
                 setItems(newItems);
                 setHoldingIndex(overIndex);
@@ -198,7 +198,7 @@ const DraggableList = <T extends {}>({
     const getOverIndex = useCallback((x: number, y: number): number | null => {
         for (let i = 0; i < itemRefs.current.length; i++) {
             const item = itemRefs.current[i];
-            if (item && i !== draggedItem?.index) {
+            if (item) {
                 const rect = item.getBoundingClientRect();
                 if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
                     return i;
@@ -212,8 +212,8 @@ const DraggableList = <T extends {}>({
         return items.map((item, index) => {
             const isHover = holdingIndex === index;
             const isDragged = draggedItem?.index === index ? 'dragged' : '';
-            const toDown = holdingIndex && draggedItem && (
-                draggedItem?.index > index 
+            const toDown = holdingIndex != null && draggedItem != null && (
+                draggedItem?.index >= index 
                     ? (holdingIndex <= index ? 'hover-down' : '') 
                     : (holdingIndex >= index ? 'hover-up' : '')
                 ) || '';
