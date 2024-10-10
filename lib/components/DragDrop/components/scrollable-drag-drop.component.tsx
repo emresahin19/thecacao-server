@@ -42,7 +42,7 @@ const DraggableList = <T extends {}>({
         if (item) {
             const rect = item.getBoundingClientRect();
             const offsetX = touch.clientX - rect.left;
-            const offsetY = touch.clientY - item.offsetTop;
+            const offsetY = touch.clientY - item.offsetTop + containerRef.current!.scrollTop;
 
             setStartTouch({ x: touch.clientX, y: touch.clientY });
             setLastTouch({ x: touch.clientX, y: touch.clientY });
@@ -219,7 +219,7 @@ const DraggableList = <T extends {}>({
         return items.map((item, index) => {
             const isDragged = draggedItem?.index === index ? 'dragged' : '';
             const hover = holdingIndex != null && draggedItem != null && (
-                draggedItem?.index > index 
+                draggedItem?.index >= index 
                     ? (holdingIndex <= index ? 'hover-down' : '') 
                     : (holdingIndex >= index ? 'hover-up' : '')
                 ) || '';
