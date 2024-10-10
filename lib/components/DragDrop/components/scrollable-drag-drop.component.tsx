@@ -201,12 +201,12 @@ const DraggableList = <T extends {}>({
             if (item) {
                 const rect = item.getBoundingClientRect();
                 if(property === 'horizontal' || property === 'both') {
-                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                    if (x > rect.left && x < rect.right) {
                         return i;
                     }
                 }
                 if(property === 'vertical' || property === 'both') {
-                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                    if (y > rect.top && y < rect.bottom) {
                         return i;
                     }
                 }
