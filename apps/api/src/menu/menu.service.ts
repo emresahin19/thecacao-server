@@ -55,6 +55,8 @@ export class MenuService {
             .leftJoin('category.products', 'product')
             .where('category.passive = :passive', { passive: 0 })
             .andWhere('category.deleted = :deleted', { deleted: 0 })
+            .andWhere('product.passive = :passive', { passive: 0 })
+            .andWhere('product.deleted = :deleted', { deleted: 0 })
             .orderBy('category.order', 'ASC')
             .addOrderBy('product.order', 'ASC')
             .getMany();

@@ -72,7 +72,7 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
                 <MetaSubData
                     name={product.name}
                     image={product.images?.[0]?.filename || null}
-                    description={product.description}
+                    description={product.description || ''}
                     category={category?.name}
                     slug={`${category?.slug}/${product.slug}`}
                 />
