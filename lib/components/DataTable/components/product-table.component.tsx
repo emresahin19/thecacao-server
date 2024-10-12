@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import Table from "../../Table/components/table.component";
-import { EditTypeProps, ProductProps } from '../../../interfaces';
+import { EditTypeProps, OptionsProps, ProductProps } from '../../../interfaces';
 import { useCategoryInputData, useExtraInputData } from '../../../hooks';
 import { dateToString, imageToCdnUrl } from '../../../utils';
 import { placeholderProductImageBg, productVariantHeight, productVariantWidth } from '../../../constants';
@@ -29,7 +29,7 @@ const ProductTable: React.FC = () => {
             key: 'images',
             property: 'all',
             label: 'Resim',
-            type: 'image',
+            type: 'images',
             render: (product: ProductProps) => (
                 product.images && (
                     <div className="avatar">
@@ -93,7 +93,8 @@ const ProductTable: React.FC = () => {
             label: 'Ekstra',
             type: 'multiselect',
             editable: true,
-            options: extraData,
+            options: extraData.filter((extra: OptionsProps) => extra.options && extra.options.length > 0),
+            defaultValue: [],
         },
         {
             key: 'description',

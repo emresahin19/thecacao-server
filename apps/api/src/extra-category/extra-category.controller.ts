@@ -9,7 +9,7 @@ import { Response } from 'express';
 
 @Controller('extra-categories')
 export class ExtraCategoryController {
-    constructor(private readonly extraCategoryService: ExtraCategoryService) {}
+    constructor(private readonly extraCategoryService: ExtraCategoryService) { }
 
     @Post()
     @FormDataRequest()
@@ -19,13 +19,13 @@ export class ExtraCategoryController {
 
             return item
                 ? res.status(StatusCode.CREATED.statusCode).json({
-                      status: true,
-                      message: StatusCode.CREATED.message,
-                  })
+                    status: true,
+                    message: StatusCode.CREATED.message,
+                })
                 : res.status(StatusCode.BAD_REQUEST.statusCode).json({
-                      status: false,
-                      message: StatusCode.BAD_REQUEST.message,
-                  });
+                    status: false,
+                    message: StatusCode.BAD_REQUEST.message,
+                });
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
@@ -43,13 +43,38 @@ export class ExtraCategoryController {
 
             return item
                 ? res.status(StatusCode.SUCCESS.statusCode).json({
-                      status: true,
-                      message: StatusCode.SUCCESS.message,
-                  })
+                    status: true,
+                    message: StatusCode.SUCCESS.message,
+                })
                 : res.status(StatusCode.BAD_REQUEST.statusCode).json({
-                      status: false,
-                      message: StatusCode.BAD_REQUEST.message,
-                  });
+                    status: false,
+                    message: StatusCode.BAD_REQUEST.message,
+                });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
+                message: StatusCode.BAD_REQUEST.message,
+            });
+        }
+    }
+
+    @Get(':id')
+    async getExtraCategory(@Param('id') id: number, @Res() res: Response) {
+        try {
+            const item = await this.extraCategoryService.findOne(id);
+
+            return item
+                ? res.status(StatusCode.SUCCESS.statusCode).json({
+                    status: true,
+                    item,
+                    message: StatusCode.SUCCESS.message,
+                })
+                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                    status: false,
+                    item: null,
+                    message: StatusCode.BAD_REQUEST.message,
+                });
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
@@ -66,40 +91,15 @@ export class ExtraCategoryController {
 
             return items
                 ? res.status(StatusCode.SUCCESS.statusCode).json({
-                      status: true,
-                      ...items,
-                      message: StatusCode.SUCCESS.message,
-                  })
+                    status: true,
+                    ...items,
+                    message: StatusCode.SUCCESS.message,
+                })
                 : res.status(StatusCode.BAD_REQUEST.statusCode).json({
-                      status: false,
-                      items: [],
-                      message: StatusCode.BAD_REQUEST.message,
-                  });
-        } catch (error) {
-            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
-                status: false,
-                error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
-            });
-        }
-    }
-
-    @Get(':id')
-    async getExtraCategory(@Param('id') id: number, @Res() res: Response) {
-        try {
-            const item = await this.extraCategoryService.getExtraCategoryWithImage(id);
-
-            return item
-                ? res.status(StatusCode.SUCCESS.statusCode).json({
-                      status: true,
-                      item,
-                      message: StatusCode.SUCCESS.message,
-                  })
-                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
-                      status: false,
-                      item: null,
-                      message: StatusCode.BAD_REQUEST.message,
-                  });
+                    status: false,
+                    items: [],
+                    message: StatusCode.BAD_REQUEST.message,
+                });
         } catch (error) {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,

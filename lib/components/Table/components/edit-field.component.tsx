@@ -8,6 +8,8 @@ import { CardStyleProps, EditFieldProps, ImageObject } from "lib/interfaces";
 import RangeInput from "lib/components/Input/components/range-input.component";
 import lodash from "lodash";
 import EditableMenuCard from "lib/components/Card/components/editable-menu-card.component";
+import ImageInput from "lib/components/Input/components/image-input.component";
+import { imageToCdnUrl } from "lib/utils";
 
 const EditField = <T extends {  }>({ field, value, onChange, setItemData, inputProps }: EditFieldProps<T>) => {
     const key = field.subKey ? `${String(field.key)}.${field.subKey}` : String(field.key);
@@ -45,6 +47,7 @@ const EditField = <T extends {  }>({ field, value, onChange, setItemData, inputP
         case 'select':
         case 'multiselect':
             if (!field.options || field.options.length === 0) return null;
+            
             return (
                 <MultipleSelectBox
                     key={key}
@@ -56,7 +59,7 @@ const EditField = <T extends {  }>({ field, value, onChange, setItemData, inputP
                 />
             );
 
-        case 'image':
+        case 'images':
             return (
                 <MultipleImageInput
                     key={key}
@@ -65,6 +68,24 @@ const EditField = <T extends {  }>({ field, value, onChange, setItemData, inputP
                         setItemData((prevItemData) => {
                             const newItemData = { ...prevItemData };
                             lodash.set(newItemData, key, images);
+                            return newItemData;
+                        });
+                    }}
+                />
+            );
+    
+        case 'image':
+            const { id, file, filename, url } = value as ImageObject || {};
+            const src = url ? url : filename ? imageToCdnUrl({ image: filename, width: 150, height: 150 }) : null;
+            return (
+                <ImageInput
+                    value={src}
+                    onChange={(file: File | null) => {
+                        if(!file) return;
+                        return setItemData((prevItemData) => {
+                            const newItemData = { ...prevItemData };
+                            const imgObj = file ? { ...value, file, filename: file.name, url: URL.createObjectURL(file) } : null;
+                            lodash.set(newItemData, key, imgObj);
                             return newItemData;
                         });
                     }}

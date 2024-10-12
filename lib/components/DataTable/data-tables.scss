@@ -109,31 +109,29 @@
     thead tr th {
         flex: 1 1 auto;
     
-        &:nth-child(1) {
-            flex: 0 0 10%;
-            max-width: 10%;
-            min-width: 140px;
-        }
-    
         &:nth-child(2) {
-            flex: 0 1 40%; 
-            max-width: 40%;
+            flex: 0 1 10%; 
+            max-width: 10%;
         }
     
         &:nth-child(3) {
+            flex: 0 1 15%; 
+            max-width: 15%;
+        }
+        &:nth-child(4) {
             flex: 0 1 20%;
             max-width: 20%;
         }
     
-        &:nth-child(4) {
-            flex: 0 1 20%; 
-            max-width: 20%;
+        &:nth-child(5) {
+            flex: 0 1 35%; 
+            max-width: 35%;
             min-width: 140px;
         }
     
-        &:nth-child(5) {
-            flex: 0 0 10%;
-            max-width: 10%;
+        &:nth-child(6) {
+            flex: 0 0 15%;
+            max-width: 15%;
         }
     }
 }
@@ -144,40 +142,36 @@
     thead tr th {
         flex: 1 1 auto;
     
-        &:nth-child(1) {
-            flex: 0 0 5%;
-            max-width: 5%;
-        }
-    
         &:nth-child(2) {
-            flex: 0 0 10%;
+            flex: 0 1 10%; 
             max-width: 10%;
-            min-width: 90px;
+            min-width: 80px;
         }
     
         &:nth-child(3) {
-            flex: 0 1 35%;
-            max-width: 35%;
-        }
-    
-        &:nth-child(4) {
-            flex: 0 0 10%;
+            flex: 0 1 10%; 
             max-width: 10%;
-            min-width: 90px;
-            &.lt-td {
-                text-align: right;
-            }
+            min-width: 80px;
         }
-    
+        &:nth-child(4) {
+            flex: 0 1 20%;
+            max-width: 20%;
+            min-width: 100px;
+        }
         &:nth-child(5) {
             flex: 0 1 20%; 
             max-width: 20%;
-            min-width: 140px;
+            min-width: 150px;
+        }
+        &:nth-child(6) {
+            flex: 0 1 20%; 
+            max-width: 20%;
+            min-width: 150px;
         }
     
-        &:nth-child(6) {
-            flex: 0 0 10%;
-            max-width: 10%;
+        &:nth-child(7) {
+            flex: 0 0 15%;
+            max-width: 15%;
         }
     }
 }

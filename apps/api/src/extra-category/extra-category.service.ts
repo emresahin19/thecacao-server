@@ -51,47 +51,45 @@ export class ExtraCategoryService {
             .take(perPage)
             .getManyAndCount();
 
-        // for (const item of items) {
-        //     if (item.image) {
-        //         item.imageFile = await this.getImage(item.image);
-        //     } else {
-        //         item.imageFile = null;
-        //     }
-        // }
+        for (const item of items) {
+            if (item.image_id) {
+                item.image = await this.getImage(item.image_id);
+            }
+        }
 
         return { items, total, currentPage: page, lastPage: Math.ceil(total / perPage) };
     }
 
     findOne(id: number): Promise<ExtraCategory> {
-        return this.extraCategoryRepository.findOne({ where: { id }, relations: ['extras'] });
+        return this.extraCategoryRepository.findOne({ where: { id }, relations: ['image'] });
     }
 
     async create(createExtraCategoryDto: CreateExtraCategoryDto): Promise<ExtraCategory> {
         let imageId: number = null;
 
-        if (createExtraCategoryDto.file) {
-            const image = await this.imageService.saveImage(null, createExtraCategoryDto.file);
+        if (createExtraCategoryDto.imageObj) {
+            const image = await this.imageService.saveImage(null, createExtraCategoryDto.imageObj.file);
             imageId = image.id;
         }
 
-        delete createExtraCategoryDto.file;
-        createExtraCategoryDto.image = imageId;
+        delete createExtraCategoryDto.imageObj;
+        createExtraCategoryDto.image_id = imageId;
 
         const extraCategory = await this.saveExtraCategory(createExtraCategoryDto);
         return extraCategory;
     }
 
     async update(id: number, updateExtraCategoryDto: UpdateExtraCategoryDto): Promise<ExtraCategory> {
-        let imageId: number = updateExtraCategoryDto.image || null;
+        let imageId: number = updateExtraCategoryDto.imageObj.id || null;
 
-        if (updateExtraCategoryDto.file) {
-            const image = await this.imageService.saveImage(imageId, updateExtraCategoryDto.file);
+        if (updateExtraCategoryDto.imageObj) {
+            const image = await this.imageService.saveImage(imageId, updateExtraCategoryDto.imageObj.file);
             imageId = image.id;
         }
 
-        delete updateExtraCategoryDto.file;
+        delete updateExtraCategoryDto.imageObj;
         updateExtraCategoryDto.id = id;
-        updateExtraCategoryDto.image = imageId;
+        updateExtraCategoryDto.image_id = imageId;
 
         const extraCategory = await this.saveExtraCategory(updateExtraCategoryDto);
         return extraCategory;

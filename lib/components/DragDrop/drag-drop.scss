@@ -66,17 +66,26 @@
 
     --translate-plus: calc(100% + 8px);
     --translate-minus: calc(-100% - 8px);
-    &.vertical .hover-up {
-        transform: translateY(var(--translate-minus));
+
+    &.vertical {
+        flex-direction: column;
+        &.hover-up {
+            transform: translateY(var(--translate-minus));
+        }
+        &.hover-down {
+            transform: translateY(var(--translate-plus));
+        }
     }
-    &.vertical .hover-down {
-        transform: translateY(var(--translate-plus));
-    }
-    &.horizontal .hover-up {
-        transform: translateX(var(--translate-minus));
-    }
-    &.horizontal .hover-down {
-        transform: translateX(var(--translate-plus));
+
+    &.horizontal {
+        flex-direction: row;
+        width: 100%;
+        &.hover-up {
+            transform: translateX(var(--translate-minus));
+        }
+        &.hover-down {
+            transform: translateX(var(--translate-plus));
+        }
     }
 
     &.dragging {

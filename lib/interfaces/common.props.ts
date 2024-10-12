@@ -5,7 +5,7 @@ import { ReactElement, ReactNode, RefObject } from "react";
 import { ImageObject } from "../components/Input/input.props";
 
 export type InputSize = 'sm' | 'md' | 'lg';
-export type InputType = 'text' | 'password' | 'email' | 'number' | 'date' | 'time' | 'datetime-local' | 'select' | 'datetime' | 'textarea' | 'color' | 'file' | 'checkbox' | 'radio' | 'range' | 'multiselect' | 'image' | 'sorter';
+export type InputType = 'text' | 'password' | 'email' | 'number' | 'date' | 'time' | 'datetime-local' | 'select' | 'datetime' | 'textarea' | 'color' | 'file' | 'checkbox' | 'radio' | 'range' | 'multiselect' | 'image' | 'images' | 'sorter';
 export type ColorOptions =
   | 'primary'
   | 'secondary'
@@ -96,7 +96,7 @@ export interface ExtraDataProps {
     id: number;
     name: string;
     description	: number;
-    image?: string;
+    image?: ImageObject;
     extras: ExtraProps[];
     passive: number;
     deleted: boolean;
@@ -108,6 +108,9 @@ export interface ExtraProps {
     id: number;
     name: string;
     price: number;
+    category_id: number;
+    category: CategoryProps;
+    image?: ImageObject;
     description: string;
     image_url?: string;
     image_urls?: string[];

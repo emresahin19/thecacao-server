@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { ExtraCategory } from '../../extra-category/entities/extra-category.entity';
 import { Image } from '../../image/entities/image.entity';
+import { MemoryStoredFile } from 'nestjs-form-data';
 
 @Entity('extras')
 export class Extra {
@@ -16,9 +17,12 @@ export class Extra {
   @Column({ type: 'decimal', precision: 8, scale: 2, default: 0 })
   price: number;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  image?: number;
+
   @Column({ type: 'simple-json', nullable: true })
   image_ids: number[];
-  images?: Image[];
+  images?: { id?: number; file?: MemoryStoredFile; fieldname?: string }[];
   image_urls?: string[];
 
   @Column({ type: 'tinyint', default: 0 })

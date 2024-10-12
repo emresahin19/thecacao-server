@@ -1,6 +1,7 @@
 import { IsString, IsOptional, IsBoolean, IsInt, IsNotEmpty, IsDate } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { MemoryStoredFile } from 'nestjs-form-data';
+import { Image } from '../../image/entities/image.entity';
 
 export class CreateExtraCategoryDto {
     @IsOptional()
@@ -8,21 +9,27 @@ export class CreateExtraCategoryDto {
     @Transform(({ value }) => parseInt(value, 10))
     id?: number;
 
-    @IsNotEmpty({ message: 'Kategori adı boş olamaz.' })
+    @IsNotEmpty({ message: 'İsim alanı boş olamaz.' })
     name: string;
 
-    @IsOptional()
+    @IsNotEmpty({ message: 'Açıklama alanı boş olamaz.' })
     @IsString()
-    description?: string;
+    description: string;
+
+    @IsOptional()
+    image?: Image;
 
     @IsOptional()
     @IsInt()
     @Type(() => Number)
     @Transform(({ value }) => parseInt(value, 10))
-    image?: number;
+    image_id?: number;
 
     @IsOptional()
-    file?: MemoryStoredFile;
+    imageObj?: { 
+        id: Image['id']; 
+        file: MemoryStoredFile 
+    };
 
     @IsOptional()
     @IsInt()

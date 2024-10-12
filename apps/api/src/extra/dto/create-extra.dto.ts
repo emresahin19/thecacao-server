@@ -2,6 +2,9 @@ import { IsString, IsNumber, IsOptional, IsBoolean, IsArray, IsInt, IsNotEmpty, 
 import { Type, Transform } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common';
 import { MemoryStoredFile } from 'nestjs-form-data';
+import { ManyToOne } from 'typeorm';
+import { ExtraCategory } from '../../extra-category/entities/extra-category.entity';
+import { Image } from '../../image/entities/image.entity';
 
 export class CreateExtraDto {
   @IsOptional()
@@ -40,8 +43,20 @@ export class CreateExtraDto {
   image_ids?: number[];
 
   @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  @Transform(({ value }) => parseInt(value, 10))
+  image?: number;
+
+  @IsOptional()
+  imageObj?: { 
+      id: Image['id']; 
+      file: MemoryStoredFile 
+  };
+
+  @IsOptional()
   @IsArray()
-  files?: { id?: number; file?: MemoryStoredFile; fieldname?: string }[];
+  images?: { id?: number; file?: MemoryStoredFile; fieldname?: string }[];
 
   @IsOptional()
   @IsInt()
@@ -68,4 +83,8 @@ export class CreateExtraDto {
   @IsDate()
   @Transform(({ value }) => (value ? new Date(value) : new Date()))
   updated_at?: Date;
+
+  @IsOptional()
+  @ManyToOne(() => ExtraCategory, (category) => category.extras)
+  category?: ExtraCategory;
 }

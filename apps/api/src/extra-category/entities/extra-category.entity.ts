@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Extra } from '../../extra/entities/extra.entity';
+import { Image } from '../../image/entities/image.entity';
 
 @Entity('extras_categories')
 export class ExtraCategory {
@@ -12,8 +13,9 @@ export class ExtraCategory {
     @Column({ type: 'varchar', length: 255, nullable: true })
     description: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
-    image: number;
+    
+    @Column({ type: 'integer', nullable: true })
+    image_id?: number;
 
     image_url?: string;
 
@@ -31,5 +33,9 @@ export class ExtraCategory {
 
     @OneToMany(() => Extra, (extra) => extra.category)
     extras: Extra[];
+
+    @ManyToOne(() => Image)
+    @JoinColumn({ name: 'image_id' })
+    image?: Image;
 
 }

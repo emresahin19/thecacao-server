@@ -1,38 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ImageInputProps } from '../input.props';
 
-const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, className, onChange, onRemove, disablePreview = false }) => {
+const ImageInput: React.FC<ImageInputProps> = ({
+    label,
+    name = 'image-input',
+    value,
+    className,
+    onChange,
+    onRemove,
+    disablePreview = false,
+}) => {
     const [dragActive, setDragActive] = useState(false);
-    const [preview, setPreview] = useState<string | null>(value || null);
-
-    useEffect(() => {
-        !disablePreview && setPreview(value || null);
-    }, [value]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
-            !disablePreview && setPreview(URL.createObjectURL(selectedFile));
             onChange?.(selectedFile);
         }
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault(); // Prevent default to allow drop
         e.stopPropagation();
         setDragActive(true);
     };
 
     const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
     };
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault(); // Prevent default to handle drop correctly
         e.stopPropagation();
         setDragActive(false);
         const droppedFile = e.dataTransfer.files?.[0];
         if (droppedFile) {
-            !disablePreview && setPreview(URL.createObjectURL(droppedFile));
             onChange?.(droppedFile);
         }
     };
@@ -46,7 +50,6 @@ const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, className, 
     const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        setPreview(null);
         onChange?.(null);
         onRemove?.();
     };
@@ -57,6 +60,7 @@ const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, className, 
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={handleClick}
         >
             <input
                 type="file"
@@ -67,17 +71,15 @@ const ImageInput: React.FC<ImageInputProps> = ({ label, name, value, className, 
                 onChange={handleFileChange}
             />
             <label htmlFor={`${name}-input`} className="switch">
-                {preview ? (
+                {value && !disablePreview ? (
                     <div className="preview-container">
-                        <img src={preview} alt="Preview" className="preview" draggable="false" />
+                        <img src={value} alt="Preview" className="preview" draggable="false" />
                     </div>
                 ) : (
                     <>{label || 'Resmi sürükle veya yüklemek için tıkla'}</>
                 )}
             </label>
-
-            {/* {!disablePreview && file && <div className="file-info">{file.name}</div>} */}
-            {preview && <button type="button" className="close" onClick={handleRemove} />}
+            {value && <button type="button" className="close" onClick={handleRemove} />}
         </div>
     );
 };

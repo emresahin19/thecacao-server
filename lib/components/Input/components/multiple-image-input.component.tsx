@@ -14,10 +14,9 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
     height = productVariantHeight,
 }) => {
     const [images, setImages] = useState<ImageObject[]>(initialImages);
-    const [emptyImage, setEmptyImage] = useState<string | null>(null);
 
     useEffect(() => {
-        setImages(initialImages);
+        initialImages && initialImages.length > 0 && setImages(initialImages);
     }, [initialImages]);
 
     const handleImageChange = (index: number, file: File | null) => {
@@ -37,7 +36,6 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
             setImages(newImages);
             onImagesChange(newImages);
             onChange?.(file);
-            setEmptyImage(null);
         }
     };
 
@@ -55,17 +53,18 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
     };
 
     return (
-        <div className='multiple-image-input'>
+        <div className="multiple-image-input">
             <ScrollableDraggableList<ImageObject>
                 items={images}
                 setItems={handleReorder}
-                property='horizontal'
+                property="horizontal"
                 render={(image: ImageObject, index: number) => {
                     const img = image.filename
                         ? imageToCdnUrl({ image: image.filename, width, height })
                         : image.url;
                     return (
                         <ImageInput
+                            key={index}
                             name={`image-${index}`}
                             value={img}
                             onChange={(file) => handleImageChange(index, file)}
@@ -76,7 +75,7 @@ const MultipleImageInput: React.FC<MultipleImageInputProps> = ({
             >
                 <ImageInput
                     name={`image-${images.length}`}
-                    value={emptyImage}
+                    value={null}
                     disablePreview={true}
                     onChange={handleAddImage}
                 />

@@ -34,9 +34,10 @@ export const saveItem = async <T>({id, route, item, isFormData = false}: ItemReq
 
 export const prepareItemFormData = async <T extends Record<keyof T, any>>({ item }: { item: T }): Promise<FormData> => {
     const formData = new FormData();
-
+    console.log('item:', item);
     for (const key in item) {
         const value = item[key];
+
         if (Array.isArray(value)) {
             if (key === 'images') {
                 value.forEach((image: ImageObject, index: number) => {
@@ -47,6 +48,13 @@ export const prepareItemFormData = async <T extends Record<keyof T, any>>({ item
                 continue;
             }
             formData.append(key, JSON.stringify(value));
+            continue;
+        }
+
+        if (key === 'image') {
+            const image = value as ImageObject;
+            if (image.id) formData.append(`imageObj[id]`, String(value.id));
+            if (image.file) formData.append(`imageObj[file]`, value.file);
             continue;
         }
 

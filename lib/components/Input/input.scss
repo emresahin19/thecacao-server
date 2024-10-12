@@ -604,8 +604,8 @@
 .editable-input {
     position: relative;
     width: 100%;
-    input, .input-value, label, .selected-value {
-        padding: 0 8px;
+    input, .input-value, label {
+        padding: 0 8px !important;
         border: none;
         border-radius: 4px;
         max-width: 100%;
@@ -623,8 +623,8 @@
             padding-right: 24px;
         }
     }
-    input {
-        padding: 8px;
+    input, .selected-value {
+        padding: 8px 24px 8px 8px !important;
     }
     .editable-color-input {
         width: calc(100% - 32px);

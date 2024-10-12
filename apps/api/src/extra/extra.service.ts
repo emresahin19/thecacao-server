@@ -81,37 +81,37 @@ export class ExtraService {
   }
 
   async create(createExtraDto: CreateExtraDto): Promise<Extra> {
-    const image_ids = createExtraDto.files && createExtraDto.files.length > 0
-      ? await this.imageService.saveFiles(createExtraDto.files.map(fileObject => fileObject.file))
+    let imageId: number = null;
+
+    if (createExtraDto.imageObj) {
+        const image = await this.imageService.saveImage(null, createExtraDto.imageObj.file);
+        imageId = image.id;
+    }
+
+    delete createExtraDto.imageObj;
+    createExtraDto.image = imageId;
+    const image_ids = createExtraDto.images && createExtraDto.images.length > 0
+      ? await this.imageService.saveFiles(createExtraDto.images.map(fileObject => fileObject.file))
       : [];
 
-    delete createExtraDto.files;
+    delete createExtraDto.images;
     createExtraDto.image_ids = image_ids;
     const extra = await this.saveExtra(createExtraDto);
     return extra;
   }
 
   async update(id: number, updateExtraDto: UpdateExtraDto): Promise<Extra> {
-    const image_ids: number[] = [];
+    let imageId: number = updateExtraDto.imageObj.id || null;
 
-    if (updateExtraDto.files && updateExtraDto.files.length > 0) {
-      const imageUpdates = updateExtraDto.files.map(async (fileObject) => {
-        const imgId = fileObject.id || null;
-        const file = fileObject.file;
-
-        const { id } = file
-          ? await this.imageService.saveImage(imgId, file)
-          : { id: imgId };
-
-        id && image_ids.push(Number(id));
-      });
-
-      await Promise.all(imageUpdates);
+    if (updateExtraDto.imageObj) {
+        const image = await this.imageService.saveImage(imageId, updateExtraDto.imageObj.file);
+        imageId = image.id;
     }
-    delete updateExtraDto.files;
+
+    delete updateExtraDto.imageObj;
 
     updateExtraDto.id = id;
-    updateExtraDto.image_ids = image_ids;
+    updateExtraDto.image = imageId;
     const extra = await this.saveExtra(updateExtraDto);
     return extra;
   }
@@ -177,27 +177,14 @@ export class ExtraService {
 
   async inputData() {
       try {
-          const categories = await this.extraCategoryRepository
-              .createQueryBuilder('extras_category')
-              .leftJoinAndSelect('extras_category.extras', 'extras')
-              .select([
-                  'extras_category.id',
-                  'extras_category.name',
-                  'extras.id',
-                  'extras.name',
-              ])
-              .where('extras.deleted = :deleted', { deleted: false })
-              .andWhere('extras.passive = :passive', { passive: false })
-              .andWhere('extras_category.deleted = :deleted', { deleted: false })
-              .andWhere('extras_category.passive = :passive', { passive: false })
-              .getMany();
+          const categories = await this.extraCategoryRepository.find({ where: { deleted: false, passive: false }, relations: ['extras'] });
 
           const items = categories.map(category => ({
               value: category.id,
               label: category.name,
-              options: category.extras.map(extra => ({
-                  value: extra.id,
-                  label: extra.name,
+              options: category.extras.map(extra => ({ 
+                  value: extra.id, 
+                  label: extra.name 
               })),
           }));
 

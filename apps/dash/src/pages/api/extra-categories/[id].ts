@@ -28,13 +28,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         switch (req.method) {
             case 'GET':
-                response = await axios.get(`${apiUrl}/products/${id}`, { headers });
+                response = await axios.get(`${apiUrl}/extra-categories/${id}`, { headers });
                 break;
 
             case 'POST':
                 response = await axios({
                     method: 'post',
-                    url: `${apiUrl}/products`,
+                    url: `${apiUrl}/extra-categories`,
                     data: req,
                     headers: headers,
                     maxContentLength: Infinity,
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'PUT':
                 response = await axios({
                     method: 'put',
-                    url: `${apiUrl}/products/${id}`,
+                    url: `${apiUrl}/extra-categories/${id}`,
                     data: req,
                     headers: headers,
                     maxContentLength: Infinity,
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
 
             case 'DELETE':
-                response = await axios.delete(`${apiUrl}/products/${id}`, { headers });
+                response = await axios.delete(`${apiUrl}/extra-categories/${id}`, { headers });
                 break;
 
             default:
