@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, Put, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, Put, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -6,12 +6,14 @@ import { createResponse } from '../common/lib/response-handler';
 import { StatusCode } from '../common/constants';
 import { Response } from 'express';
 import { CategoryQueryParams } from './category.props';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @Controller('categories')
 export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
 
     @Get()
+    @UseGuards(JwtAuthGuard)
     async index(
         @Query() params: CategoryQueryParams,
         @Res() res: Response
@@ -34,12 +36,13 @@ export class CategoryController {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
                 error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
+                message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }
     }
 
     @Get('input-data')
+    @UseGuards(JwtAuthGuard)
     async inputData() {
         const categories = await this.categoryService.inputData();
         return {
@@ -49,6 +52,7 @@ export class CategoryController {
     }
 
     @Get(':id')
+    @UseGuards(JwtAuthGuard)
     async getCategory(
         @Param('id') id: number,
         @Res() res: Response
@@ -71,12 +75,13 @@ export class CategoryController {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
                 error: error.message,
-                message: StatusCode.BAD_REQUEST.message,
+                message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     async create(
         @Body() createCategoryDto: CreateCategoryDto,
         @Res() res: Response
@@ -103,6 +108,7 @@ export class CategoryController {
     }
 
     @Put(':id')
+    @UseGuards(JwtAuthGuard)
     async update(
         @Param('id') id: string,
         @Body() updateCategoryDto: UpdateCategoryDto,
@@ -130,6 +136,7 @@ export class CategoryController {
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     async remove(
         @Param('id') id: string,
         @Res() res: Response

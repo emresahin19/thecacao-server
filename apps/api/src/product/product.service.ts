@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -100,9 +100,9 @@ export class ProductService {
 
     async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
         const existingItem = await this.categoryRepository.find({
-            where: { name: updateProductDto.name },
+            where: { name: updateProductDto.name, id: Not(id) },
         });
-        if (existingItem.length > 1) {
+        if (existingItem.length >= 1) {
             throw new BadRequestException('Bu isimde bir ürün zaten mevcut.');
         }
         const image_ids: number[] = [];

@@ -42,7 +42,7 @@ export class MenuService {
 
         extras.forEach((extra) => {
             extra.extras.forEach(async (item) => {
-                item.image_urls = item.image_ids && await Promise.all(item.image_ids.map((imageId) => this.imageService.getImageUrlByType(imageId, 'extra')))
+                item.image = item.image_id && await this.imageService.findOne(item.image_id)
             });
         });
     

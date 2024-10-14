@@ -237,7 +237,7 @@
     margin: 0;
     min-width: calc(100% - 32px);
     padding: 0 16px;
-    height: 100%;
+    height: fit-content;
     * > ul {
         width: 100%;
         display: flex;
@@ -281,10 +281,11 @@
         flex: 1 1 0;
         min-width: 50px;
         position: relative;
-    
+        min-width: 100px;
         &:first-child {
             flex: 0 0 50px;
             max-width: 50px;
+            min-width: 50px;
             .checkbox {
                 margin: auto;
             }

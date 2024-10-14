@@ -1,20 +1,11 @@
 "use client";
 import React from 'react';
 import { EditTypeProps, ExtraDataProps, } from '../../../interfaces';
-import { useCategoryInputData } from '../../../hooks';
-import { dateToString, imageToCdnUrl } from '../../../utils';
+import { imageToCdnUrl } from '../../../utils';
 import Table from "../../Table/components/table.component";
-import { useToast } from 'lib/contexts';
 import { placeholderProductImageBg } from 'lib/constants';
 
-const ProductTable: React.FC = () => {
-    const { categories } = useCategoryInputData();
-    const { showToast } = useToast();
-
-    const handleAction = async (item: ExtraDataProps, action: string) => {
-        
-    }
-
+const ExtraCategoryTable: React.FC = () => {
     const fields: EditTypeProps<ExtraDataProps>[] = [
         {
             key: 'id',
@@ -62,7 +53,7 @@ const ProductTable: React.FC = () => {
         },
         {
             key: 'passive',
-            property: 'none',
+            property: 'edit',
             label: 'Pasif',
             type: 'checkbox',
             editable: true,
@@ -83,7 +74,6 @@ const ProductTable: React.FC = () => {
             <Table<ExtraDataProps>
                 className="extra-category-table"
                 apiRoute="extra-categories"
-                onAction={handleAction}
                 isFormData={true}
                 fields={fields}
             />
@@ -91,4 +81,4 @@ const ProductTable: React.FC = () => {
     );
 };
 
-export default ProductTable;
+export default ExtraCategoryTable;

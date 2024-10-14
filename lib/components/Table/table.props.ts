@@ -1,10 +1,10 @@
 import { InputProps, InputType, OptionsProps, ProductEditTypeProps } from "lib/interfaces";
 
-export type DataRouteProps = 'products' | 'categories' | 'extra' | 'extra-category';
+export type DataRouteProps = 'products' | 'categories' | 'extra' | 'extra-categories';
 export type EditTypes = 'text' | 'number' | 'textarea' | 'select' | 'multiselect' | 'image' | 'sorter';
 
 export interface EditCardProps<T> {
-    id: number | string;
+    id: number;
     route: DataRouteProps;
     onSave?: (response: any) => void;
     onCancel?: () => void;
@@ -36,7 +36,7 @@ export interface ColumnProps<T> {
 }
   
 export interface TableProps<T> {
-    apiRoute: string;
+    apiRoute: DataRouteProps;
     className?: string;
     editPage?: string;
     fields: Array<EditTypeProps<T>>;
@@ -64,7 +64,7 @@ export interface TableViewProps<T> {
         itemId: string,
         key: string
     ) => void;
-    handleSave: (item: T, key: string, value: any) => void;
+    handleSave: (item: T, key: string, value: any, callback?: (status: boolean) => void) => void;
     handleCancel: (itemId: string) => void;
     isLoading: boolean;
     perPage: number;
@@ -105,7 +105,6 @@ export interface EditFieldProps<T> {
         [key in keyof InputProps]?: any;
     }
 }
-
 
 export interface UseTableDataProps<T> {
     items: T[];

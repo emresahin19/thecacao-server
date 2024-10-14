@@ -148,7 +148,7 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                                 onChange={(e) =>
                                                     onEditInputChange(e, String(item.id), col.inputKey)
                                                 }
-                                                onSave={({ value }) => handleSave(item, col.inputKey, value)}
+                                                onSave={({ value, callback }) => handleSave(item, col.inputKey, value, callback)}
                                                 onCancel={() => handleCancel(String(item.id))}
                                                 options={col.options}
                                                 render={

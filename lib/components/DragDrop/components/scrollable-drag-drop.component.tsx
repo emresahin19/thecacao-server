@@ -166,7 +166,6 @@ const DraggableList = <T extends {}>({
             if (property === 'vertical' || property === 'both') {
                 const distanceToTop = currentY - containerRect.top;
                 const distanceToBottom = containerRect.bottom - currentY;
-
                 if (distanceToTop < scrollThreshold) {
                     const scrollSpeed = Math.max(
                         -maxScrollSpeed,

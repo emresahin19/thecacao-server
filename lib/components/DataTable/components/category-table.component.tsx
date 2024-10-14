@@ -17,10 +17,7 @@ const CategoryTable: React.FC = () => {
 
     const handleAction = async (item: CategoryProps, action: string) => {
         if(action === 'save') {
-            const { data } = await saveCategory(item);
-            const { status, message } = data;
-            showToast({ message, type: status ? 'success' : 'danger' });
-            return status;
+           
         }
     }
     
@@ -48,7 +45,7 @@ const CategoryTable: React.FC = () => {
             key: 'style',
             subKey: 'backgroundColor',
             property: 'all',
-            label: 'Arkaplan Rengi',
+            label: 'Arkaplan',
             type: 'color',
             editable: true,
             defaultValue: defaultStyle.backgroundColor,
@@ -71,7 +68,7 @@ const CategoryTable: React.FC = () => {
             key: 'style',
             subKey: 'color',
             property: 'all',
-            label: 'Yazı Rengi',
+            label: 'Yazı',
             type: 'color',
             editable: true,
             defaultValue: defaultStyle.color,
@@ -134,7 +131,6 @@ const CategoryTable: React.FC = () => {
             <Table<CategoryProps>
                 className="category-table"
                 apiRoute="categories"
-                onAction={handleAction}
                 fields={fields}
             />
         </div>

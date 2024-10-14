@@ -195,9 +195,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                             className="close"
                             onClick={handleClose}
                             role="button"
-                            aria-label="Close Modal"
+                            aria-label="Kapat"
                         >
-                            Close
+                            Kapat
                         </button>
                     </div>
                     <div className="modal-body">

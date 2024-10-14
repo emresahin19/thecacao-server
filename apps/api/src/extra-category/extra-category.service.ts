@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 import { ExtraCategory } from './entities/extra-category.entity';
 import { CreateExtraCategoryDto } from './dto/create-extra-category.dto';
@@ -65,9 +65,17 @@ export class ExtraCategoryService {
     }
 
     async create(createExtraCategoryDto: CreateExtraCategoryDto): Promise<ExtraCategory> {
+        const existingItem = await this.extraCategoryRepository.findOne({
+          where: { name: createExtraCategoryDto.name },
+        });
+        console.log(existingItem);
+    
+        if (existingItem) {
+            throw new BadRequestException('Bu isimde bir kategori zaten mevcut.');
+        }
         let imageId: number = null;
 
-        if (createExtraCategoryDto.imageObj) {
+        if (createExtraCategoryDto.imageObj && createExtraCategoryDto.imageObj.file) {
             const image = await this.imageService.saveImage(null, createExtraCategoryDto.imageObj.file);
             imageId = image.id;
         }
@@ -80,9 +88,16 @@ export class ExtraCategoryService {
     }
 
     async update(id: number, updateExtraCategoryDto: UpdateExtraCategoryDto): Promise<ExtraCategory> {
-        let imageId: number = updateExtraCategoryDto.imageObj.id || null;
+        const existingItem = await this.extraCategoryRepository.find({
+          where: { name: updateExtraCategoryDto.name, id: Not(id) },
+        });
+        console.log(existingItem);
+        if (existingItem.length >= 1) {
+            throw new BadRequestException('Bu isimde bir kategori zaten mevcut.');
+        }
+        let imageId: number = updateExtraCategoryDto.imageObj?.id || null;
 
-        if (updateExtraCategoryDto.imageObj) {
+        if (updateExtraCategoryDto.imageObj && updateExtraCategoryDto.imageObj?.file) {
             const image = await this.imageService.saveImage(imageId, updateExtraCategoryDto.imageObj.file);
             imageId = image.id;
         }

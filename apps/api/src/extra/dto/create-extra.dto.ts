@@ -30,33 +30,16 @@ export class CreateExtraDto {
   price?: number;
 
   @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => {
-    if (!value) return [];
-    if (Array.isArray(value)) return value.map(Number);
-    try {
-      return JSON.parse(value).map(Number);
-    } catch (error) {
-      throw new BadRequestException('image_ids geçersiz formatta.');
-    }
-  })
-  image_ids?: number[];
-
-  @IsOptional()
   @IsInt()
   @Type(() => Number)
   @Transform(({ value }) => parseInt(value, 10))
-  image?: number;
+  image_id?: number;
 
   @IsOptional()
   imageObj?: { 
       id: Image['id']; 
       file: MemoryStoredFile 
   };
-
-  @IsOptional()
-  @IsArray()
-  images?: { id?: number; file?: MemoryStoredFile; fieldname?: string }[];
 
   @IsOptional()
   @IsInt()

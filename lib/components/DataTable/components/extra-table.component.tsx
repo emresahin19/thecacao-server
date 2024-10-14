@@ -9,10 +9,6 @@ import { useToast } from 'lib/contexts';
 
 const ProductTable: React.FC = () => {
     const { extraData } = useExtraInputData();
-    const { showToast } = useToast();
-    const handleAction = async (item: ExtraProps, action: string) => {
-        
-    }
 
     const fields: EditTypeProps<ExtraProps>[] = [
         {
@@ -60,7 +56,7 @@ const ProductTable: React.FC = () => {
             filterType: 'select',
             options: extraData.map((extra: OptionsProps) => ({ value: extra.value, label: extra.label })),
             render: (extra: ExtraProps) => (
-                <span>{extra.category?.name}</span>
+                <span>{extraData.find((data: OptionsProps) => data.value === extra.category_id)?.label}</span>
             ),
         },
         {
@@ -104,7 +100,6 @@ const ProductTable: React.FC = () => {
                 className="extra-table"
                 fields={fields}
                 apiRoute="extra"
-                onAction={handleAction}
                 isFormData={true}
             />
         </div>

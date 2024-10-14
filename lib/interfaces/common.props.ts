@@ -109,7 +109,6 @@ export interface ExtraProps {
     name: string;
     price: number;
     category_id: number;
-    category: CategoryProps;
     image?: ImageObject;
     description: string;
     image_url?: string;

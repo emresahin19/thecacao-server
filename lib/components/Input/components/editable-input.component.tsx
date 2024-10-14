@@ -2,10 +2,12 @@ import type { EditableInputProps } from '../input.props';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { dateToString } from 'lib/utils';
 import MultipleSelectBox from './multiple-selectbox.component';
+import Spinner from 'lib/components/Loading/components/spinner.component';
 
 const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = [], onChange, onSave, onCancel, type = 'text', render }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(value);
+    const [loading, setLoading] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const allowedTypes = useMemo(() => ['text', 'number', 'email', 'password'], []);
     const dateTypes = useMemo(() => ['date', 'time', 'datetime-local'], []);
@@ -41,9 +43,15 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
         }
     }, [onChange, value]);
 
+    const handleSaveResponse = useCallback((status: boolean) => {
+        setLoading(false);
+        setIsEditing(!status);
+    }, []);
+
     const handleSaveClick = useCallback(() => {
+        setLoading(true);
         setIsEditing(false);
-        onSave({ value: inputValue });
+        onSave({ value: inputValue, callback: handleSaveResponse });
         isChanged.current = false;
     }, [onSave, inputValue]);
 
@@ -94,6 +102,14 @@ const EditableInput: React.FC<EditableInputProps> = ({ name, value, options = []
             lastTapRef.current = now;
         }
     }, [handleActivateEditMode]);
+
+    if(loading) {
+        return (
+            <div className="editable-input">
+                <Spinner size={16} />
+            </div>
+        );
+    }
 
     return (
         <div className="editable-input" onDoubleClick={handleActivateEditMode} onTouchStart={handleTouchStart}>

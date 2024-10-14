@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -96,9 +96,9 @@ export class CategoryService {
 
     async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
         const existingItem = await this.categoryRepository.find({
-            where: { name: updateCategoryDto.name },
+            where: { name: updateCategoryDto.name, id: Not(id) },
         });
-        if (existingItem.length > 1) {
+        if (existingItem.length >= 1) {
             throw new BadRequestException('Bu isimde bir kategori zaten mevcut.');
         }
 

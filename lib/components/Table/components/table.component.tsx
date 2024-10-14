@@ -10,6 +10,8 @@ import { useAppSelector } from 'lib/store';
 import Button from '../../Button/components/button.component';
 import ListTableView from './list-table-view.component';
 import { useTableData } from '../../../hooks';
+import { saveItem } from 'lib/services';
+import { useToast } from 'lib/contexts';
 
 const Table = <T extends { id: string | number; passive?: number; [key: string]: any }>({
     className = '',
@@ -90,6 +92,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     const [selectAll, setSelectAll] = useState(false);
     const prevShowRef = useRef<boolean>(show || false);
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const { showToast, handleRequestError } = useToast();
 
     const filterKeys = useMemo(
         () => columns.filter((col) => col.filterType).map((col: ColumnProps<T>) => col.inputKey),
@@ -362,10 +365,19 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     );
 
     const handleSave = useCallback(
-        async (item: T, inputKey: string, value: any) => {
+        async (item: T, inputKey: string, value: any, callback?: ((status: boolean) => void)) => {
+            if (!item) return;
             lodash.set(item, inputKey, value);
-            await onAction!(item, 'save');
-            mutateData();
+            try {
+                const { data } = await saveItem<T>({ id: Number(item.id), route: apiRoute, item, isFormData });
+                const { status, message }: { status: boolean, message: string } = data as any;
+                callback && callback(status);
+                showToast({ message, type: status ? 'success' : 'danger' });
+            } catch (error: any) {
+                handleRequestError(error);
+            } finally {
+                mutateData();
+            }
         },
         [editValues, onAction]
     );

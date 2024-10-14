@@ -303,6 +303,8 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                flex: 1;
+                max-width: 33%;
                 .extra-icon {
                     font-size: 24px;
                     color: var(--white);
@@ -383,7 +385,6 @@
     .menu-list {
         .scrollable-draggable-list {
             gap: 8px;
-            flex-wrap: wrap;
             max-height: 280px;
             overflow-y: auto;
             overflow-x: hidden;

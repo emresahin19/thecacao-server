@@ -93,7 +93,7 @@ const EditField = <T extends {  }>({ field, value, onChange, setItemData, inputP
             );
 
         case 'sorter':
-            if(!inputProps) return null;
+            if(!inputProps || !Array.isArray(value)) return null;
             const { style } = inputProps as { style: CardStyleProps };
             return (
                 <EditableMenuCard

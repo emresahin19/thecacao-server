@@ -355,6 +355,7 @@ body {
         font-size: 12px;
         margin: 4px;
         position: relative;
+        user-select: none;
         &:last-child {
             margin-right: 0;
         }

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 import { Extra } from './entities/extra.entity';
 import { CreateExtraDto } from './dto/create-extra.dto';
@@ -39,37 +39,36 @@ export class ExtraService {
     } = params;
 
     const query = this.extraRepository.createQueryBuilder('extra')
-      .leftJoinAndSelect('extra.category', 'category')
-      .where('extra.deleted = :deleted', { deleted: false })
-      .andWhere('extra.passive = :passive', { passive: false });
+      .where('deleted = :deleted', { deleted: false })
+      .andWhere('passive = :passive', { passive: false });
 
     if (name) {
-      query.andWhere('extra.name LIKE :name', { name: `%${name}%` });
+      query.andWhere('name LIKE :name', { name: `%${name}%` });
     }
 
     if (updated_at) {
-      query.andWhere('DATE(extra.updated_at) = :updated_at', { updated_at });
+      query.andWhere('DATE(updated_at) = :updated_at', { updated_at });
     }
 
     if (category_id) {
-      query.andWhere('extra.category_id = :category_id', { category_id });
+      query.andWhere('category_id = :category_id', { category_id });
     }
 
     if (price) {
-      query.andWhere('extra.price = :price', { price });
+      query.andWhere('price = :price', { price });
     }
 
     const [items, total] = await query
-      .orderBy(`extra.${orderBy}`, orderDirection)
+      .orderBy(`${orderBy}`, orderDirection)
       .skip((page - 1) * perPage)
       .take(perPage)
       .getManyAndCount();
 
     for (const item of items) {
-      if (item.image_ids && item.image_ids.length > 0) {
-        item.images = await this.getImages(item.image_ids);
+      if (item.image_id) {
+        item.image = await this.getImage(item.image_id);
       } else {
-        item.images = [];
+        item.image = null;
       }
     }
 
@@ -81,29 +80,36 @@ export class ExtraService {
   }
 
   async create(createExtraDto: CreateExtraDto): Promise<Extra> {
+    const existingItem = await this.extraRepository.findOne({
+      where: { name: createExtraDto.name },
+    });
+    if (existingItem) {
+        throw new BadRequestException('Bu isimde bir ürün zaten mevcut.');
+    }
     let imageId: number = null;
-
-    if (createExtraDto.imageObj) {
+    if (createExtraDto.imageObj && createExtraDto.imageObj.file) {
         const image = await this.imageService.saveImage(null, createExtraDto.imageObj.file);
         imageId = image.id;
     }
 
     delete createExtraDto.imageObj;
-    createExtraDto.image = imageId;
-    const image_ids = createExtraDto.images && createExtraDto.images.length > 0
-      ? await this.imageService.saveFiles(createExtraDto.images.map(fileObject => fileObject.file))
-      : [];
+    createExtraDto.image_id = imageId;
 
-    delete createExtraDto.images;
-    createExtraDto.image_ids = image_ids;
     const extra = await this.saveExtra(createExtraDto);
     return extra;
   }
 
   async update(id: number, updateExtraDto: UpdateExtraDto): Promise<Extra> {
-    let imageId: number = updateExtraDto.imageObj.id || null;
+    const existingItem = await this.extraRepository.find({
+      where: { name: updateExtraDto.name, id: Not(id) },
+    });
 
-    if (updateExtraDto.imageObj) {
+    if (existingItem.length >= 1) {
+        throw new BadRequestException('Bu isimde bir ürün zaten mevcut.');
+    }
+    let imageId: number = updateExtraDto.imageObj?.id || null;
+
+    if (updateExtraDto.imageObj && updateExtraDto.imageObj.file) {
         const image = await this.imageService.saveImage(imageId, updateExtraDto.imageObj.file);
         imageId = image.id;
     }
@@ -111,7 +117,7 @@ export class ExtraService {
     delete updateExtraDto.imageObj;
 
     updateExtraDto.id = id;
-    updateExtraDto.image = imageId;
+    updateExtraDto.image_id = imageId;
     const extra = await this.saveExtra(updateExtraDto);
     return extra;
   }
@@ -150,26 +156,17 @@ export class ExtraService {
     await this.clearCache();
   }
 
-  async getImages(image_ids: number[]): Promise<Image[]> {
-    if (!image_ids || image_ids.length === 0) {
-      return [];
-    }
-
-    const images = await this.imageRepository
-      .createQueryBuilder('image')
-      .whereInIds(image_ids)
-      .getMany();
-
-    return image_ids.map((id) => images.find((image) => image.id === id));
+  async getImage(id: number): Promise<Image> {
+    return this.imageRepository.findOne({ where: { id } });
   }
 
-  async getExtraWithImages(extraId: number): Promise<Extra> {
+  async getExtraWithImage(extraId: number): Promise<Extra> {
     const extra = await this.extraRepository.findOne({ where: { id: extraId } });
 
-    if (extra.image_ids && extra.image_ids.length > 0) {
-      extra.images = await this.getImages(extra.image_ids);
+    if (extra.image_id) {
+      extra.image = await this.getImage(extra.image_id);
     } else {
-      extra.images = [];
+      extra.image = null;
     }
 
     return extra;

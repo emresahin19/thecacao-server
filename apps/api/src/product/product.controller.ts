@@ -63,7 +63,6 @@ export class ProductController {
         @Body() updateProductDto: UpdateProductDto,
         @Res() res: Response
     ) {
-       
         try {
             const item = await this.productService.update(+id, updateProductDto);
             

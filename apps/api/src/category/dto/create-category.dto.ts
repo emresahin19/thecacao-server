@@ -50,9 +50,10 @@ export class CreateCategoryDto {
     updated_at?: Date;
 
     @IsOptional()
+    @IsArray()
     @Transform(({ value }: { value: Product[] }) => {
         try {
-            return value.map((item: Product, index: number) => ({id: item.id, order: index}));
+            return value && value.map((item: Product, index: number) => ({id: item.id, order: index})) || [];
         } catch (error) {
             throw new BadRequestException('Geçersiz JSON formatı');
         }

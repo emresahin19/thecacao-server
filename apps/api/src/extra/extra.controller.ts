@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, Res, UseGuards } from '@nestjs/common';
 import { ExtraService } from './extra.service';
 import { CreateExtraDto } from './dto/create-extra.dto';
 import { UpdateExtraDto } from './dto/update-extra.dto';
@@ -6,12 +6,14 @@ import { StatusCode } from '../common/constants';
 import { ExtraQueryParams } from './extra.props';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Response } from 'express';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @Controller('extra')
 export class ExtraController {
   constructor(private readonly extraService: ExtraService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @FormDataRequest()
   async create(@Body() createExtraDto: CreateExtraDto, @Res() res: Response) {
     try {
@@ -30,12 +32,13 @@ export class ExtraController {
       return res.status(StatusCode.BAD_REQUEST.statusCode).json({
         status: false,
         error: error.message,
-        message: StatusCode.BAD_REQUEST.message,
+        message: error.message || StatusCode.BAD_REQUEST.message,
       });
     }
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   @FormDataRequest()
   async update(@Param('id') id: string, @Body() updateExtraDto: UpdateExtraDto, @Res() res: Response) {
     try {
@@ -50,16 +53,17 @@ export class ExtraController {
             status: false,
             message: StatusCode.BAD_REQUEST.message,
           });
-    } catch (error) {
+    }  catch (error) {
       return res.status(StatusCode.BAD_REQUEST.statusCode).json({
         status: false,
-        error: error.message,
-        message: StatusCode.BAD_REQUEST.message,
+        error: error.error,
+        message: error.message || StatusCode.BAD_REQUEST.message,
       });
     }
   }
 
   @Get('input-data')
+  @UseGuards(JwtAuthGuard)
   async inputData() {
       const items = await this.extraService.inputData();
       return {
@@ -69,6 +73,7 @@ export class ExtraController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async index(@Query() params: ExtraQueryParams, @Res() res: Response) {
     try {
       const items = await this.extraService.findAll(params);
@@ -88,15 +93,16 @@ export class ExtraController {
       return res.status(StatusCode.BAD_REQUEST.statusCode).json({
         status: false,
         error: error.message,
-        message: StatusCode.BAD_REQUEST.message,
+        message: error.message || StatusCode.BAD_REQUEST.message,
       });
     }
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async getExtra(@Param('id') id: number, @Res() res: Response) {
     try {
-      const item = await this.extraService.getExtraWithImages(id);
+      const item = await this.extraService.getExtraWithImage(id);
 
       return item
         ? res.status(StatusCode.SUCCESS.statusCode).json({
@@ -113,12 +119,13 @@ export class ExtraController {
       return res.status(StatusCode.BAD_REQUEST.statusCode).json({
         status: false,
         error: error.message,
-        message: StatusCode.BAD_REQUEST.message,
+        message: error.message || StatusCode.BAD_REQUEST.message,
       });
     }
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: string, @Res() res: Response) {
     try {
       await this.extraService.remove(+id);
@@ -130,7 +137,7 @@ export class ExtraController {
       return res.status(StatusCode.BAD_REQUEST.statusCode).json({
         status: false,
         error: error.message,
-        message: StatusCode.BAD_REQUEST.message,
+        message: error.message || StatusCode.BAD_REQUEST.message,
       });
     }
   }

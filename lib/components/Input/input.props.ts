@@ -36,7 +36,7 @@ export interface EditableInputProps {
     value: string;
     key?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onSave: ({value}: {value: string}) => void;
+    onSave: ({value, callback}: {value: string; callback?: (status: boolean) => void}) => void;
     onCancel: () => void;
     options?: OptionsProps[];
     type: InputType;
@@ -83,7 +83,6 @@ export interface TogglerProps {
     name?: string
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-
 
 export interface ImageObject {
     id?: string | null;

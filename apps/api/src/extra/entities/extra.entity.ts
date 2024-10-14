@@ -18,12 +18,9 @@ export class Extra {
   price: number;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  image?: number;
+  image_id?: number;
 
-  @Column({ type: 'simple-json', nullable: true })
-  image_ids: number[];
-  images?: { id?: number; file?: MemoryStoredFile; fieldname?: string }[];
-  image_urls?: string[];
+  image?: Image;
 
   @Column({ type: 'tinyint', default: 0 })
   passive: boolean;
