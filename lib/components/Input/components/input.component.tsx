@@ -53,26 +53,38 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     return (
         <div 
             className={`input-body ${className} ${error && "error" || ""} ${size}`}
-            {...style && { style }}    
+            {...style && { style }}
         >
-            {type === "textarea" ? (
-                <textarea
-                    ref={ref as React.Ref<HTMLTextAreaElement>}
-                    rows={3}
-                    name={name}
-                    onChange={onTextareaChange}
-                    value={value ?? ''}
-                />
-            ) : (
-                <input
-                    ref={ref}
-                    type={inputType}
-                    name={name}
-                    onChange={onChange}
-                    value={value ?? ''}
-                    {...inputStyle && { style: inputStyle }}
-                />
-            )}
+            {(
+                type === "textarea" && (
+                    <textarea
+                        ref={ref as React.Ref<HTMLTextAreaElement>}
+                        rows={3}
+                        name={name}
+                        onChange={onTextareaChange}
+                        value={value ?? ''}
+                    />
+                )) || (type === "number"  && (
+                    <input
+                        ref={ref}
+                        type={inputType}
+                        name={name}
+                        onChange={onChange}
+                        // onChange={(e: React.ChangeEvent<HTMLInputElement>) => !isNaN(Number(e.target.value)) && onChange({ target: { value: e.target.value, name } } as React.ChangeEvent<HTMLInputElement>)}
+                        value={value ?? ''}
+                        {...inputStyle && { style: inputStyle }}
+                    />
+                )) || (
+                    <input
+                        ref={ref}
+                        type={inputType}
+                        name={name}
+                        onChange={onChange}
+                        value={value ?? ''}
+                        {...inputStyle && { style: inputStyle }}
+                    />
+                )
+            }
             <label {...labelColor && {style: {color: labelColor}}} >{label}</label>
 
             {type === "password" && (

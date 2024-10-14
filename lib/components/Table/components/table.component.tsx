@@ -13,12 +13,13 @@ import { useTableData } from '../../../hooks';
 import { saveItem } from 'lib/services';
 import { useToast } from 'lib/contexts';
 
-const Table = <T extends { id: string | number; passive?: number; [key: string]: any }>({
+const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
     className = '',
     editPage = 'EditCard',
     apiRoute,
     fields,
     onAction,
+    onCheckboxChange,
     isFormData = false,
 }: TableProps<T>) => {
 
@@ -87,7 +88,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
     const { show } = useAppSelector((state) => state.modal);
 
     const [filterParams, setFilterParams] = useState<string>(initialParams);
-    const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
+    const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>({});
     const [editValues, setEditValues] = useState<{ [key: string]: any }>({});
     const [selectAll, setSelectAll] = useState(false);
     const prevShowRef = useRef<boolean>(show || false);
@@ -292,7 +293,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
         (e: React.ChangeEvent<HTMLInputElement>, item: T | null) => {
             if (!item) return;
             const checked = e.target.checked;
-            const itemId = String(item.id);
+            const itemId = item.id;
 
             setSelectedItems((prevSelectedItems) => {
                 const newSelectedItems = { ...prevSelectedItems };
@@ -301,8 +302,10 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
                 } else {
                     delete newSelectedItems[itemId];
                 }
+                onCheckboxChange && onCheckboxChange(newSelectedItems);
                 return newSelectedItems;
             });
+
         },
         []
     );
@@ -312,13 +315,17 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             const checked = e.target.checked;
             setSelectAll(checked);
             const newSelectedItems = items.reduce(
-                (acc: any, item: { id: any }) => ({
-                    ...acc,
-                    [String(item.id)]: checked
-                }),
+                (acc: any, item: { id: any }) => checked 
+                    ? ({
+                        ...acc,
+                        [String(item.id)]: checked
+                    }) : (
+                        delete acc[String(item.id)] && acc
+                    ),
                 {}
             );
             setSelectedItems(newSelectedItems);
+            onCheckboxChange && onCheckboxChange(newSelectedItems);
         },
         [items]
     );
@@ -395,7 +402,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             ...prevState,
             currentPage: page
         }));
-        setSelectedItems({});
+        // setSelectedItems({});
         setSelectAll(false);
     }, []);
 
@@ -405,7 +412,7 @@ const Table = <T extends { id: string | number; passive?: number; [key: string]:
             perPage,
             currentPage: 0
         }));
-        setSelectedItems({});
+        // setSelectedItems({});
         setSelectAll(false);
     }, []);
     

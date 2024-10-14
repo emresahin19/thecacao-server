@@ -4,26 +4,12 @@ import Table from "../../Table/components/table.component";
 import { EditTypeProps, OptionsProps, ProductProps } from '../../../interfaces';
 import { useCategoryInputData, useExtraInputData } from '../../../hooks';
 import { dateToString, imageToCdnUrl } from '../../../utils';
-import { placeholderProductImageBg, productVariantHeight, productVariantWidth } from '../../../constants';
-import { convertToProductDataProps, saveProduct } from 'lib/services';
-import { useToast } from 'lib/contexts';
+import { placeholderProductImageBg } from '../../../constants';
 
 const ProductTable: React.FC = () => {
     const { categories } = useCategoryInputData();
-    const { showToast } = useToast();
     const { extraData } = useExtraInputData();
 
-    const handleAction = async (item: ProductProps, action: string) => {
-        const product = convertToProductDataProps(item);
-
-        if(action === 'save') {
-            const { data } = await saveProduct(product);
-            const { status, message } = data;
-            showToast({message, type: status ? 'success' : 'danger'});
-            return status;
-        }
-    }
-    
     const fields: EditTypeProps<ProductProps>[] = [
         {
             key: 'images',
@@ -129,9 +115,8 @@ const ProductTable: React.FC = () => {
         <div className='table'>
             <Table<ProductProps>
                 className="product-table"
-                fields={fields}
                 apiRoute="products"
-                onAction={handleAction}
+                fields={fields}
                 isFormData={true}
             />
         </div>

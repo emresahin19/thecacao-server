@@ -20,6 +20,10 @@ const CategoryTable: React.FC = () => {
            
         }
     }
+
+    const handleCheckboxChange = async (items: { [key: CategoryProps['id']]: boolean }) => {
+        console.log('save', items);
+    }
     
     const fields: EditTypeProps<CategoryProps>[] = [
         {
@@ -132,6 +136,8 @@ const CategoryTable: React.FC = () => {
                 className="category-table"
                 apiRoute="categories"
                 fields={fields}
+                onAction={handleAction}
+                onCheckboxChange={handleCheckboxChange}
             />
         </div>
     );
