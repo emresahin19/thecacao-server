@@ -10,7 +10,7 @@ import MultipleSelectBox from 'lib/components/Input/components/multiple-selectbo
 import Input from '../../Input/components/input.component';
 import { TableViewProps } from '../table.props';
 
-const TableView = <T extends { id: string | number; passive?: number; [key: string]: any }>({
+const TableView = <T extends { id: number; passive?: number; [key: string]: any }>({
     items,
     columns,
     className,
@@ -134,7 +134,7 @@ const TableView = <T extends { id: string | number; passive?: number; [key: stri
                                     id="selectAll"
                                     name="checkboxes"
                                     onChange={(e) => handleSelectItem(e, item)}
-                                    checked={selectedItems[item.id]}
+                                    checked={selectedItems[item.id] && selectedItems[item.id].id === item.id}
                                 />
                             </li>
                             {columns.map((col) => (

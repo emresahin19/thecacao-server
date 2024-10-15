@@ -41,7 +41,6 @@ export interface TableProps<T> {
     editPage?: string;
     fields: Array<EditTypeProps<T>>;
     onAction?: (item: T, action: 'save' | 'delete') => void;
-    onCheckboxChange?: (items: {[key: string]: {id: number; name: string;}}) => void;
     isFormData?: boolean;
 }
 

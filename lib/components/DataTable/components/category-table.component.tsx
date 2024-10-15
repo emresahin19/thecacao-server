@@ -125,7 +125,6 @@ const CategoryTable: React.FC = () => {
                 className="category-table"
                 apiRoute="categories"
                 fields={fields}
-                onCheckboxChange={handleCheckboxChange}
             />
         </div>
     );

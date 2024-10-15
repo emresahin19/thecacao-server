@@ -24,7 +24,6 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
     apiRoute,
     fields,
     onAction,
-    onCheckboxChange,
     isFormData = false,
 }: TableProps<T>) => {
 
@@ -323,11 +322,10 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
                 } else {
                     delete newSelectedItems[itemId];
                 }
-                onCheckboxChange && onCheckboxChange(newSelectedItems);
                 return newSelectedItems;
             });
         },
-        [onCheckboxChange]
+        []
     );
 
     const handleSelectAllItems = useCallback(
@@ -346,18 +344,16 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
                         delete newSelectedItems[item.id];
                     });
                 }
-                onCheckboxChange && onCheckboxChange(newSelectedItems);
                 return newSelectedItems;
             });
         },
-        [items, onCheckboxChange]
+        [items]
     );
 
     const clearAllSelections = useCallback(() => {
         setSelectedItems({});
         setSelectAll(false);
-        onCheckboxChange && onCheckboxChange({});
-    }, [onCheckboxChange]);
+    }, []);
 
     const handleFilterChange = useCallback(
         (key: string, value: any) => {
