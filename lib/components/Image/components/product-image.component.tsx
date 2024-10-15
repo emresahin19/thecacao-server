@@ -1,8 +1,9 @@
 import type { ImageProps } from '../image.props';
 import React from 'react';
 import CustomImage from './custom-image.component';
+import { productVariantHeight, productVariantWidth } from 'lib/constants';
 
-const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width, height, type, format, loading = "lazy", backgroundColor, quality = 80 }) => {
+const ProductImage: React.FC<ImageProps> = ({ image, alt = 'The Cacao', width = productVariantWidth, height = productVariantHeight, type, format, loading = "lazy", backgroundColor, quality = 80 }) => {
     return (
         <CustomImage
             image={image}

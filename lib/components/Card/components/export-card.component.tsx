@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
-import Button from "../../Button/components/button.component";
 import DashDivider from "../../Layout/components/dash/divider.component";
 import { ExportProps } from "../card.props";
 import { exportItems } from "lib/services";
 import { ProductProps } from "lib/interfaces";
 import Spinner from "lib/components/Loading/components/spinner.component";
-import ProductCard from "./product-card.component";
+import ProductExportCard from "./product-export-card.component";
 import Pagination from "lib/components/Table/components/pagination.component";
 import MdDownloading from 'lib/assets/icon/svg/MdDownloading.svg'
 import IconButton from "lib/components/Button/components/icon-button.component";
@@ -89,7 +88,7 @@ const ExportCard: React.FC<ExportProps<ProductProps>> = ({ items, route, onSave,
             <div className="export-area interactive">
                 <div className="a4-page">
                     {currentPageData.map((item, index) => (
-                        <ProductCard key={index} {...item} listView={true} />  
+                        <ProductExportCard key={index} {...item} listView={true} />  
                     ))}
                 </div>
             </div>

@@ -168,9 +168,9 @@ export class ProductService {
             });
             for(const product of products){
                 if (product.image_ids && product.image_ids.length > 0) {
-                    product.image = await this.getImage(product.image_ids[0]);
+                    product.images = [await this.getImage(product.image_ids[0])];
                 } else {
-                    product.image = null;
+                    product.images = [];
                 }
             }
             return products;
