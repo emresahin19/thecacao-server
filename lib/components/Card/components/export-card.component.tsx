@@ -62,8 +62,10 @@ const ExportCard: React.FC<ExportProps<ProductProps>> = ({ items, route, onSave,
 
     if(loading) {
         return (
-            <div className="modal-loading">
-                <Spinner absolute={true} />
+            <div className="export-section">
+                <div className="export-loading">
+                    <Spinner absolute={true} />
+                </div>
             </div>
         )
     }

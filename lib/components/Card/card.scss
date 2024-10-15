@@ -403,6 +403,14 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+
+    .export-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
     .export-area {
         width: 100%;
         height: 100%;
