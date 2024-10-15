@@ -107,8 +107,6 @@ const ExportCard: React.FC<ExportProps<ProductProps>> = ({ items, route, onSave,
                     totalPages={totalPages}
                     currentPage={currentPage}
                     onPageChange={handlePageChange}
-                    perPage={ITEMS_PER_PAGE}
-                    onPerPageChange={() => {}}
                 />
             )}
         </div>

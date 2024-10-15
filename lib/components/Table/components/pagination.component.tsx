@@ -75,7 +75,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, perPag
         const value = parseInt(e.target.value, 10);
 
         if (value > 0) {
-            onPerPageChange(value);
+            onPerPageChange && onPerPageChange(value);
         }
     };
 
@@ -99,29 +99,31 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, perPag
                     }
                 })}
             </div>
-            <div className="paginate-props">
-                <small>
-                    Page 
-                    {<MultipleSelectBox
-                        clearable={false}
-                        size='sm'
-                        options={Array.from({ length: totalPages }, (_, i) => i + 1)}
-                        value={currentPage + 1}
-                        onChange={onPageInputChange}
-                    />}
-                    of {totalPages}
-                </small>
-                <small>
-                    Per Page
-                    {<MultipleSelectBox
-                        clearable={false}
-                        size='sm'
-                        options={Array.from(new Set([...[perPage], ...[10, 20, 50, 100]].sort((a, b) => a - b)))}
-                        value={perPage}
-                        onChange={onPerPageInputChange}
-                    />}
-                </small>
-            </div>
+            {perPage && (
+                <div className="paginate-props">
+                    <small>
+                        Page 
+                        {<MultipleSelectBox
+                            clearable={false}
+                            size='sm'
+                            options={Array.from({ length: totalPages }, (_, i) => i + 1)}
+                            value={currentPage + 1}
+                            onChange={onPageInputChange}
+                        />}
+                        of {totalPages}
+                    </small>
+                    <small>
+                        Per Page
+                        {<MultipleSelectBox
+                            clearable={false}
+                            size='sm'
+                            options={Array.from(new Set([...[perPage], ...[10, 20, 50, 100]].sort((a, b) => a - b)))}
+                            value={perPage}
+                            onChange={onPerPageInputChange}
+                        />}
+                    </small>
+                </div>
+            ) || null}
         </div>
     );
 };

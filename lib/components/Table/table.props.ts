@@ -15,9 +15,9 @@ export interface EditCardProps<T> {
 export interface PaginationProps {
     totalPages: number;
     currentPage: number;
-    perPage: number;
+    perPage?: number;
     onPageChange: (page: number) => void;
-    onPerPageChange: (perPage: number) => void;
+    onPerPageChange?: (perPage: number) => void;
     loading?: boolean;
 }
 
