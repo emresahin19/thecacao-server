@@ -26,6 +26,7 @@
     position: relative;
     border: 1px solid var(--text-color);
     gap: 4px;
+    
     .badge-item {
         display: flex;
         white-space: nowrap;
@@ -45,5 +46,6 @@
         cursor: pointer;
         position: relative;
         aspect-ratio: 1;
+        padding: 0;
     }
 }
