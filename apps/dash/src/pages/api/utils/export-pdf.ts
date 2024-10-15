@@ -37,12 +37,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!html) {
             return res.status(400).json({ error: 'HTML content is required' });
         }
+
+        const browserConfig = {
+            headless: true,
+            args: ['--no-sandbox'],
+            ...(process.env.NEXT_PUBLIC_APP_MODE === 'production' ? { executablePath: '/usr/bin/chromium' } : {})
+        }
     
         try {
-            const browser = await puppeteer.launch({
-                headless: true,
-                args: ['--no-sandbox']
-            });
+            const browser = await puppeteer.launch(browserConfig);
             const page = await browser.newPage();
             await page.setContent(domToHtmlPage(html), { waitUntil: 'networkidle0' });
 
