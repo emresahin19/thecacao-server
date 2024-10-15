@@ -106,10 +106,6 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
 
     const { items, total = 0, isLoading = false, mutateData } = useTableData<T>(filterParams) 
 
-    const allSelected = useMemo(() => {
-        return items.every(item => selectedItems[item.id]);
-    }, [items, selectedItems]);
-    
     const updateQuery = useCallback(
         (newParams: { [key: string]: any }) => {
             const currentParams = { ...query };

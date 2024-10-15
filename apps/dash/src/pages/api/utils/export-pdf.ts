@@ -11,10 +11,65 @@ const domToHtmlPage = (html: string) => (
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Export</title>
         <style>
-            /* Temel CSS ekleyin veya public klasöründen gerekli dosyaları dahil edin */
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
+            .a4-page {
+                width: 210mm;
+                height: 297mm;
+                background-color: white;
+                margin: auto;
+            }
+            .export-items {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                overflow: hidden;
+                padding: 16px;
+                height: calc(100% - 32px);
+                width: calc(100% - 32px);
+            }
+            .export-card {
+                flex-direction: row;
+                display: flex;
+                align-items: center;
+                max-height: 10%;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0px 1px 2px 0px rgba(var(--primary-rgb), 0.1);
+                width: 100%;
+                height: 100%;
+                gap: 8px;
+                color: var(--black);
+
+            }
+            .export-card .card-image {
+                width: 20%;
+                height: auto;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                max-height: 100%;
+            }
+            .export-card .card-image img {
+                width: 100%;
+                height: auto;
+                max-height: 100%;
+            }
+            .export-card .title {
+                font-weight: 400;
+                display: flex;
+                align-items: center;
+                margin: 0;
+                font-size: 16px;
+                width: 20%;
+                color: var(--black);
+            }
+            .export-card p {
+                width: 60%;
+                margin: 0;
+                color: var(--black);
+                text-align: start;
+                padding-left: 16px;
             }
         </style>
     </head>
@@ -51,22 +106,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             const pdfBuffer = await page.pdf({
                 format: 'A4',
-                printBackground: true, // Arka planı dahil eder
-                margin: {
-                    top: '20mm',
-                    right: '20mm',
-                    bottom: '20mm',
-                    left: '20mm'
-                }
+                printBackground: true,
+                width: '210mm',
+                height: '297mm',
             });
 
             await browser.close();
-    
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', 'attachment; filename=export.pdf');
             res.setHeader('Content-Length', pdfBuffer.length.toString());
     
-            return res.status(200).send(pdfBuffer);
+            return res.status(200).end(pdfBuffer);
         } catch (error: any) {
             console.error('PDF oluşturma hatası:', error);
             return handleErrorResponse(error, res);
