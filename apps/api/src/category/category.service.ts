@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -10,6 +10,7 @@ import { menuCacheKey } from '../common/constants';
 import { clearCache } from '../common/lib/clear-cache';
 import { ImageService } from '../image/image.service';
 import { Product } from '../product/entities/product.entity';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class CategoryService {
@@ -18,7 +19,8 @@ export class CategoryService {
         private readonly categoryRepository: Repository<Category>,
         @InjectRepository(Product)
         private readonly productRepository: Repository<Product>,
-        private readonly imageService: ImageService
+        private readonly imageService: ImageService,
+        private readonly productService: ProductService
     ) {}
 
     async findAll(params: CategoryQueryParams) {
@@ -129,6 +131,21 @@ export class CategoryService {
         await this.categoryRepository.save(category)
         await clearCache({cacheKey: menuCacheKey})
         return category;
+    }
+
+    async export(ids: number[]) {
+        try {
+            console.log(ids);
+            const categories = await this.categoryRepository.find({
+                where: { id: In(ids) },
+                relations: ['products'],
+            });
+            const product_ids = categories.map((category) => category.products.map((product) => product.id)).flat();
+            return this.productService.export(product_ids);
+        } catch (error) {
+            console.error('Error exporting items:', error);
+            throw error;
+        }
     }
 
     async inputData() {

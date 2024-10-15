@@ -2,8 +2,6 @@
 import React from 'react';
 import { CardStyleProps, CategoryProps, EditTypeProps } from '../../../interfaces';
 import Table from "../../Table/components/table.component";
-import { useToast } from 'lib/contexts';
-import { saveCategory } from 'lib/services';
 import { defaultColor } from 'lib/constants';
 
 const defaultStyle: CardStyleProps = {
@@ -13,16 +11,7 @@ const defaultStyle: CardStyleProps = {
 }
 
 const CategoryTable: React.FC = () => {
-    const { showToast } = useToast();
-
-    const handleAction = async (item: CategoryProps, action: string) => {
-        if(action === 'save') {
-           
-        }
-    }
-
     const handleCheckboxChange = async (items: { [key: CategoryProps['id']]: boolean }) => {
-        console.log('save', items);
     }
     
     const fields: EditTypeProps<CategoryProps>[] = [
@@ -136,7 +125,6 @@ const CategoryTable: React.FC = () => {
                 className="category-table"
                 apiRoute="categories"
                 fields={fields}
-                onAction={handleAction}
                 onCheckboxChange={handleCheckboxChange}
             />
         </div>

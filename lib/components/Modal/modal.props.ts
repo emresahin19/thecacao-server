@@ -13,6 +13,7 @@ export interface ModalProps {
     data?: any;
     route?: string;
     backRoute?: string;
+    className?: string;
 }
 
 export interface DeleteModalProps {

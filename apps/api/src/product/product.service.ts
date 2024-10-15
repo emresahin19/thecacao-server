@@ -160,6 +160,26 @@ export class ProductService {
         clearCache({cacheKey: menuCacheKey})
     }
 
+    async export(ids: number[]) {
+        try {
+            const products = await this.productRepository.find({
+                where: { id: In(ids) },
+                relations: ['category'],
+            });
+            for(const product of products){
+                if (product.image_ids && product.image_ids.length > 0) {
+                    product.image = await this.getImage(product.image_ids[0]);
+                } else {
+                    product.image = null;
+                }
+            }
+            return products;
+        } catch (error) {
+            console.error('Error exporting items:', error);
+            throw error;
+        }
+    }
+
     async order(items: OrderProps[]): Promise<any> {
         for(const item of items){
             this.productRepository.update({ id: item.id }, { order: item.order });
@@ -184,6 +204,15 @@ export class ProductService {
         return sorted
     }
 
+    async getImage(image_id: number): Promise<Image> {
+        if (!image_id) {
+            return null;
+        }
+
+        const image = await this.imageRepository.findOne({ where: { id: image_id } });
+        return image;
+    }
+
     async getImageUrls(image_ids: number[]): Promise<string[]> {
         if (!image_ids || image_ids.length === 0) {
             return [];
@@ -195,19 +224,6 @@ export class ProductService {
             .getMany();
 
         return images.map((image) => `${cdnUrl}/images/product/${image.filename}`);
-    }
-
-    async getCfImageUrls(image_ids: number[]): Promise<string[]> {
-        if (!image_ids || image_ids.length === 0) {
-            return [];
-        }
-
-        const images = await this.imageRepository
-            .createQueryBuilder('image')
-            .whereInIds(image_ids)
-            .getMany();
-
-        return images.map((image) => image.url);
     }
 
     async getProductWithImages(productId: number): Promise<Product> {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, Res, UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -6,6 +6,7 @@ import { StatusCode } from '../common/constants';
 import { OrderProps, ProductQueryParams } from './product.props';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Response } from 'express';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @Controller('products')
 export class ProductController {
@@ -39,6 +40,7 @@ export class ProductController {
             });
         }
     }
+
     @Post('order')
     async order(
         @Body() items: OrderProps[],
@@ -51,6 +53,35 @@ export class ProductController {
             return res.status(StatusCode.BAD_REQUEST.statusCode).json({
                 status: false,
                 error: error.error,
+                message: error.message || StatusCode.BAD_REQUEST.message,
+            });
+        }
+    }
+
+    @Post('export')
+    @UseGuards(JwtAuthGuard)
+    async export(
+        @Body() body: { ids: number[] },
+        @Res() res: Response
+    ) {
+        try {
+            const items = await this.productService.export(body.ids);
+
+            return items
+                ? res.status(StatusCode.SUCCESS.statusCode).json({
+                    status: true,
+                    items,
+                    message: StatusCode.SUCCESS.message,
+                })
+                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                    status: false,
+                    items: [],
+                    message: StatusCode.BAD_REQUEST.message,
+                });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
                 message: error.message || StatusCode.BAD_REQUEST.message,
             });
         }

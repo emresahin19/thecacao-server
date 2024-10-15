@@ -27,4 +27,5 @@ export interface ModalState {
     component?: string | null;
     backRoute?: string | null;
     data?: any;
+    className?: string;
 }

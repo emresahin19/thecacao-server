@@ -7,7 +7,7 @@ export type IconButtonProps = {
     width?: number;
     height?: number;
     children?: React.ReactNode;
-    ariaLabel: string;
+    ariaLabel?: string;
     className?: string;
 };
 

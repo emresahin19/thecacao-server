@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { closeModal } from 'lib/store/modal.slice';
 import { RootState } from 'lib/store';
 import ProductDetailCard from "lib/components/Card/components/product-detail-card.component";
-import ProductEditCard from "lib/components/Card/components/product-edit-card.component";
-import CategoryEditCard from "lib/components/Card/components/category-edit-card.component";
+import ExportCard from "lib/components/Card/components/export-card.component";
 import DeleteModal from "./delete-modal.component"
 import EditCard from "lib/components/Table/components/edit-card.component";
 import Logo from "lib/components/Logo/components/logo.component";
@@ -24,10 +23,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
 
     const [isInitialDataUsed, setIsInitialDataUsed] = useState<boolean>(!!initialData);
     const modalState = useSelector((state: RootState) => state.modal);
-    const { show, component, data } = isInitialDataUsed && initialData ? initialData : modalState;
+    const { show, component, data, className } = isInitialDataUsed && initialData ? initialData : modalState;
     const shouldHandleTouch = useRef(false);
     
-    // Modal open logic
     const handleOpen = useCallback(() => {
         const wrapper = document.body;
         if (wrapper) {
@@ -43,7 +41,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         moveYRef.current = 0;
     }, []);
     
-    // Modal close logic
     const handleClose = useCallback(() => {
         if (initialData) setIsInitialDataUsed(false);
         dispatch(closeModal());
@@ -60,7 +57,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         }
     }, [initialData, onClose, dispatch]);
 
-    // Update modal height when content changes
     useEffect(() => {
         if (!modalRef.current) return;
 
@@ -75,7 +71,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         const resizeObserver = new ResizeObserver(handleResize);
         resizeObserver.observe(modalRef.current);
 
-        // Call it initially to set the values
         handleResize();
 
         return () => {
@@ -83,7 +78,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         };
     }, [component, data]);
 
-    // Open or close modal based on 'show' state
     useEffect(() => {
         if (show) {
             handleOpen();
@@ -94,7 +88,6 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
 
     const isInteractiveElement = (element: HTMLElement): boolean => {
         // const interactiveTags = ['TEXTAREA', 'LABEL'];
-        // Aktif elementin tag'ı input türündeyse ya da draggable bir component içindeyse true döner
         // if (interactiveTags.includes(element.tagName)) return true;
         if (element.closest('.interactive')) return true;
     
@@ -183,7 +176,7 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
         <div className={`modal-container ${show ? 'show' : ''}`}>
             {show && (
                 <div
-                    className="modal"
+                    className={`modal ${className || ''}`}
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
@@ -202,10 +195,9 @@ const Modal: React.FC<ModalInitialProps> = ({ onClose, initialData }) => {
                     </div>
                     <div className="modal-body">
                         {component === 'ProductDetailCard' && data && <ProductDetailCard {...data} />}
-                        {component === 'ProductEditCard' && <ProductEditCard {...data} onSave={onSave} onCancel={onCancel} />}
-                        {component === 'CategoryEditCard' && <CategoryEditCard {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'DeleteModal' && data && <DeleteModal {...data} onSave={onSave} onCancel={onCancel} />}
                         {component === 'EditCard' && data && <EditCard {...data} onSave={onSave} onCancel={onCancel} />}
+                        {component === 'ExportCard' && data && <ExportCard {...data} onSave={onSave} onCancel={onCancel} />}
                     </div>
                 </div>
             )}

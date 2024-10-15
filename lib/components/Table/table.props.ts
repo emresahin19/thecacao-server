@@ -34,14 +34,14 @@ export interface ColumnProps<T> {
     options?: OptionsProps[];
     editable?: boolean;
 }
-  
+
 export interface TableProps<T> {
     apiRoute: DataRouteProps;
     className?: string;
     editPage?: string;
     fields: Array<EditTypeProps<T>>;
     onAction?: (item: T, action: 'save' | 'delete') => void;
-    onCheckboxChange?: (items: { [key: number]: boolean }) => void;
+    onCheckboxChange?: (items: {[key: string]: {id: number; name: string;}}) => void;
     isFormData?: boolean;
 }
 
@@ -49,7 +49,7 @@ export interface TableViewProps<T> {
     items: T[];
     columns: Array<ColumnProps<T>>;
     className?: string;
-    selectedItems: { [key: string]: boolean };
+    selectedItems:{[key: string]: {id: number; name: string;}};
     selectAll: boolean;
     orderBy: string;
     orderDirection: string;

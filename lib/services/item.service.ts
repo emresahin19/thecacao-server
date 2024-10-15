@@ -32,6 +32,16 @@ export const saveItem = async <T>({id, route, item, isFormData = false}: ItemReq
     }
 };
 
+export const exportItems = async ({ ids, route }: { ids: number[]; route: string }) => {
+    try {
+        const response = await axiosInstance.post(`/api/${route}/export`, { ids });
+        return response;
+    } catch (error) {
+        console.error('Error exporting items:', error);
+        throw error;
+    }
+};
+
 export const prepareItemFormData = async <T extends Record<keyof T, any>>({ item }: { item: T }): Promise<FormData> => {
     const formData = new FormData();
     for (const key in item) {

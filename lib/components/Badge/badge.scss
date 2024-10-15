@@ -1,5 +1,5 @@
 
-.badge {
+.count-badge {
     width: 16px;
     height: 16px;
     display: flex;
@@ -11,4 +11,37 @@
     position: absolute;
     right: -10px;
     top: -12px;
+}
+
+.badge {
+    height: 18px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 26px;
+    color: var(--text-color);
+    padding: 3px 4px 3px 8px;
+    position: relative;
+    border: 1px solid var(--text-color);
+    .badge-item {
+        display: flex;
+        white-space: nowrap;
+    }
+    .clear {
+        border: 1px solid var(--danger);
+        border-radius: 50%;
+        color: var(--danger);
+        font-size: 10px;
+        width: 14px;
+        height: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 4px;
+        background-color: transparent;
+        outline: none;
+        cursor: pointer;
+    }
 }

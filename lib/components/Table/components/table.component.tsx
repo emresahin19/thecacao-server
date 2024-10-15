@@ -12,6 +12,11 @@ import ListTableView from './list-table-view.component';
 import { useTableData } from '../../../hooks';
 import { saveItem } from 'lib/services';
 import { useToast } from 'lib/contexts';
+import Badge from '../../Badge/components/badge.component';
+import IconButton from 'lib/components/Button/components/icon-button.component';
+import TbFileExport from 'lib/assets/icon/svg/TbFileExport.svg';
+import MdOutlineCancel from 'lib/assets/icon/svg/MdOutlineCancel.svg';
+import Divider from 'lib/components/Layout/components/dash/divider.component';
 
 const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
     className = '',
@@ -88,7 +93,7 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
     const { show } = useAppSelector((state) => state.modal);
 
     const [filterParams, setFilterParams] = useState<string>(initialParams);
-    const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>({});
+    const [selectedItems, setSelectedItems] = useState<{[key: string]: {id: number; name: string;}}>({});
     const [editValues, setEditValues] = useState<{ [key: string]: any }>({});
     const [selectAll, setSelectAll] = useState(false);
     const prevShowRef = useRef<boolean>(show || false);
@@ -102,6 +107,10 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
 
     const { items, total = 0, isLoading = false, mutateData } = useTableData<T>(filterParams) 
 
+    const allSelected = useMemo(() => {
+        return items.every(item => selectedItems[item.id]);
+    }, [items, selectedItems]);
+    
     const updateQuery = useCallback(
         (newParams: { [key: string]: any }) => {
             const currentParams = { ...query };
@@ -269,6 +278,17 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
                     }
                 })
             );
+        } else if (action === 'export') {
+            dispatch(
+                openModal({
+                    component: 'ExportCard',
+                    className: 'export-card',
+                    data: { 
+                        items: selectedItems,
+                        route: apiRoute,
+                    }
+                })
+            );
         } else {
             dispatch(closeModal());
         }
@@ -294,41 +314,50 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
             if (!item) return;
             const checked = e.target.checked;
             const itemId = item.id;
+            const itemName = item.name;
 
             setSelectedItems((prevSelectedItems) => {
                 const newSelectedItems = { ...prevSelectedItems };
                 if (checked) {
-                    newSelectedItems[itemId] = true;
+                    newSelectedItems[itemId] = { id: itemId, name: itemName };
                 } else {
                     delete newSelectedItems[itemId];
                 }
                 onCheckboxChange && onCheckboxChange(newSelectedItems);
                 return newSelectedItems;
             });
-
         },
-        []
+        [onCheckboxChange]
     );
 
     const handleSelectAllItems = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const checked = e.target.checked;
             setSelectAll(checked);
-            const newSelectedItems = items.reduce(
-                (acc: any, item: { id: any }) => checked 
-                    ? ({
-                        ...acc,
-                        [String(item.id)]: checked
-                    }) : (
-                        delete acc[String(item.id)] && acc
-                    ),
-                {}
-            );
-            setSelectedItems(newSelectedItems);
-            onCheckboxChange && onCheckboxChange(newSelectedItems);
+
+            setSelectedItems((prevSelectedItems) => {
+                const newSelectedItems = { ...prevSelectedItems };
+                if (checked) {
+                    items.forEach((item) => {
+                        newSelectedItems[item.id] = { id: item.id, name: item.name };
+                    });
+                } else {
+                    items.forEach((item) => {
+                        delete newSelectedItems[item.id];
+                    });
+                }
+                onCheckboxChange && onCheckboxChange(newSelectedItems);
+                return newSelectedItems;
+            });
         },
-        [items]
+        [items, onCheckboxChange]
     );
+
+    const clearAllSelections = useCallback(() => {
+        setSelectedItems({});
+        setSelectAll(false);
+        onCheckboxChange && onCheckboxChange({});
+    }, [onCheckboxChange]);
 
     const handleFilterChange = useCallback(
         (key: string, value: any) => {
@@ -415,6 +444,14 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
         // setSelectedItems({});
         setSelectAll(false);
     }, []);
+
+    const handleRemoveSelectedItem = useCallback((itemId: number) => {
+        setSelectedItems((prevSelectedItems) => {
+            const newSelectedItems = { ...prevSelectedItems };
+            delete newSelectedItems[itemId];
+            return newSelectedItems;
+        });
+    }, []);
     
     const numPages = useMemo(() => Math.ceil(total / tableState.perPage), [total, tableState.perPage, router]);
     
@@ -423,6 +460,32 @@ const Table = <T extends { id: number; passive?: number; [key: string]: any }>({
     return (
         <>
             <div className="table-header">
+                {Object.values(selectedItems).length > 0 && (
+                    <div className="selected-items-container">
+                        <ul className="selected-list">
+                            {Object.values(selectedItems).map(item => (
+                                <li key={item.id}>
+                                    <Badge onRemove={() => handleRemoveSelectedItem(item.id)}>{item.name}</Badge>
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="selected-button-area">
+                            <IconButton 
+                                width={24} 
+                                onClick={clearAllSelections} 
+                            >
+                                <MdOutlineCancel />
+                            </IconButton>
+                            <IconButton 
+                                width={24} 
+                                onClick={() => updateQuery({ action: 'export' })} 
+                            >
+                                <TbFileExport />
+                            </IconButton>
+                        </div>
+                        <Divider />
+                    </div>
+                )}
                 <Button onClick={() => handleRowAction('create', null)} label="Yeni Ekle" />
             </div>
             <ListTableView

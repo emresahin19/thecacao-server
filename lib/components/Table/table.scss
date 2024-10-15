@@ -25,10 +25,12 @@
     .table-header {
         display: flex;
         justify-content: flex-start;
-        align-items: center;
+        align-items: flex-start;
         position: sticky;
         left: 0;
         padding: 1rem;
+        flex-direction: column;
+        gap: 8px;
     }
     
     table {
@@ -226,6 +228,46 @@
     }
     .td-item {
         color: var(--text-color) !important;
+    }
+}
+
+.selected-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: selection-anim 0.3s ease-in-out;
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
+    .selected-list {
+        margin: 0;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 8px 0;
+        .badge {
+            cursor: pointer;
+        }
+    }
+    .selected-button-area {
+        display: flex;
+        gap: 8px;
+        color: var(--text-color);
+        svg {
+            color: var(--text-color);
+        }
+    }
+    .divider {
+        opacity: 0.3;
+    }
+}
+
+@keyframes selection-anim {
+    0% {
+        max-height: 0%;
+    }
+    100% {
+        max-height: 100%;
     }
 }
 

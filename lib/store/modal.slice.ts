@@ -8,6 +8,7 @@ const initialState: ModalState = {
     component: null,
     data: null,
     backRoute: null,
+    className: '',
 };
 
 const modalSlice = createSlice({
@@ -19,12 +20,14 @@ const modalSlice = createSlice({
             state.component = action.payload.component;
             state.data = action.payload.data;
             state.backRoute = action.payload.backRoute;
+            state.className = action.payload.className;
         },
         closeModal: (state) => {
             state.show = false;
             state.component = null;
             state.data = null;
             state.backRoute = null;
+            state.className = '';
         },
     },
 });

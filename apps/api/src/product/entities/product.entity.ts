@@ -34,6 +34,7 @@ export class Product {
     @Column({ type: 'simple-json', nullable: true })
     image_ids: number[];
     images?: Image[];
+    image?: Image;
 
     @Column({ type: 'simple-json', nullable: true })
     extra: number[]; 

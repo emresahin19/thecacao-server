@@ -80,6 +80,35 @@ export class CategoryController {
         }
     }
 
+    @Post('export')
+    @UseGuards(JwtAuthGuard)
+    async export(
+        @Body() body: { ids: number[] },
+        @Res() res: Response
+    ) {
+        try {
+            const items = await this.categoryService.export(body.ids);
+
+            return items
+                ? res.status(StatusCode.SUCCESS.statusCode).json({
+                    status: true,
+                    items,
+                    message: StatusCode.SUCCESS.message,
+                })
+                : res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                    status: false,
+                    items: [],
+                    message: StatusCode.BAD_REQUEST.message,
+                });
+        } catch (error) {
+            return res.status(StatusCode.BAD_REQUEST.statusCode).json({
+                status: false,
+                error: error.message,
+                message: error.message || StatusCode.BAD_REQUEST.message,
+            });
+        }
+    }
+
     @Post()
     @UseGuards(JwtAuthGuard)
     async create(

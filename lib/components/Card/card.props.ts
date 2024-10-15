@@ -71,3 +71,10 @@ export interface ProductEditTypeProps {
     width?: number;
     height?: number;
 }
+
+export interface ExportProps<T> {
+    items: {[key: string]: {id: number; name: string;}};
+    route: string;
+    onSave?: (response: any) => void;
+    onCancel?: () => void;
+}
