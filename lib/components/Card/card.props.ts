@@ -78,3 +78,10 @@ export interface ExportProps<T> {
     onSave?: (response: any) => void;
     onCancel?: () => void;
 }
+
+export interface ExportCardProps {
+    id: number;
+    name: string;
+    image?: string;
+    description?: string;
+}

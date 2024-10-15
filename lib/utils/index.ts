@@ -14,6 +14,7 @@ import {
     customLoader,
     generateSrcSet,
     deserializeFilters,
+    convertImageToBase64,
 } from './helpers';
 
 export { 
@@ -32,4 +33,5 @@ export {
     customLoader,
     generateSrcSet,
     deserializeFilters,
+    convertImageToBase64,
 };

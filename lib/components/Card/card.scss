@@ -422,66 +422,6 @@
         max-height: calc(100vh - 220px);
     }
     
-    .a4-page {
-        width: 210mm;
-        height: 297mm;
-        background-color: white;
-        margin: auto;
-    }
-    .export-items {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        overflow: hidden;
-        padding: 16px;
-        height: calc(100% - 32px);
-        width: calc(100% - 32px);
-    }
-    .export-card {
-        flex-direction: row;
-        display: flex;
-        align-items: center;
-        max-height: 10%;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0px 1px 2px 0px rgba(var(--primary-rgb), 0.1);
-        width: 100%;
-        height: 100%;
-        gap: 8px;
-        color: var(--black);
-
-    }
-    .export-card .card-image {
-        width: 20%;
-        height: auto;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        max-height: 100%;
-    }
-    .export-card .card-image img {
-        width: 100%;
-        height: auto;
-        max-height: 100%;
-    }
-    .export-card .title {
-        font-weight: 400;
-        display: flex;
-        align-items: center;
-        margin: 0;
-        font-size: 16px;
-        width: 20%;
-        color: var(--black);
-    }
-    .export-card p {
-        width: 60%;
-        margin: 0;
-        color: var(--black);
-        text-align: start;
-        padding-left: 16px;
-    }
     .export-button {
         position: fixed;
         right: 26px;

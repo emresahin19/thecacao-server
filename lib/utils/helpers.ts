@@ -246,6 +246,31 @@ const generateSrcSet = (src: string, width: number, quality: number = 80) => {
 //     const serveUrl = 'https://serve.thecacao.com.tr';
 //     return `${serveUrl}/${src}?w=${width}&q=${quality || 80}`;
 // }
+const convertImageToBase64 = async (imageUrl: string) => {
+    return new Promise<string>((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = imageUrl;
+
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+                ctx.drawImage(img, 0, 0);
+                const dataURL = canvas.toDataURL("image/png");
+                resolve(dataURL);
+            } else {
+                reject("Canvas context not available");
+            }
+        };
+
+        img.onerror = () => {
+            reject("Error loading image");
+        };
+    });
+};
 
 export {
     sleep,
@@ -263,4 +288,5 @@ export {
     customLoader,
     generateSrcSet,
     deserializeFilters,
+    convertImageToBase64,
 }
