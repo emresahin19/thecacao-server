@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import DashDivider from "../../Layout/components/dash/divider.component";
 import { ExportProps } from "../card.props";
-import { exportItems } from "lib/services";
+import { exportAsPdf, exportItems } from "lib/services";
 import { ProductProps } from "lib/interfaces";
 import Spinner from "lib/components/Loading/components/spinner.component";
 import ProductExportCard from "./product-export-card.component";
@@ -14,10 +14,36 @@ const ITEMS_PER_PAGE = 10;
 const ExportCard: React.FC<ExportProps<ProductProps>> = ({ items, route, onSave, onCancel }) => {
     const [data, setData] = useState<ProductProps[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [downloading, setDownloading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(0);
-    
+    const a4PageRef = useRef<HTMLDivElement>(null); 
+
     const handleSave = async () => {
-        onSave && onSave(true);
+        if (!a4PageRef.current) {
+            console.error("A4 Page ref is not available");
+            return;
+        }
+    
+        const htmlContent = a4PageRef.current.innerHTML;
+    
+        setDownloading(true);
+        try {
+            const response = await exportAsPdf({ html: htmlContent });
+    
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'export.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+    
+            onSave && onSave(true);
+        } catch (error) {
+            console.error("PDF oluşturma sırasında bir hata oluştu:", error);
+        } finally {
+            setDownloading(false);
+        }
     };
     
     const handleReset = () => {
@@ -86,10 +112,12 @@ const ExportCard: React.FC<ExportProps<ProductProps>> = ({ items, route, onSave,
             <DashDivider />
 
             <div className="export-area interactive">
-                <div className="a4-page">
-                    {currentPageData.map((item, index) => (
-                        <ProductExportCard key={index} {...item} listView={true} />  
-                    ))}
+                <div className="a4-page" ref={a4PageRef}>
+                    <div className="export-items">
+                        {currentPageData.map((item, index) => (
+                            <ProductExportCard key={index} {...item} listView={true} />  
+                        ))}
+                    </div>
                 </div>
             </div>
             
@@ -98,7 +126,10 @@ const ExportCard: React.FC<ExportProps<ProductProps>> = ({ items, route, onSave,
                 className="export-button"
                 width={36}
             >
-                <MdDownloading />
+                {downloading 
+                    && <Spinner size={24} color1="#fff" color2="#fff" color3="#fff" />
+                    || <MdDownloading />
+                }
             </IconButton>
 
             {totalPages > 1 && (
