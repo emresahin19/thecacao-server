@@ -41,12 +41,6 @@ const ImageInput: React.FC<ImageInputProps> = ({
         }
     };
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        const inputElement = document.getElementById(`${name}-input`) as HTMLInputElement;
-        inputElement.click();
-    };
-
     const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -60,7 +54,6 @@ const ImageInput: React.FC<ImageInputProps> = ({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            onClick={handleClick}
         >
             <input
                 type="file"

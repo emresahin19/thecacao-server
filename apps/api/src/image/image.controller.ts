@@ -35,12 +35,13 @@ const storage = diskStorage({
 export class ImageController {
     constructor(private readonly imageService: ImageService) {}
 
-    @Get('crop,w=:width,h=:height,f=:format,q=:quality/*')
+    @Get('crop,w=:width,h=:height,f=:format,q=:quality,t=:transform/*')
     async getCroppedImage(
         @Param('width', new ParseIntPipe()) width: number,  // Get width as an integer using ParseIntPipe
         @Param('height', new ParseIntPipe()) height: number,  // Get height as an integer using ParseIntPipe
         @Param('format') format: 'png' | 'webp',  // Get format as a string
         @Param('quality', new ParseIntPipe()) quality: number,  // Get quality as an integer using ParseIntPipe
+        @Param('transform') transform: 'base64',
         @Param() params: any,
         @Res() res: Response,
     ) {
@@ -54,6 +55,11 @@ export class ImageController {
 
         // Compress the image based on provided dimensions
         const compressedImagePath = await this.imageService.compressImage({imagePath, width: _width, height: _height, format: _format, quality: _quality});
+
+        if(transform === 'base64') {
+            // Send the base64 encoded image to the browser
+            return res.sendFile(compressedImagePath);
+        }
         
         // Send the image file to the browser
         res.sendFile(compressedImagePath);

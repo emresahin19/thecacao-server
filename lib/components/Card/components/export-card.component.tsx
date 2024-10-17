@@ -11,7 +11,6 @@ import IconButton from "lib/components/Button/components/icon-button.component";
 import { convertImageToBase64, imageToCdnUrl } from "lib/utils";
 import { cdnUrl } from "lib/constants";
 import Head from "next/head";
-import './product-export-card.css';
 
 const ITEMS_PER_PAGE = 10;
 const style = `

@@ -8,6 +8,7 @@ export const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'http://localhost
 export const wwwUrl = process.env.NEXT_PUBLIC_WWW_URL || 'http://localhost:4020';
 export const dashUrl = process.env.NEXT_PUBLIC_DASH_URL || 'http://localhost:4040';
 export const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:4040';
+export const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || 'http://media.thecacao.com.tr';
 export const cfCdnUrl = process.env.NEXT_PUBLIC_CF_CDN_URL || 'https://cdn.thecacao.com.tr/cdn-cgi/imagedelivery';
 
 export const dbName = process.env.DB_NAME || 'base';
