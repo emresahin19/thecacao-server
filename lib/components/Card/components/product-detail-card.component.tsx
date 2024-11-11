@@ -88,12 +88,12 @@ const ProductDetail: React.FC<ProductProps> = ({ name, description, price, extra
                         );
                     })}
                 </div>
-                {/* Seçilen öğelerin ID'lerini göster */}
+                {/* Seçilen öğelerin ID'lerini göster 
                 {selectedItems.length > 0 && (
                     <div className="selected-items">
                         Seçilen öğelerin ID'leri: {selectedItems.join(', ')}
                     </div>
-                )}
+                )}*/}
             </div>
         );
     };
