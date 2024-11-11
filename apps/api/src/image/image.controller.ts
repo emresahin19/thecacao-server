@@ -108,7 +108,7 @@ export class ImageController {
         const { width, height, format = 'webp', quality }: ImageVariant = sizes[type as ImageTypes];
 
         // Compress the image based on the type and get the file path
-        const compressedImagePath = await this.imageService.compressImage({imagePath, width, height, format, quality, type});
+        const compressedImagePath = await this.imageService.compressImage({imagePath, width, height, format, quality, type, removeBackground: type === 'extra'});
 
         // Send the image file to the browser
         res.sendFile(compressedImagePath);

@@ -46,6 +46,19 @@ const ProductTable: React.FC = () => {
             filterType: 'text',
         },
         {
+            key: 'price',
+            property: 'all',
+            label: 'Fiyat',
+            type: 'number',
+            sort: true,
+            editable: true,
+            required: true,
+            filterType: 'number',
+            render: (product: ExtraProps) => (
+                <span>{product.price} ₺</span>
+            ),
+        },
+        {
             key: 'category_id',
             property: 'all',
             label: 'Kategori',

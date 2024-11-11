@@ -298,17 +298,26 @@
             padding: 16px 0 8px;
             background-color: rgba(var(--primary-rgb), .5);
             border-radius: 12px;
+            flex-wrap: wrap;
+            gap: 8px 0;
+
             .extra-item {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                flex: 1;
-                max-width: 33%;
+                flex: 1 1 33%;
+                &.selected {
+                    img {
+                        box-shadow: 0 0 0 3px var(--success);
+                    }
+                }
+                
                 .extra-icon {
                     font-size: 24px;
                     color: var(--white);
                 }
+
                 .extra-item-title {
                     color: var(--white);
                     font-size: 12px;
@@ -317,10 +326,12 @@
                     margin-top: 8px;
                     justify-content: center;
                 }
+
                 .extra-item-price {
                     color: var(--white);
                     font-size: 14px;
                 }
+
                 img {
                     width: 60px;
                     height: 60px;

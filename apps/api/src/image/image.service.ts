@@ -60,61 +60,64 @@ export class ImageService {
 
         return `${cdnUrl}/images/${type}/${image.filename}`;
     }
-
+    
     async compressImage({
         imagePath,
         width,
         height,
         format = 'webp',
         quality = 80,
-        type = 'product',  
+        type = 'product',
+        removeBackground = false,  // Boşlukları kırpma işlemi için yeni bir parametre
     }: {
         imagePath: string;
         width?: number;
         height?: number;
         format?: 'png' | 'webp';
         quality?: number;
-        type?: ImageTypes
+        type?: ImageTypes;
+        removeBackground?: boolean;
     }): Promise<string> {
         const inputFilePath = join(this.inputDir, imagePath);
-        // Create dynamic output directory based on type
-        const dynamicOutputDir = join(this.outputDir, type);  // E.g., compressed/product or compressed/slider
-
+        const dynamicOutputDir = join(this.outputDir, type); 
+    
         if (!existsSync(dynamicOutputDir)) {
-            mkdirSync(dynamicOutputDir, { recursive: true });  // Ensure the directory exists
+            mkdirSync(dynamicOutputDir, { recursive: true });
         }
         
-        // Dynamic file name: image name + parameters (width, height, format, quality)
-        const imageName = imagePath.split('/').pop()?.split('.')[0]; // Image name without extension
+        const imageName = imagePath.split('/').pop()?.split('.')[0];
         const outputFileName = `${imageName}-${width}x${height}-${quality}.${format}`;
-        const outputPath = join(dynamicOutputDir, outputFileName);  // Save to the dynamic folder
-
-        // Check if the file already exists
+        const outputPath = join(dynamicOutputDir, outputFileName); 
+    
         if (existsSync(outputPath)) {
             const stats = statSync(outputPath);
             if (stats.size > 0) {
-                return outputPath; // Return if valid file exists
+                return outputPath;
             }
         }
-
-        // Proceed with image processing if no valid file exists
-        let image = sharp(inputFilePath).resize(width, height, {
-            fit: sharp.fit.cover, // Cover to ensure image fills the dimensions
-            position: 'center', // Center the image
+    
+        // Görsel işleme ve boşlukları kırpma
+        let image = sharp(inputFilePath);
+    
+        if (removeBackground) {
+            image = image.trim(); // Boşlukları kırpma işlemi
+        }
+    
+        image = image.resize(width, height, {
+            fit: sharp.fit.cover,
+            position: 'center',
         });
-
-        // Compress the image based on format
+    
         if (format === 'png') {
             image = image.png({ quality });
         } else if (format === 'webp') {
             image = image.webp({ quality });
         }
-
-        // Save the processed image
+    
         await image.toFile(outputPath);
         return outputPath;
     }
-
+    
     async saveFiles(files: Array<MemoryStoredFile>): Promise<number[]> {
         const image_ids: number[] = [];
         
