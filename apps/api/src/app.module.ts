@@ -25,6 +25,7 @@ import { RedisService } from './common/redis/redis.service';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { NestjsFormDataModule } from 'nestjs-form-data';
+import { SocialModule } from './social/social.module';
 
 @Module({
     imports: [
@@ -42,6 +43,7 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
         RedisModule,
         AuthModule,
         NestjsFormDataModule,
+        SocialModule,
     ],
     providers: [
         CategoryService,
