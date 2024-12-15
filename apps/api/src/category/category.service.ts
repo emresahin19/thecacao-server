@@ -108,9 +108,9 @@ export class CategoryService {
         if (!updateCategoryDto.updated_at) updateCategoryDto.updated_at = new Date();
 
         if(updateCategoryDto.products && updateCategoryDto.products.length > 0) {
-            await Promise.all(updateCategoryDto.products.map(async (product) => {
-                const productEntity = await this.productRepository.findOne({ where: { id }});
-                productEntity.order = product.order;
+            await Promise.all(updateCategoryDto.products.map(async (product, order) => {
+                const productEntity = await this.productRepository.findOne({ where: { id: product.id }});
+                productEntity.order = order;
                 return this.productRepository.save(productEntity);
             }));
         }
