@@ -99,12 +99,12 @@ export class ProductService {
     }
 
     async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
-        const existingItem = await this.categoryRepository.find({
-            where: { name: updateProductDto.name, id: Not(id) },
-        });
-        if (existingItem.length >= 1) {
-            throw new BadRequestException('Bu isimde bir ürün zaten mevcut.');
-        }
+        // const existingItem = await this.categoryRepository.find({
+        //     where: { name: updateProductDto.name, id: Not(id) },
+        // });
+        // if (existingItem.length >= 1) {
+        //     throw new BadRequestException('Bu isimde bir ürün zaten mevcut.');
+        // }
         const image_ids: number[] = [];
 
         if(updateProductDto.files && updateProductDto.files.length > 0){

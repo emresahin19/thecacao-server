@@ -97,12 +97,13 @@ export class CategoryService {
     }
 
     async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
-        const existingItem = await this.categoryRepository.find({
-            where: { name: updateCategoryDto.name, id: Not(id) },
-        });
-        if (existingItem.length >= 1) {
-            throw new BadRequestException('Bu isimde bir kategori zaten mevcut.');
-        }
+        // const existingItem = await this.categoryRepository.find({
+        //     where: { name: updateCategoryDto.name, id: Not(id) },
+        // });
+        // console.log(existingItem)
+        // if (existingItem.length >= 1) {
+        //     throw new BadRequestException('Bu isimde bir kategori zaten mevcut.');
+        // }
 
         updateCategoryDto.slug = slugify(updateCategoryDto.name, { lower: true });
         if (!updateCategoryDto.updated_at) updateCategoryDto.updated_at = new Date();
