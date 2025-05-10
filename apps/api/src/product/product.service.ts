@@ -156,7 +156,13 @@ export class ProductService {
     }
 
     async remove(id: number): Promise<void> {
-        await this.productRepository.delete(id);
+        const product = await this.productRepository.findOne({ where: { id } });
+        if (!product) {
+            throw new BadRequestException('Product not found');
+        }
+        product.deleted = true;
+        product.passive = true;
+        await this.productRepository.save(product);
         clearCache({cacheKey: menuCacheKey})
     }
 
