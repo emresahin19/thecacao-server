@@ -29,11 +29,9 @@ export class CreateExtraDto {
   @Transform(({ value }) => parseFloat(value))
   price?: number;
 
-  @IsOptional()
-  @IsInt()
   @Type(() => Number)
   @Transform(({ value }) => parseInt(value, 10))
-  image_id?: number;
+  image_id?: number | null
 
   @IsOptional()
   imageObj?: { 

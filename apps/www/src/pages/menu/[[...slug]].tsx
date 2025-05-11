@@ -3,38 +3,9 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Menu from 'lib/views/Menu/menu.component';
 import { fetchMenuData } from '../api/menu';
 import type { MenuProps, MenuInitialProps, CategoryProps, ProductProps } from "lib/interfaces";
+import { GetServerSideProps } from 'next';
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    const { items }: MenuInitialProps = await fetchMenuData();
-    const paths: { params: { slug: string[] } }[] = [];
-
-    paths.push({
-        params: {
-            slug: [], 
-        },
-    });
-
-    items?.forEach((category: CategoryProps) => {
-        if (category.slug && category.products) {
-            category.products.forEach((product: ProductProps) => {
-                if (product.slug) {
-                    paths.push({
-                        params: {
-                            slug: [category.slug.toString(), product.slug.toString()],
-                        },
-                    });
-                }
-            });
-        }
-    });
-
-    return {
-        paths,
-        fallback: 'blocking',
-    };
-}
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     const { items, contacts }: MenuInitialProps = await fetchMenuData();
 
     if(!items) {
