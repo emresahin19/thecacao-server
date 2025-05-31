@@ -22,13 +22,13 @@ const viewTypes = [
     },
 ];
 
-const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, style, products, index, viewType = 'carousel', onProductClick }) => {
+const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, description, style, products, index, viewType = 'carousel', onProductClick }) => {
     const [catType, setCatType] = useState<CarouselProps['viewType']>(viewType);
     // const [viewed, setViewed] = useState(index < 3);
     // const [isVisible, setIsVisible] = useState(index < 3);
     const ref = useRef<HTMLDivElement>(null);
     const category_slug = slug;
-    
+
     useEffect(() => {
         const listTypeStorage = getLocalStorageItem('listTypes') || {};
         if (listTypeStorage[slug]) {
@@ -58,8 +58,8 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, style, produ
     //     };
     // }, [ref, viewed]);
 
-    const handleProductClick = useCallback(({productSlug} : {productSlug: string}) => {
-        onProductClick && onProductClick({productSlug});
+    const handleProductClick = useCallback(({ productSlug }: { productSlug: string }) => {
+        onProductClick && onProductClick({ productSlug });
     }, [onProductClick]);
 
     const renderContent = () => {
@@ -71,7 +71,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, style, produ
             const { id, name, slug, description, price, category_id, recipe, extra, images, order }: ProductProps = product;
             const isEager = (index === 0 || index === 1) && (i === 0 || i === 1); // First two items load eagerly
             const fullpath = `${category_slug}/${slug}`;
-            
+
             return (
                 <ProductCard
                     key={id}
@@ -92,7 +92,7 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, style, produ
                 />
             );
         });
-        
+
         return (
             <Carousel
                 items={items}
@@ -115,19 +115,20 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, style, produ
         setLocalStorageItem('listTypes', currentStorage);
         setCatType(newType);
     }, [slug, catType]);
-    
+
     return (
-        <div 
-            id={`category-${id}`} 
-            className="category-section" 
-            style={{...style && style.backgroundColor && style.opacity && 
+        <div
+            id={`category-${id}`}
+            className="category-section"
+            style={{
+                ...style && style.backgroundColor && style.opacity &&
                 {
-                    backgroundColor: hexToRgba(style.backgroundColor, style.opacity), 
+                    backgroundColor: hexToRgba(style.backgroundColor, style.opacity),
                     color: style.color || defaultColor,
                     fill: style.color || defaultColor,
                 }
             }}
-            ref={ref}    
+            ref={ref}
         >
             <div className="category-header">
                 <div className="category-title">
@@ -143,6 +144,11 @@ const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, style, produ
                     {currentViewType?.icon}
                     {currentViewType?.title || ''}
                 </div>
+                {description && (
+                    <div className="category-description">
+                        {description}
+                    </div>
+                )}
             </div>
             {renderContent()}
         </div>

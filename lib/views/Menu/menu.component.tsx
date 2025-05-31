@@ -89,6 +89,7 @@ const Menu: React.FC<MenuProps> = ({ data, contacts, initialModalData }) => {
                         id={cat.id}
                         index={i}
                         order={cat.order}
+                        description={cat.description}
                         style={cat.style}
                         slug={cat.slug}
                         name={cat.name}

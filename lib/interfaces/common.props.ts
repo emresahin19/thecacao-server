@@ -56,6 +56,7 @@ export type ColorOptions =
     index: number;
     name: string;
     slug: string;
+    description?: string;
     style: any;
     order: number;
     products: ProductProps[];

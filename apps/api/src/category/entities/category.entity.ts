@@ -12,6 +12,9 @@ export class Category {
     @Column({ type: 'varchar', length: 255, nullable: true })
     slug: string;
 
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    description: string;
+
     @Column({ type: 'simple-json', nullable: true })
     style: object;
 
