@@ -23,7 +23,7 @@ const viewTypes = [
 ];
 
 const CategorySection: React.FC<CategoryProps> = ({ id, name, slug, description, style, products, index, viewType = 'carousel', onProductClick }) => {
-    const [catType, setCatType] = useState<CarouselProps['viewType']>(viewType);
+    const [catType, setCatType] = useState<CarouselProps['viewType']>(style?.viewType || viewType);
     // const [viewed, setViewed] = useState(index < 3);
     // const [isVisible, setIsVisible] = useState(index < 3);
     const ref = useRef<HTMLDivElement>(null);
